@@ -42,25 +42,98 @@ public final class ReachabilityMonitor {
 
     // MARK: - Initializers
 
-    /// Create a `ReachabilityMonitor`
+    /// Create a reachability monitor
+    /// - Throws: An error of type ``ReachabilityError``
     public convenience init() throws {
-        try self.init(updateHandler: nil, delegate: nil)
+        var zeroAddress = sockaddr()
+        zeroAddress.sa_len = UInt8(MemoryLayout<sockaddr>.size)
+        zeroAddress.sa_family = sa_family_t(AF_INET)
+        guard let reachability = SCNetworkReachabilityCreateWithAddress(nil, &zeroAddress) else {
+            throw ReachabilityError.failedToCreate(SCError())
+        }
+        self.init(reachability: reachability,
+                  updateHandler: nil,
+                  delegate: nil)
     }
-
-    /// Create a `ReachabilityMonitor` with a closure used to respond to status changes
+    
+    /// Create a reachability monitor for a specific host
+    ///
+    /// Use this initializer to monitor reachability updates for a specific host
+    /// - Parameter host: The host who's reachability you wish to monitor
+    /// - Throws: An error of type ``ReachabilityError``
+    public convenience init(host: String) throws {
+        guard let reachability = SCNetworkReachabilityCreateWithName(nil, host) else {
+            throw ReachabilityError.failedToCreate(SCError())
+        }
+        self.init(reachability: reachability,
+                  updateHandler: nil,
+                  delegate: nil)
+    }
+    
+    /// Create a reachability monitor with a closure used to respond to status changes
     ///
     /// Use this initializer to respond to status updates with a closure
     /// - Parameter updateHandler: The closure used to observe reachability updates
     public convenience init(updateHandler: @escaping UpdateHandler) throws {
-        try self.init(updateHandler: updateHandler, delegate: nil)
+        var zeroAddress = sockaddr()
+        zeroAddress.sa_len = UInt8(MemoryLayout<sockaddr>.size)
+        zeroAddress.sa_family = sa_family_t(AF_INET)
+        guard let reachability = SCNetworkReachabilityCreateWithAddress(nil, &zeroAddress) else {
+            throw ReachabilityError.failedToCreate(SCError())
+        }
+        self.init(reachability: reachability,
+                  updateHandler: updateHandler,
+                  delegate: nil)
+    }
+    
+    /// Create a reachability monitor for a specific host, with a closure used to respond to status changes
+    ///
+    /// Use this initializer to respond to reachability updates for a specific host with a closure
+    /// - Parameters:
+    ///   - host: The host who's reachability you wish to monitor
+    ///   - updateHandler: The closure used to observe reachability updates
+    /// - Throws: An error of type ``ReachabilityError``
+    public convenience init(host: String,
+                            updateHandler: @escaping UpdateHandler) throws {
+        guard let reachability = SCNetworkReachabilityCreateWithName(nil, host) else {
+            throw ReachabilityError.failedToCreate(SCError())
+        }
+        self.init(reachability: reachability,
+                  updateHandler: updateHandler,
+                  delegate: nil)
     }
 
-    /// Create a `ReachabilityMonitor` with a delegate object used to respond to status changes
+    /// Create a reachability monitor with a delegate object used to respond to status changes
     ///
     /// Use this initializer to respond to status updates with an instance of an object that conforms to ``ReachabilityMonitorDelegate``
     /// - Parameter delegate: The delegate object used to observe reachability updates
+    /// - Throws: An error of type ``ReachabilityError``
     public convenience init(delegate: ReachabilityMonitorDelegate) throws {
-        try self.init(updateHandler: nil, delegate: delegate)
+        var zeroAddress = sockaddr()
+        zeroAddress.sa_len = UInt8(MemoryLayout<sockaddr>.size)
+        zeroAddress.sa_family = sa_family_t(AF_INET)
+        guard let reachability = SCNetworkReachabilityCreateWithAddress(nil, &zeroAddress) else {
+            throw ReachabilityError.failedToCreate(SCError())
+        }
+        self.init(reachability: reachability,
+                  updateHandler: nil,
+                  delegate: delegate)
+    }
+    
+    /// Create a reachability monitor for a specific host, with a delegate object used to respond to status changes
+    ///
+    /// Use this initializer to respond to status updates with an instance of an object that conforms to ``ReachabilityMonitorDelegate`
+    /// - Parameters:
+    ///   - host: The host who's reachability you wish to monitor
+    ///   - delegate: The delegate object used to observe reachability updates
+    /// - Throws: An error of type ``ReachabilityError``
+    public convenience init(host: String, delegate: ReachabilityMonitorDelegate) throws {
+        guard let reachability = SCNetworkReachabilityCreateWithName(nil, host) else {
+            throw ReachabilityError.failedToCreate(SCError())
+        }
+        self.init(reachability: reachability,
+                  updateHandler: nil,
+                  delegate: delegate)
     }
 
     // MARK: - API
@@ -119,6 +192,7 @@ public final class ReachabilityMonitor {
     ///     // Handle error
     /// }
     /// ```
+    /// - Throws: An error of type ``ReachabilityError``
     public var currentStatus: ReachabilityStatus {
         get throws {
             refreshFlags()
@@ -148,14 +222,9 @@ public final class ReachabilityMonitor {
 
     // MARK: - Private
 
-    private init(updateHandler: UpdateHandler?,
-                 delegate: ReachabilityMonitorDelegate?) throws {
-        var zeroAddress = sockaddr()
-        zeroAddress.sa_len = UInt8(MemoryLayout<sockaddr>.size)
-        zeroAddress.sa_family = sa_family_t(AF_INET)
-        guard let reachability = SCNetworkReachabilityCreateWithAddress(nil, &zeroAddress) else {
-            throw ReachabilityError.failedToCreate(SCError())
-        }
+    private init(reachability: SCNetworkReachability,
+                 updateHandler: UpdateHandler?,
+                 delegate: ReachabilityMonitorDelegate?) {
         self.reachability = reachability
         self.updateHandler = updateHandler
         setUp()
