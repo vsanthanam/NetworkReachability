@@ -49,13 +49,26 @@ public extension NetworkMonitor {
         public var errorDescription: String? {
             switch self {
             case let .failedToCreate(code):
-                return "Couldn't create system reachability reference with SCError code \(code)"
+                return "Couldn't create system reachability reference"
             case let .failedToStartCallback(code):
-                return "Couldn't start system observability callback with SCError code \(code)"
+                return "Couldn't start system observability callback"
             case let .failedToSetRunLoop(code):
-                return "Couldn't schedule system observability callback with SCError code \(code)"
+                return "Couldn't schedule system observability callback"
             case let .failedToGetFlags(code):
-                return "Couldn't get system reachability flags with SCError code \(code)"
+                return "Couldn't get system reachability flags"
+            }
+        }
+        
+        public var failureReason: String? {
+            switch self {
+            case let .failedToCreate(code):
+                return "SCError Code \(code)"
+            case let .failedToStartCallback(code):
+                return "SCError Code \(code)"
+            case let .failedToSetRunLoop(code):
+                return "SCError Code \(code)"
+            case let .failedToGetFlags(code):
+                return "SCError Code \(code)"
             }
         }
     }

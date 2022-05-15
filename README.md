@@ -1,4 +1,6 @@
-# NetworkReachability
+<p align="center">
+  <img width="640" height="320" src="Images/banner.png">
+</p>
 
 ![GitHub](https://img.shields.io/github/license/vsanthanam/NetworkReachability)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/vsanthanam/NetworkReachability)
