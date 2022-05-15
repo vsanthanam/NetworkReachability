@@ -1,15 +1,15 @@
-# ReachabilityMonitor
+# Reachability
 
-`ReachabilityMonitor` is a replacement for Apple's [SystemConfiguration](https://developer.apple.com/documentation/systemconfiguration) [Network Reachability APIs](https://developer.apple.com/documentation/systemconfiguration/scnetworkreachability?language=swift). These APIs were originally written in C and are old, cumbersome to use, and do not play nicely with many modern Swift language patterns. `ReachabilityMonitor` wraps these APIs in Swift and provides a modern interface for the most common use cases.
+`Reachability` is a replacement for Apple's [SystemConfiguration](https://developer.apple.com/documentation/systemconfiguration) [Network Reachability APIs](https://developer.apple.com/documentation/systemconfiguration/scnetworkreachability?language=swift). These APIs were originally written in C and are old, cumbersome to use, and do not play nicely with many modern Swift language patterns. `Reachability` wraps these APIs in Swift and provides a modern interface for the most common use cases.
 
-`ReachabilityMonitor` supports with the following Apple platform releases:
+`Reachability` supports with the following Apple platform releases:
 
 - iOS 13.0 - 15.x
 - macOS 10.15 - 13.x
 - tvOS 13.0 - 15.x
 - watchOS 13.0 - 15.x
 
-`ReachabilityMonitor` supports synchronous reachability queries, as well as constant asynchronous reachability observation via the following mechanisms:
+`Reachability` supports synchronous reachability queries, as well as constant asynchronous reachability observation via the following mechanisms:
 
 - Delegation
 - Closures
@@ -17,35 +17,35 @@
 - [Swift Structured Concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html)
 - [Combine](https://developer.apple.com/documentation/combine)
 
-Large parts of the library's design are inspired by [this project](https://github.com/ashleymills/Reachability.swift), which was written before Swift 5.5 and the introduction of structured concurrency 
+Large parts of the library's design are inspired by [this project](https://github.com/ashleymills/Reachability.swift), which was written before Swift 5.5 and the introduction of structured concurrency.
 
 ## Set Up
 
-`ReachabilityMonitor` is currently distributed exclusively through the [Swift Package Manager](https://www.swift.org/package-manager/). 
+`Reachability` is currently distributed exclusively through the [Swift Package Manager](https://www.swift.org/package-manager/). 
 
-To add `ReachabilityMonitor` as a dependency to an existing Swift package, add the following line of code to the `packages` parameter of your `Package.swift` file:
+To add `Reachability` as a dependency to an existing Swift package, add the following line of code to the `packages` parameter of your `Package.swift` file:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/vsanthanam/ReachabilityMonitor.git", .upToNextMajor(from: "1.0.0"))
+    .package(url: "https://github.com/vsanthanam/Reachability.git", .upToNextMajor(from: "1.0.0"))
 ]
 ```
 
-To add `ReachabilityMonitor` as a dependency to an Xcode Project: 
+To add `Reachability` as a dependency to an Xcode Project: 
 
 - Choose File -> Swift Packages -> Add Package Dependency...
-- Enter package URL `https://github.com/vsanthanam/ReachabilityMonitor.git` and select your release and of choice.
+- Enter package URL `https://github.com/vsanthanam/Reachability.git` and select your release and of choice.
 
 Other distribution mechanisms like CocoaPods or Carthage may be added in the future.
 
 ## Usage
 
-Basic usage of `ReachabilityMonitor` is the same, regardless of your observability mechanism. Create a long-used instance of `ReachabilityMonitor` and retain it in memory. From there, you can access the `.currentStatus` property as needed, or observe changes using one of the mechanisms described above
+Basic usage of `Reachability` is the same, regardless of your observability mechanism. Create a long-used instance of `ReachabilityMonitor` and retain it in memory. From there, you can access the `.currentStatus` property as needed, or observe changes using one of the mechanisms described above
 
 ### Synchronously
 
 ```swift
-import ReachabilityMonitor
+import Reachability
 
 final class MyObject {
 
@@ -66,7 +66,7 @@ final class MyObject {
 ### Asynchronously
 
 ```swift
-import ReachabilityMonitor
+import Reachability
 
 final class MyObject {
 
@@ -102,7 +102,7 @@ final class MyObject {
 ### Closures
 
 ```swift
-import ReachabilityMonitor
+import Reachability
 
 final class MyObject {
     
@@ -130,7 +130,7 @@ final class MyObject {
 ### Delegation
 
 ```swift
-import ReachabilityMonitor
+import Reachability
 
 final class MyObject: ReachabilityMonitorDelegate {
 
@@ -160,7 +160,7 @@ final class MyObject: ReachabilityMonitorDelegate {
 
 ```swift
 import Combine
-import ReachabilityMonitor
+import Reachability
 
 final class MyObject {
 
@@ -223,4 +223,4 @@ final class MyObject {
 
 ## Documentation
 
-Documentation is built with [DocC](https://developer.apple.com/documentation/docc) and included in the repository. The latest version is hosted on [GitHub Pages](https://pages.github.com) and is available [here](https://vsanthanam.github.io/ReachabilityMonitor/documentation/reachabilitymonitor).
+Documentation is built with [DocC](https://developer.apple.com/documentation/docc) and included in the repository. The latest version is hosted on [GitHub Pages](https://pages.github.com) and is available [here](https://vsanthanam.github.io/Reachability/documentation/reachability).
