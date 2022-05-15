@@ -72,7 +72,7 @@ public final class ReachabilityMonitor {
     ///
     /// The handler is fed `Result` types and should be used to handle status changes as well as errors
     ///
-    /// ```
+    /// ```swift
     /// func setUpdateHandler(on monitor: ReachabilityMonitor) {
     ///     let updateHandler: ReachabilityMonitor.UpdateHandler = { (monitor, result) in
     ///         do {
@@ -94,7 +94,7 @@ public final class ReachabilityMonitor {
     ///
     /// Use [structured concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html) to iterate over status updates
     ///
-    /// ```
+    /// ```swift
     /// do {
     ///     for try await status in monitor.status {
     ///         // Do something with `status`
@@ -103,13 +103,15 @@ public final class ReachabilityMonitor {
     ///     // Handle error
     /// }
     /// ```
-    public var status: AsyncThrowingStream<ReachabilityStatus, Error>!
+    public var status: AsyncThrowingStream<ReachabilityStatus, Error> {
+        stream
+    }
 
     /// The current reachability updates
     ///
     /// Use this property to retrieve the current reachability status in a synchronous context:
     ///
-    /// ```
+    /// ```swift
     /// do {
     ///     let status = try monitor.currentStatus
     ///     // Do something with `status`
@@ -128,7 +130,7 @@ public final class ReachabilityMonitor {
     ///
     /// Use this property to observe status updates with [Combine](https://developer.apple.com/documentation/combine).
     ///
-    /// ```
+    /// ```swift
     /// let cancellable = monitor.statusPublisher
     ///     .map(\.isConnected)
     ///     .replaceError(with: false)
@@ -160,6 +162,7 @@ public final class ReachabilityMonitor {
     }
 
     private var reachability: SCNetworkReachability
+    private var stream: AsyncThrowingStream<ReachabilityStatus, Error>!
     private var streamContinuation: AsyncThrowingStream<ReachabilityStatus, Error>.Continuation!
     private var statusSubject = CurrentValueSubject<ReachabilityStatus?, ReachabilityError>(nil)
 
@@ -177,7 +180,7 @@ public final class ReachabilityMonitor {
     }
 
     private func setUp() {
-        status = .init(bufferingPolicy: .bufferingNewest(1)) { continuation in
+        stream = .init(bufferingPolicy: .bufferingNewest(1)) { continuation in
             self.streamContinuation = continuation
         }
 
