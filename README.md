@@ -17,7 +17,7 @@
 - [Swift Structured Concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html)
 - [Combine](https://developer.apple.com/documentation/combine)
 
-Large parts of its design are inspired by this project: https://github.com/ashleymills/Reachability.swift
+Large parts of the library's design are inspired by [this project](https://github.com/ashleymills/Reachability.swift), which was written before Swift 5.5 and the introduction of structured concurrency 
 
 ## Set Up
 
