@@ -23,12 +23,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+import Combine
 import Foundation
 import SystemConfiguration
-
-#if canImport(Combine)
-    import Combine
-#endif
 
 /// A class used to observe network reachability.
 /// Create one of these objects and keep it in memory
@@ -104,11 +101,8 @@ public final class ReachabilityMonitor {
     }
 
     private var reachability: SCNetworkReachability
-    private var continuation: AsyncThrowingStream<ReachabilityStatus, Error>.Continuation!
-
-    #if canImport(Combine)
-        private var subject = CurrentValueSubject<ReachabilityStatus?, ReachabilityError>(nil)
-    #endif
+    private var streamContinuation: AsyncThrowingStream<ReachabilityStatus, Error>.Continuation!
+    private var statusSubject = CurrentValueSubject<ReachabilityStatus?, ReachabilityError>(nil)
 
     private var flags: Result<SCNetworkReachabilityFlags?, ReachabilityError> = .success(nil) {
         didSet {
@@ -125,7 +119,7 @@ public final class ReachabilityMonitor {
 
     private func setUp() {
         status = .init(bufferingPolicy: .bufferingNewest(1)) { continuation in
-            self.continuation = continuation
+            self.streamContinuation = continuation
         }
 
         let callback: SCNetworkReachabilityCallBack = { (reachability, flags, info) in
@@ -159,13 +153,11 @@ public final class ReachabilityMonitor {
 
         if !SCNetworkReachabilitySetCallback(reachability, callback, &context) {
             flags = .failure(.failedToStartCallback(SCError()))
-        }
-
-        if !SCNetworkReachabilityScheduleWithRunLoop(reachability, CFRunLoopGetCurrent(), CFRunLoopMode.defaultMode.rawValue) {
+        } else if !SCNetworkReachabilityScheduleWithRunLoop(reachability, CFRunLoopGetCurrent(), CFRunLoopMode.defaultMode.rawValue) {
             flags = .failure(.failedToSetRunLoop(SCError()))
-        }
-
-        refreshFlags()
+        } else {
+            refreshFlags()
+        }        
     }
 
     private func refreshFlags() {
@@ -178,11 +170,12 @@ public final class ReachabilityMonitor {
     }
 
     private func succeed(with flags: SCNetworkReachabilityFlags?) {
+        let connection = flags.map(\.connection) ?? .unknown
+        streamContinuation.yield(connection)
+        statusSubject.send(connection)
         Task {
             await MainActor.run {
-                let connection = flags.map(\.connection) ?? .unknown
-                continuation.yield(connection)
-                subject.send(connection)
+                
                 postNotification()
                 delegate?.monitor(self, didUpdateStatus: connection)
                 updateHandler?(self, .success(connection))
@@ -191,18 +184,31 @@ public final class ReachabilityMonitor {
     }
 
     private func fail(with error: ReachabilityError) {
+        streamContinuation.finish(throwing: error)
+        statusSubject.send(completion: .failure(error))
         Task {
             await MainActor.run {
-                continuation.finish(throwing: error)
-                subject.send(completion: .failure(error))
                 postNotification()
                 delegate?.monitor(self, didFailWithError: error)
                 updateHandler?(self, .failure(error))
             }
         }
     }
+    
+    private func complete() {
+        streamContinuation.finish(throwing: nil)
+        subject.send(completion: .finished)
+    }
 
     private func postNotification() {
-        NotificationCenter.default.post(name: .reachabilityChanged, object: self)
+        NotificationCenter.default.post(name: .reachabilityStatusChanged, object: self)
+    }
+    
+    // MARK: - Deinit
+    
+    deinit {
+        SCNetworkReachabilitySetCallback(reachability, nil, nil)
+        SCNetworkReachabilityUnscheduleFromRunLoop(reachability, CFRunLoopGetCurrent(), CFRunLoopMode.defaultMode.rawValue)
+        complete()
     }
 }

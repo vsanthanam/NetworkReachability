@@ -28,6 +28,8 @@ import Foundation
 /// The available network reachability status
 public enum ReachabilityStatus: LocalizedError, Equatable, Hashable, Sendable {
 
+    // MARK: - Cases
+    
     /// The current status is unknown
     case unknown
 
@@ -39,6 +41,18 @@ public enum ReachabilityStatus: LocalizedError, Equatable, Hashable, Sendable {
 
     /// The network is available via a local wlan connection
     case wlan
+    
+    // MARK: - API
+    
+    /// Whether or not the status is connected to the internet.
+    public var isConnected: Bool {
+        switch self {
+        case .unknown, .unavailable:
+            return false
+        case .wwan, .wlan:
+            return true
+        }
+    }
 
     // MARK: - LocalizedError
 

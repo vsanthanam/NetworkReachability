@@ -28,5 +28,5 @@ import Foundation
 public extension Notification.Name {
 
     /// A notification sent when the reachability status changes or fails.
-    static let reachabilityChanged = Notification.Name("reachabilityChanged")
+    static let reachabilityStatusChanged = Notification.Name("reachabilityStatusChanged")
 }
