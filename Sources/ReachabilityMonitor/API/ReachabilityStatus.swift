@@ -26,7 +26,7 @@
 import Foundation
 
 /// The available network reachability status
-public enum ReachabilityStatus: LocalizedError, Equatable, Hashable, Sendable {
+public enum ReachabilityStatus: Equatable, Hashable, Sendable, CustomStringConvertible {
 
     // MARK: - Cases
     
@@ -54,9 +54,9 @@ public enum ReachabilityStatus: LocalizedError, Equatable, Hashable, Sendable {
         }
     }
 
-    // MARK: - LocalizedError
+    // MARK: - CustomStringConvertible
 
-    public var errorDescription: String? {
+    public var description: String {
         switch self {
         case .unknown:
             return "Unknown Status"

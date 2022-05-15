@@ -28,7 +28,16 @@ import Foundation
 import SystemConfiguration
 
 /// A class used to observe network reachability.
-/// Create one of these objects and keep it in memory
+///
+/// Create an instance of this object and retain it in memory.
+///
+/// You can observe status changes in several ways:
+/// - Synchronously, using the ``currentStatus`` property
+/// - Using delegation via ``ReachabilityMonitorDelegate``
+/// - Using structured concurrency via the ``status`` property
+/// - Using a [Combine](https://developer.apple.com/documentation/combine) [`Publisher`](https://developer.apple.com/documentation/combine/publisher) via the ``statusPublisher`` property
+/// - Using a provided closure via the ``updateHandler-swift.property`` property
+/// - Using `Notification` observers on `NotificationCenter.default`
 public final class ReachabilityMonitor {
 
     // MARK: - Initializers
@@ -38,14 +47,18 @@ public final class ReachabilityMonitor {
         try self.init(updateHandler: nil, delegate: nil)
     }
 
-    /// Create a `ReachabilityMonitor`
+    /// Create a `ReachabilityMonitor` with a closure used to respond to status changes
+    ///
+    /// Use this initializer to respond to status updates with a closure
     /// - Parameter updateHandler: The closure used to observe reachability updates
     public convenience init(updateHandler: @escaping UpdateHandler) throws {
         try self.init(updateHandler: updateHandler, delegate: nil)
     }
 
-    /// Create a `ReachabilityMonitor`
-    /// - Parameter delegate: The object used to observe reachability updates
+    /// Create a `ReachabilityMonitor` with a delegate object used to respond to status changes
+    ///
+    /// Use this initializer to respond to status updates with an instance of an object that conforms to ``ReachabilityMonitorDelegate``
+    /// - Parameter delegate: The delegate object used to observe reachability updates
     public convenience init(delegate: ReachabilityMonitorDelegate) throws {
         try self.init(updateHandler: nil, delegate: delegate)
     }
@@ -56,15 +69,54 @@ public final class ReachabilityMonitor {
     public typealias UpdateHandler = (ReachabilityMonitor, Result<ReachabilityStatus, ReachabilityError>) -> Void
 
     /// The closure used to observe reachability updates
+    ///
+    /// The handler is fed `Result` types and should be used to handle status changes as well as errors
+    ///
+    /// ```
+    /// func setUpdateHandler(on monitor: ReachabilityMonitor) {
+    ///     let updateHandler: ReachabilityMonitor.UpdateHandler = { (monitor, result) in
+    ///         do {
+    ///             let status = try result.get()
+    ///             // Do something with `status`
+    ///         } catch {
+    ///             // Handle error
+    ///         }
+    ///     }
+    ///     monitor.updateHandler = updateHandler
+    /// }
+    /// ```
     public var updateHandler: UpdateHandler?
 
     /// The delegate object used to observe reachability updates
     public weak var delegate: ReachabilityMonitorDelegate?
 
     /// An `AsyncSequence` of reachability updates
+    ///
+    /// Use [structured concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html) to iterate over status updates
+    ///
+    /// ```
+    /// do {
+    ///     for try await status in monitor.status {
+    ///         // Do something with `status`
+    ///     }
+    /// } catch {
+    ///     // Handle error
+    /// }
+    /// ```
     public var status: AsyncThrowingStream<ReachabilityStatus, Error>!
 
     /// The current reachability updates
+    ///
+    /// Use this property to retrieve the current reachability status in a synchronous context:
+    ///
+    /// ```
+    /// do {
+    ///     let status = try monitor.currentStatus
+    ///     // Do something with `status`
+    /// } catch {
+    ///     // Handle error
+    /// }
+    /// ```
     public var currentStatus: ReachabilityStatus {
         get throws {
             refreshFlags()
@@ -72,18 +124,25 @@ public final class ReachabilityMonitor {
         }
     }
 
-    #if canImport(Combine)
-
-        /// A `Publisher` of reachability updates
-        public var statusPublisher: AnyPublisher<ReachabilityStatus, ReachabilityError> {
-            subject
-                .prepend(try? currentStatus)
-                .compactMap { $0 }
-                .removeDuplicates()
-                .eraseToAnyPublisher()
-        }
-
-    #endif
+    /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of reachability updates
+    ///
+    /// Use this property to observe status updates with [Combine](https://developer.apple.com/documentation/combine).
+    ///
+    /// ```
+    /// let cancellable = monitor.statusPublisher
+    ///     .map(\.isConnected)
+    ///     .replaceError(with: false)
+    ///     .sink { isConnected in
+    ///         // Do something with `isConnected`
+    ///     }
+    /// ```
+    public var statusPublisher: AnyPublisher<ReachabilityStatus, ReachabilityError> {
+        statusSubject
+            .prepend(try? currentStatus)
+            .compactMap { $0 }
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
 
     // MARK: - Private
 
@@ -197,7 +256,7 @@ public final class ReachabilityMonitor {
     
     private func complete() {
         streamContinuation.finish(throwing: nil)
-        subject.send(completion: .finished)
+        statusSubject.send(completion: .finished)
     }
 
     private func postNotification() {
