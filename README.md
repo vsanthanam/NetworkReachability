@@ -40,4 +40,4 @@ Other distribution mechanisms like CocoaPods or Carthage may be added in the fut
 
 ## Usage & Documentation
 
-Reachability's documentation is built with [DocC](https://developer.apple.com/documentation/docc) and included in the repository as a DocC archive. The latest version is hosted on [GitHub Pages](https://pages.github.com) and is available [here](https://vsanthanam.github.io/Reachability/documentation/reachability).
+Reachability's documentation is built with [DocC](https://developer.apple.com/documentation/docc) and included in the repository as a DocC archive. The latest version is hosted on [GitHub Pages](https://pages.github.com) and is available [here](https://vsanthanam.github.io/Reachability/docs/documentation/reachability).
