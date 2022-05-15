@@ -1,5 +1,5 @@
-// ReachabilityMonitor
-// Notification+ReachabilityMonitor.swift
+// NetworkReachabiliy
+// Notification+NetworkReachability.swift
 //
 // MIT License
 //
@@ -27,6 +27,6 @@ import Foundation
 
 public extension Notification.Name {
 
-    /// A notification sent when the reachability status changes or fails.
-    static let reachabilityStatusChanged = Notification.Name("reachabilityStatusChanged")
+    /// A notification posted by a ``NetworkMonitor`` when its eachability changes or fails.
+    static let reachabilityChanged = Notification.Name("reachabilityChanged")
 }

@@ -1,5 +1,5 @@
-// ReachabilityMonitor
-// ReachabilityMonitorDelegate.swift
+// NetworkReachabiliy
+// WeakReference.swift
 //
 // MIT License
 //
@@ -25,18 +25,19 @@
 
 import Foundation
 
-/// A protocol used to observe reachability status changes from a `ReachabilityMonitor`
-public protocol ReachabilityMonitorDelegate: AnyObject {
+/// A weak reference to an object or actor
+final class WeakReference<T: AnyObject> {
 
-    /// Sent to the delegate when the reachability status changes
-    /// - Parameters:
-    ///   - monitor: The `ReachabilityMonitor` who's status changed
-    ///   - status: The new reachability status
-    func monitor(_ monitor: ReachabilityMonitor, didUpdateStatus status: ReachabilityStatus)
+    /// Create a weak reference to the provided object instance
+    /// - Parameter obj: An instance to weakify
+    init(_ obj: T) {
+        self.obj = obj
+    }
 
-    /// Sent to the delegate when the reachability monitor failed with an error
-    /// - Parameters:
-    ///   - monitor: The `ReachabilityMonitor` that failed
-    ///   - error: The error that caused the monitor to fail
-    func monitor(_ monitor: ReachabilityMonitor, didFailWithError error: Error)
+    /// A weak reference to the object
+    weak var obj: T?
+}
+
+func weak<T: AnyObject>(_ obj: T) -> WeakReference<T> {
+    .init(obj)
 }

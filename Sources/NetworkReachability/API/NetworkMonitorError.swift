@@ -1,5 +1,5 @@
-// ReachabilityMonitor
-// WeakReference.swift
+// NetworkReachabiliy
+// NetworkMonitorError.swift
 //
 // MIT License
 //
@@ -25,19 +25,18 @@
 
 import Foundation
 
-/// A weak reference to an object or actor
-final class WeakReference<T: AnyObject> {
+/// Errors that could cause a ``NetworkMonitor`` to fail
+public enum NetworkMonitorError: LocalizedError, Equatable, Hashable, Sendable {
 
-    /// Create a weak reference to the provided object instance
-    /// - Parameter obj: An instance to weakify
-    init(_ obj: T) {
-        self.obj = obj
-    }
+    /// An error indicating the SystemConfiguration reachability monitor could not be initialized
+    case failedToCreate(Int32)
 
-    /// A weak reference to the object
-    weak var obj: T?
-}
+    /// An error indicating the reachability callback could not be configured
+    case failedToStartCallback(Int32)
 
-func weak<T: AnyObject>(_ obj: T) -> WeakReference<T> {
-    .init(obj)
+    /// An error indicating the rachability observation could not be scheduled
+    case failedToSetRunLoop(Int32)
+
+    /// An error indicating the reachability couldn't be obtained from the system
+    case failedToGetFlags(Int32)
 }

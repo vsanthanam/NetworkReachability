@@ -1,4 +1,4 @@
-// ReachabilityMonitor
+// NetworkReachabiliy
 // SCNetworkReachabilityFlags+Reachability.swift
 //
 // MIT License
@@ -28,10 +28,10 @@ import SystemConfiguration
 
 extension SCNetworkReachabilityFlags {
 
-    /// The `ReachabilityStatus` represented by the flags
-    var connection: ReachabilityStatus {
+    /// The `Reachability` represented by the flags
+    var reachability: Reachability {
         guard isReachableFlagSet else { return .unavailable }
-        var connection = ReachabilityStatus.unavailable
+        var connection = Reachability.unavailable
 
         if !isConnectionRequiredFlagSet {
             connection = .wlan

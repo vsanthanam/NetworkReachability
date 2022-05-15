@@ -1,5 +1,5 @@
-// ReachabilityMonitor
-// ReachabilityMonitorTests.swift
+// NetworkReachabiliy
+// NetworkMonitorTests.swift
 //
 // MIT License
 //
@@ -23,16 +23,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-@testable import Reachability
+@testable import NetworkReachability
 import XCTest
 
-final class ReachabilityMonitorTests: XCTestCase {
+final class NetworkMonitorTests: XCTestCase {
 
     func testStandardSynchronous() {
         do {
-            let monitor = try ReachabilityMonitor()
-            let status = try monitor.currentStatus
-            XCTAssertTrue(status.isConnected)
+            let monitor = try NetworkMonitor()
+            let reachability = try monitor.currentReachability
+            XCTAssertTrue(reachability.isReachable)
         } catch {
             XCTFail()
         }
@@ -40,9 +40,9 @@ final class ReachabilityMonitorTests: XCTestCase {
 
     func testHostSynchronous() {
         do {
-            let monitor = try ReachabilityMonitor(host: "apple.com")
-            let status = try monitor.currentStatus
-            XCTAssertTrue(status.isConnected)
+            let monitor = try NetworkMonitor(host: "apple.com")
+            let reachability = try monitor.currentReachability
+            XCTAssertTrue(reachability.isReachable)
         } catch {
             XCTFail()
         }
@@ -52,9 +52,9 @@ final class ReachabilityMonitorTests: XCTestCase {
         let expectation = expectation(description: "pass")
         Task {
             do {
-                let monitor = try ReachabilityMonitor()
-                for try await status in monitor.status {
-                    if status.isConnected {
+                let monitor = try NetworkMonitor()
+                for try await reachability in monitor.reachability {
+                    if reachability.isReachable {
                         expectation.fulfill()
                     }
                 }
@@ -66,13 +66,13 @@ final class ReachabilityMonitorTests: XCTestCase {
         waitForExpectations(timeout: 5, handler: nil)
     }
 
-    func testHostConcurrenct() {
+    func testHostConcurrency() {
         let expectation = expectation(description: "pass")
         Task {
             do {
-                let monitor = try ReachabilityMonitor(host: "apple.com")
-                for try await status in monitor.status {
-                    if status.isConnected {
+                let monitor = try NetworkMonitor(host: "apple.com")
+                for try await reachability in monitor.reachability {
+                    if reachability.isReachable {
                         expectation.fulfill()
                     }
                 }

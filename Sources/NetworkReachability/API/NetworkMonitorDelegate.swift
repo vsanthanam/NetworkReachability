@@ -1,5 +1,5 @@
-// ReachabilityMonitor
-// ReachabilityStatus.swift
+// NetworkReachabiliy
+// NetworkMonitorDelegate.swift
 //
 // MIT License
 //
@@ -25,47 +25,18 @@
 
 import Foundation
 
-/// The available network reachability status
-public enum ReachabilityStatus: Equatable, Hashable, Sendable, CustomStringConvertible {
+/// A protocol used to observe reachability changes from a ``NetworkMonitor``
+public protocol NetworkMonitorDelegate: AnyObject {
 
-    // MARK: - Cases
+    /// Sent to the delegate when the reachability changes
+    /// - Parameters:
+    ///   - monitor: The network monitor who's eachability changed
+    ///   - reachability: The new reachability
+    func monitor(_ monitor: NetworkMonitor, didUpdateReachability reachability: Reachability)
 
-    /// The current status is unknown
-    case unknown
-
-    /// The network is unavailable
-    case unavailable
-
-    /// The network is available via a cellular wwan connection
-    case wwan
-
-    /// The network is available via a local wlan connection
-    case wlan
-
-    // MARK: - API
-
-    /// Whether or not the status is connected to the internet.
-    public var isConnected: Bool {
-        switch self {
-        case .unknown, .unavailable:
-            return false
-        case .wwan, .wlan:
-            return true
-        }
-    }
-
-    // MARK: - CustomStringConvertible
-
-    public var description: String {
-        switch self {
-        case .unknown:
-            return "Unknown Status"
-        case .unavailable:
-            return "Network Offline"
-        case .wwan:
-            return "Cellular Network Online"
-        case .wlan:
-            return "Local Network Online"
-        }
-    }
+    /// Sent to the delegate when the network monitor failed with an error
+    /// - Parameters:
+    ///   - monitor: The network monitor that failed
+    ///   - error: The error that caused the monitor to fail
+    func monitor(_ monitor: NetworkMonitor, didFailWithError error: Error)
 }

@@ -1,5 +1,5 @@
-// ReachabilityMonitor
-// ReachabilityError.swift
+// NetworkReachabiliy
+// Reachability.swift
 //
 // MIT License
 //
@@ -25,18 +25,47 @@
 
 import Foundation
 
-/// Errors that could cause a ``ReachabiltiyMonitor`` to fail
-public enum ReachabilityError: LocalizedError, Equatable, Hashable, Sendable {
+/// The available network reachability status
+public enum Reachability: Equatable, Hashable, Sendable, CustomStringConvertible {
 
-    /// An error indicating the SystemConfiguration reachability monitor could not be initialized
-    case failedToCreate(Int32)
+    // MARK: - Cases
 
-    /// An error indicating the reachability callback could not be configured
-    case failedToStartCallback(Int32)
+    /// The reachability is unknown
+    case unknown
 
-    /// An error indicating the rachability observation could not be scheduled
-    case failedToSetRunLoop(Int32)
+    /// The network is unavailable
+    case unavailable
 
-    /// An error indicating the reachability status couldn't be obtained from the system
-    case failedToGetFlags(Int32)
+    /// The network is available via a cellular wwan connection
+    case wwan
+
+    /// The network is available via a local wlan connection
+    case wlan
+
+    // MARK: - API
+
+    /// Whether or not the status is connected to the internet.
+    public var isReachable: Bool {
+        switch self {
+        case .unknown, .unavailable:
+            return false
+        case .wwan, .wlan:
+            return true
+        }
+    }
+
+    // MARK: - CustomStringConvertible
+
+    public var description: String {
+        switch self {
+        case .unknown:
+            return "Unknown Status"
+        case .unavailable:
+            return "Network Offline"
+        case .wwan:
+            return "Cellular Network Online"
+        case .wlan:
+            return "Local Network Online"
+        }
+    }
 }
