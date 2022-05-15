@@ -29,7 +29,7 @@ import Foundation
 public enum ReachabilityStatus: Equatable, Hashable, Sendable, CustomStringConvertible {
 
     // MARK: - Cases
-    
+
     /// The current status is unknown
     case unknown
 
@@ -41,9 +41,9 @@ public enum ReachabilityStatus: Equatable, Hashable, Sendable, CustomStringConve
 
     /// The network is available via a local wlan connection
     case wlan
-    
+
     // MARK: - API
-    
+
     /// Whether or not the status is connected to the internet.
     public var isConnected: Bool {
         switch self {

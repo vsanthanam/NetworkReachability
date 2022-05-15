@@ -55,7 +55,7 @@ public final class ReachabilityMonitor {
                   updateHandler: nil,
                   delegate: nil)
     }
-    
+
     /// Create a reachability monitor for a specific host
     ///
     /// Use this initializer to monitor reachability updates for a specific host
@@ -69,7 +69,7 @@ public final class ReachabilityMonitor {
                   updateHandler: nil,
                   delegate: nil)
     }
-    
+
     /// Create a reachability monitor with a closure used to respond to status changes
     ///
     /// Use this initializer to respond to status updates with a closure
@@ -85,7 +85,7 @@ public final class ReachabilityMonitor {
                   updateHandler: updateHandler,
                   delegate: nil)
     }
-    
+
     /// Create a reachability monitor for a specific host, with a closure used to respond to status changes
     ///
     /// Use this initializer to respond to reachability updates for a specific host with a closure
@@ -119,7 +119,7 @@ public final class ReachabilityMonitor {
                   updateHandler: nil,
                   delegate: delegate)
     }
-    
+
     /// Create a reachability monitor for a specific host, with a delegate object used to respond to status changes
     ///
     /// Use this initializer to respond to status updates with an instance of an object that conforms to ``ReachabilityMonitorDelegate`
@@ -288,7 +288,7 @@ public final class ReachabilityMonitor {
             flags = .failure(.failedToSetRunLoop(SCError()))
         } else {
             refreshFlags()
-        }        
+        }
     }
 
     private func refreshFlags() {
@@ -306,7 +306,7 @@ public final class ReachabilityMonitor {
         statusSubject.send(connection)
         Task {
             await MainActor.run {
-                
+
                 postNotification()
                 delegate?.monitor(self, didUpdateStatus: connection)
                 updateHandler?(self, .success(connection))
@@ -325,7 +325,7 @@ public final class ReachabilityMonitor {
             }
         }
     }
-    
+
     private func complete() {
         streamContinuation.finish(throwing: nil)
         statusSubject.send(completion: .finished)
@@ -334,9 +334,9 @@ public final class ReachabilityMonitor {
     private func postNotification() {
         NotificationCenter.default.post(name: .reachabilityStatusChanged, object: self)
     }
-    
+
     // MARK: - Deinit
-    
+
     deinit {
         SCNetworkReachabilitySetCallback(reachability, nil, nil)
         SCNetworkReachabilityUnscheduleFromRunLoop(reachability, CFRunLoopGetCurrent(), CFRunLoopMode.defaultMode.rawValue)
