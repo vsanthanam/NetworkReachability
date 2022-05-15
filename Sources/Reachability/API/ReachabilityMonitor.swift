@@ -163,7 +163,7 @@ public final class ReachabilityMonitor {
     /// The delegate object used to observe reachability updates
     public weak var delegate: ReachabilityMonitorDelegate?
 
-    /// An `AsyncSequence` of reachability updates
+    /// An [`AsyncSequence`](https://developer.apple.com/documentation/swift/asyncsequence) of reachability updates
     ///
     /// Use [structured concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html) to iterate over status updates
     ///
