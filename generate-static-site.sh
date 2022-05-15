@@ -13,5 +13,6 @@ else
     git push -f -u origin gh-pages
     git checkout main
     git branch -D gh-pages
+    rm -rf docs
     echo "Website Updated!"
 fi

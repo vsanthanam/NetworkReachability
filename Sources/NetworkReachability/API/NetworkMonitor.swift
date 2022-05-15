@@ -148,7 +148,7 @@ public final class NetworkMonitor {
     ///
     /// ```swift
     /// func setUpdateHandler(on monitor: NetworkMonitor) {
-    ///     let updateHandler: NetworkMonitor.UpdateHandler = { (monitor, result) in
+    ///     let updateHandler: NetworkMonitor.UpdateHandler = { (monitor: NetworkMonitor, result: Result<Reachability, NetworkMonitorError>) in
     ///         do {
     ///             let reachability = try result.get()
     ///             // Do something with `reachability`

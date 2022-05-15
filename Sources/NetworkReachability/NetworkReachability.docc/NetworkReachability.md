@@ -109,7 +109,7 @@ final class MyObject {
     var monitor: NetworkMonitor?
     
     func startObserving() throws {
-        monitor = try NetworkMonitor() { _, result in
+        monitor = try NetworkMonitor() { (monitor: NetworkMonitor, result: Result<Reachability, NetworkMonitorError>) in
             do {
                 let reachability = try result.get()
                 switch reachability {

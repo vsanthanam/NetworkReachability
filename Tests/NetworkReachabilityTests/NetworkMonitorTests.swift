@@ -28,7 +28,7 @@ import XCTest
 
 final class NetworkMonitorTests: XCTestCase {
 
-    func testStandardSynchronous() {
+    func test_standardSynchronous() {
         do {
             let monitor = try NetworkMonitor()
             let reachability = try monitor.currentReachability
@@ -38,7 +38,7 @@ final class NetworkMonitorTests: XCTestCase {
         }
     }
 
-    func testHostSynchronous() {
+    func test_hostSynchronous() {
         do {
             let monitor = try NetworkMonitor(host: "apple.com")
             let reachability = try monitor.currentReachability
@@ -48,7 +48,7 @@ final class NetworkMonitorTests: XCTestCase {
         }
     }
 
-    func testStandardConcurrency() {
+    func test_standardConcurrency() {
         let expectation = expectation(description: "pass")
         Task {
             do {
@@ -66,7 +66,7 @@ final class NetworkMonitorTests: XCTestCase {
         waitForExpectations(timeout: 5, handler: nil)
     }
 
-    func testHostConcurrency() {
+    func test_hostConcurrency() {
         let expectation = expectation(description: "pass")
         Task {
             do {
@@ -82,6 +82,44 @@ final class NetworkMonitorTests: XCTestCase {
         }
 
         waitForExpectations(timeout: 5, handler: nil)
+    }
+
+    func test_standardClosure() {
+        let expectation = expectation(description: "pass")
+        do {
+            _ = try NetworkMonitor() { _, result in
+                do {
+                    let reachability = try result.get()
+                    if reachability.isReachable {
+                        expectation.fulfill()
+                    }
+                } catch {
+                    XCTFail()
+                }
+            }
+            waitForExpectations(timeout: 5, handler: nil)
+        } catch {
+            XCTFail()
+        }
+    }
+
+    func test_hostClosure() {
+        let expectation = expectation(description: "apple.com")
+        do {
+            _ = try NetworkMonitor() { _, result in
+                do {
+                    let reachability = try result.get()
+                    if reachability.isReachable {
+                        expectation.fulfill()
+                    }
+                } catch {
+                    XCTFail()
+                }
+            }
+            waitForExpectations(timeout: 5, handler: nil)
+        } catch {
+            XCTFail()
+        }
     }
 
 }
