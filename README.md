@@ -223,4 +223,4 @@ final class MyObject {
 
 ## Documentation
 
-Documentation is built with [DocC](https://developer.apple.com/documentation/docc) and included in the repository. The latest version is hosted on [GitHub Pages](https://pages.github.com) and is available [here](https://vsanthanam.github.io/ReachabilityMonitor/documentation/reachabilitymonitor/reachabilitymonitor/).
+Documentation is built with [DocC](https://developer.apple.com/documentation/docc) and included in the repository. The latest version is hosted on [GitHub Pages](https://pages.github.com) and is available [here](https://vsanthanam.github.io/ReachabilityMonitor/documentation/reachabilitymonitor).
