@@ -27,7 +27,7 @@
 import XCTest
 
 final class ReachabilityMonitorTests: XCTestCase {
-    
+
     func testStandardSynchronous() {
         do {
             let monitor = try ReachabilityMonitor()
@@ -37,7 +37,7 @@ final class ReachabilityMonitorTests: XCTestCase {
             XCTFail()
         }
     }
-    
+
     func testHostSynchronous() {
         do {
             let monitor = try ReachabilityMonitor(host: "apple.com")
@@ -47,7 +47,7 @@ final class ReachabilityMonitorTests: XCTestCase {
             XCTFail()
         }
     }
-    
+
     func testStandardConcurrency() {
         let expectation = expectation(description: "pass")
         Task {
@@ -62,10 +62,10 @@ final class ReachabilityMonitorTests: XCTestCase {
                 XCTFail()
             }
         }
-        
+
         waitForExpectations(timeout: 5, handler: nil)
     }
-    
+
     func testHostConcurrenct() {
         let expectation = expectation(description: "pass")
         Task {
@@ -80,7 +80,7 @@ final class ReachabilityMonitorTests: XCTestCase {
                 XCTFail()
             }
         }
-        
+
         waitForExpectations(timeout: 5, handler: nil)
     }
 
