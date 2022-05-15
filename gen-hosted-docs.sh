@@ -1,0 +1,1 @@
+swift package --allow-writing-to-directory docs generate-documentation --target Reachability --disable-indexing --transform-for-static-hosting --hosting-base-path docs/Reachability --output-path docs
