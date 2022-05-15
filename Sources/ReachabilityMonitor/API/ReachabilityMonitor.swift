@@ -1,9 +1,27 @@
+// ReachabilityMonitor
+// ReachabilityMonitor.swift
 //
-//  File.swift
-//  
+// MIT License
 //
-//  Created by Varun Santhanam on 5/14/22.
+// Copyright (c) 2021 Varun Santhanam
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the  Software), to deal
 //
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED  AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 import Foundation
 import SystemConfiguration
@@ -15,40 +33,40 @@ import SystemConfiguration
 /// A class used to observe network reachability.
 /// Create one of these objects and keep it in memory
 public final class ReachabilityMonitor {
-    
+
     // MARK: - Initializers
-    
+
     /// Create a `ReachabilityMonitor`
     public convenience init() throws {
         try self.init(updateHandler: nil, delegate: nil)
     }
-    
+
     /// Create a `ReachabilityMonitor`
     /// - Parameter updateHandler: The closure used to observe reachability updates
     public convenience init(updateHandler: @escaping UpdateHandler) throws {
         try self.init(updateHandler: updateHandler, delegate: nil)
     }
-    
+
     /// Create a `ReachabilityMonitor`
     /// - Parameter delegate: The object used to observe reachability updates
     public convenience init(delegate: ReachabilityMonitorDelegate) throws {
         try self.init(updateHandler: nil, delegate: delegate)
     }
-    
+
     // MARK: - API
-    
+
     /// The closure type used to observe reachability updates
-    public typealias UpdateHandler = (ReachabilityMonitor, Result<ReachabilityStatus, ReachabilityError>) -> ()
-    
+    public typealias UpdateHandler = (ReachabilityMonitor, Result<ReachabilityStatus, ReachabilityError>) -> Void
+
     /// The closure used to observe reachability updates
     public var updateHandler: UpdateHandler?
-    
+
     /// The delegate object used to observe reachability updates
     public weak var delegate: ReachabilityMonitorDelegate?
-    
+
     /// An `AsyncSequence` of reachability updates
     public var status: AsyncThrowingStream<ReachabilityStatus, Error>!
-    
+
     /// The current reachability updates
     public var currentStatus: ReachabilityStatus {
         get throws {
@@ -56,9 +74,9 @@ public final class ReachabilityMonitor {
             return try flags.get()?.connection ?? .unavailable
         }
     }
-    
+
     #if canImport(Combine)
-    
+
         /// A `Publisher` of reachability updates
         public var statusPublisher: AnyPublisher<ReachabilityStatus, ReachabilityError> {
             subject
@@ -67,11 +85,11 @@ public final class ReachabilityMonitor {
                 .removeDuplicates()
                 .eraseToAnyPublisher()
         }
-    
+
     #endif
-    
+
     // MARK: - Private
-    
+
     private init(updateHandler: UpdateHandler?,
                  delegate: ReachabilityMonitorDelegate?) throws {
         var zeroAddress = sockaddr()
@@ -87,11 +105,11 @@ public final class ReachabilityMonitor {
 
     private var reachability: SCNetworkReachability
     private var continuation: AsyncThrowingStream<ReachabilityStatus, Error>.Continuation!
-    
+
     #if canImport(Combine)
         private var subject = CurrentValueSubject<ReachabilityStatus?, ReachabilityError>(nil)
     #endif
-    
+
     private var flags: Result<SCNetworkReachabilityFlags?, ReachabilityError> = .success(nil) {
         didSet {
             if flags != oldValue {
@@ -104,21 +122,21 @@ public final class ReachabilityMonitor {
             }
         }
     }
-    
+
     private func setUp() {
         status = .init(bufferingPolicy: .bufferingNewest(1)) { continuation in
             self.continuation = continuation
         }
-        
+
         let callback: SCNetworkReachabilityCallBack = { (reachability, flags, info) in
             guard let info = info else { return }
             let weakMonitor = Unmanaged<WeakReference<ReachabilityMonitor>>.fromOpaque(info).takeUnretainedValue()
             weakMonitor.obj?.refreshFlags()
         }
-        
+
         let weakMonitor = weak(self)
         let opaqueMonitor = Unmanaged<WeakReference<ReachabilityMonitor>>.passUnretained(weakMonitor).toOpaque()
-        
+
         var context = SCNetworkReachabilityContext(
             version: 0,
             info: UnsafeMutableRawPointer(opaqueMonitor),
@@ -136,20 +154,20 @@ public final class ReachabilityMonitor {
                 let weakMonitor = unmanagedMonitor.takeUnretainedValue()
                 let copyDescription = try? weakMonitor.obj?.flags.get()?.copyDescription ?? "none"
                 return Unmanaged.passRetained(copyDescription! as CFString)
-           }
+            }
         )
-        
+
         if !SCNetworkReachabilitySetCallback(reachability, callback, &context) {
             flags = .failure(.failedToStartCallback(SCError()))
         }
-        
+
         if !SCNetworkReachabilityScheduleWithRunLoop(reachability, CFRunLoopGetCurrent(), CFRunLoopMode.defaultMode.rawValue) {
             flags = .failure(.failedToSetRunLoop(SCError()))
         }
-        
+
         refreshFlags()
     }
-    
+
     private func refreshFlags() {
         var flags = SCNetworkReachabilityFlags()
         if SCNetworkReachabilityGetFlags(reachability, &flags) {
@@ -171,7 +189,7 @@ public final class ReachabilityMonitor {
             }
         }
     }
-    
+
     private func fail(with error: ReachabilityError) {
         Task {
             await MainActor.run {
@@ -183,7 +201,7 @@ public final class ReachabilityMonitor {
             }
         }
     }
-    
+
     private func postNotification() {
         NotificationCenter.default.post(name: .reachabilityChanged, object: self)
     }
