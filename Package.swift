@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "ReachabilityMonitor",
+    name: "Reachability",
     platforms: [
         .iOS(.v13),
         .macOS(.v10_15),
@@ -13,8 +13,8 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "ReachabilityMonitor",
-            targets: ["ReachabilityMonitor"]
+            name: "Reachability",
+            targets: ["Reachability"]
         ),
     ],
     dependencies: [
@@ -22,12 +22,12 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "ReachabilityMonitor",
+            name: "Reachability",
             dependencies: []
         ),
         .testTarget(
-            name: "ReachabilityMonitorTests",
-            dependencies: ["ReachabilityMonitor"]
+            name: "ReachabilityTests",
+            dependencies: ["Reachability"]
         ),
     ]
 )
