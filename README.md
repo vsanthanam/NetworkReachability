@@ -2,13 +2,6 @@
 
 Reachability is a replacement for Apple's [SystemConfiguration](https://developer.apple.com/documentation/systemconfiguration) [Network Reachability APIs](https://developer.apple.com/documentation/systemconfiguration/scnetworkreachability?language=swift). These APIs were originally written in C and are old, cumbersome to use, and do not play nicely with many modern Swift language patterns. Reachability wraps these APIs in Swift and provides a modern interface for the most common use cases.
 
-Reachability supports with the following Apple platform releases:
-
-* iOS 13.0 - 15.x
-* macOS 10.15 - 13.x
-* tvOS 13.0 - 15.x
-* watchOS 13.0 - 15.x
-
 Reachability supports synchronous reachability queries, as well as constant asynchronous reachability observation via the following mechanisms:
 
 * Delegation
