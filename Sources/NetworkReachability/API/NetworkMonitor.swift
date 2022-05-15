@@ -32,12 +32,12 @@ import SystemConfiguration
 /// Create an instance of this object and retain it in memory.
 ///
 /// You can observe reachability changes in several ways:
-/// - Synchronously, using the ``currentReachability`` property
-/// - Using delegation via ``NetworkMonitorDelegate``
-/// - Using structured concurrency via the ``reachability`` property
-/// - Using a [Combine](https://developer.apple.com/documentation/combine), via the ``reachabilityPublisher`` property
-/// - Using a provided closure via the ``updateHandler-swift.property`` property
-/// - Using `Notification` observers on `NotificationCenter.default`
+/// - Synchronously, using the ``currentReachability`` property.
+/// - Using delegation via ``NetworkMonitorDelegate``.
+/// - Using structured concurrency via the ``reachability`` property.
+/// - Using a [Combine](https://developer.apple.com/documentation/combine), via the ``reachabilityPublisher`` property.
+/// - Using a provided closure via the ``updateHandler-swift.property`` property.
+/// - Using notification observers on [`NotificationCenter.default`](https://developer.apple.com/documentation/foundation/notificationcenter).
 public final class NetworkMonitor {
 
     // MARK: - Initializers
@@ -74,7 +74,7 @@ public final class NetworkMonitor {
     ///
     /// Use this initializer to respond to reachability updates with a closure
     /// - Parameter updateHandler: The closure used to observe reachability updates
-    /// - Throws: An error of type ``NetworkMonitor.Error``
+    /// - Throws: An error of type ``Error``
     public convenience init(updateHandler: @escaping UpdateHandler) throws {
         var zeroAddress = sockaddr()
         zeroAddress.sa_len = UInt8(MemoryLayout<sockaddr>.size)
@@ -93,7 +93,7 @@ public final class NetworkMonitor {
     /// - Parameters:
     ///   - host: The host who's reachability you wish to monitor
     ///   - updateHandler: The closure used to observe reachability updates
-    /// - Throws: An error of type ``NetworkMonitor.Error``
+    /// - Throws: An error of type ``Error``
     public convenience init(host: String,
                             updateHandler: @escaping UpdateHandler) throws {
         guard let reachability = SCNetworkReachabilityCreateWithName(nil, host) else {
@@ -108,7 +108,7 @@ public final class NetworkMonitor {
     ///
     /// Use this initializer to respond to reachability updates with an instance of an object that conforms to ``NetworkMonitorDelegate``
     /// - Parameter delegate: The delegate object used to observe reachability updates
-    /// - Throws: An error of type ``NetworkMonitor.Error``
+    /// - Throws: An error of type ``Error``
     public convenience init(delegate: NetworkMonitorDelegate) throws {
         var zeroAddress = sockaddr()
         zeroAddress.sa_len = UInt8(MemoryLayout<sockaddr>.size)
@@ -127,7 +127,7 @@ public final class NetworkMonitor {
     /// - Parameters:
     ///   - host: The host who's reachability you wish to monitor
     ///   - delegate: The delegate object used to observe reachability updates
-    /// - Throws: An error of type ``NetworkMonitor.Error``
+    /// - Throws: An error of type ``Error``
     public convenience init(host: String, delegate: NetworkMonitorDelegate) throws {
         guard let reachability = SCNetworkReachabilityCreateWithName(nil, host) else {
             throw Error.failedToCreate(SCError())
@@ -196,7 +196,7 @@ public final class NetworkMonitor {
     ///     // Handle error
     /// }
     /// ```
-    /// - Throws: An error of type ``NetworkMonitorError``
+    /// - Throws: An error of type ``Error``
     public var currentReachability: Reachability {
         get throws {
             refreshFlags()
@@ -344,41 +344,5 @@ public final class NetworkMonitor {
         SCNetworkReachabilitySetCallback(ref, nil, nil)
         SCNetworkReachabilityUnscheduleFromRunLoop(ref, CFRunLoopGetCurrent(), CFRunLoopMode.defaultMode.rawValue)
         complete()
-    }
-}
-
-public extension NetworkMonitor {
-
-    /// Errors that could cause a ``NetworkMonitor`` to fail
-    enum Error: LocalizedError, Equatable, Hashable, Sendable {
-
-        // MARK: - Cases
-
-        /// An error indicating the SystemConfiguration reachability monitor could not be initialized
-        case failedToCreate(Int32)
-
-        /// An error indicating the reachability callback could not be configured
-        case failedToStartCallback(Int32)
-
-        /// An error indicating the rachability observation could not be scheduled
-        case failedToSetRunLoop(Int32)
-
-        /// An error indicating the reachability couldn't be obtained from the system
-        case failedToGetFlags(Int32)
-
-        // MARK: - LocalizedError
-
-        public var errorDescription: String? {
-            switch self {
-            case let .failedToCreate(code):
-                return "Couldn't create system reachability reference with SCError code \(code)"
-            case let .failedToStartCallback(code):
-                return "Couldn't start system observability callback with SCError code \(code)"
-            case let .failedToSetRunLoop(code):
-                return "Couldn't schedule system observability callback with SCError code \(code)"
-            case let .failedToGetFlags(code):
-                return "Couldn't get system reachability flags with SCError code \(code)"
-            }
-        }
     }
 }
