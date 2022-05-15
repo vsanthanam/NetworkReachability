@@ -25,7 +25,7 @@
 
 import Foundation
 
-/// Errors that could cause a `ReachabiltiyMonitor` to fail
+/// Errors that could cause a ``ReachabiltiyMonitor`` to fail
 public enum ReachabilityError: LocalizedError, Equatable, Hashable, Sendable {
 
     /// An error indicating the SystemConfiguration reachability monitor could not be initialized

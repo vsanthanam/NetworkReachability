@@ -35,7 +35,7 @@ import SystemConfiguration
 /// - Synchronously, using the ``currentStatus`` property
 /// - Using delegation via ``ReachabilityMonitorDelegate``
 /// - Using structured concurrency via the ``status`` property
-/// - Using a [Combine](https://developer.apple.com/documentation/combine) [`Publisher`](https://developer.apple.com/documentation/combine/publisher) via the ``statusPublisher`` property
+/// - Using a [Combine](https://developer.apple.com/documentation/combine), via the ``statusPublisher`` property
 /// - Using a provided closure via the ``updateHandler-swift.property`` property
 /// - Using `Notification` observers on `NotificationCenter.default`
 public final class ReachabilityMonitor {
