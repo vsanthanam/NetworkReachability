@@ -43,13 +43,13 @@ public final class NetworkMonitor {
     // MARK: - Initializers
 
     /// Create a network monitor
-    /// - Throws: An error of type ``NetworkMonitorError``
+    /// - Throws: An error of type ``Error``
     public convenience init() throws {
         var zeroAddress = sockaddr()
         zeroAddress.sa_len = UInt8(MemoryLayout<sockaddr>.size)
         zeroAddress.sa_family = sa_family_t(AF_INET)
         guard let reachability = SCNetworkReachabilityCreateWithAddress(nil, &zeroAddress) else {
-            throw NetworkMonitorError.failedToCreate(SCError())
+            throw Error.failedToCreate(SCError())
         }
         self.init(ref: reachability,
                   updateHandler: nil,
@@ -60,10 +60,10 @@ public final class NetworkMonitor {
     ///
     /// Use this initializer to monitor reachability updates for a specific host
     /// - Parameter host: The host who's reachability you wish to monitor
-    /// - Throws: An error of type ``NetworkMonitorError``
+    /// - Throws: An error of type ``Error``
     public convenience init(host: String) throws {
         guard let reachability = SCNetworkReachabilityCreateWithName(nil, host) else {
-            throw NetworkMonitorError.failedToCreate(SCError())
+            throw Error.failedToCreate(SCError())
         }
         self.init(ref: reachability,
                   updateHandler: nil,
@@ -74,13 +74,13 @@ public final class NetworkMonitor {
     ///
     /// Use this initializer to respond to reachability updates with a closure
     /// - Parameter updateHandler: The closure used to observe reachability updates
-    /// - Throws: An error of type ``NetworkMonitorError``
+    /// - Throws: An error of type ``NetworkMonitor.Error``
     public convenience init(updateHandler: @escaping UpdateHandler) throws {
         var zeroAddress = sockaddr()
         zeroAddress.sa_len = UInt8(MemoryLayout<sockaddr>.size)
         zeroAddress.sa_family = sa_family_t(AF_INET)
         guard let reachability = SCNetworkReachabilityCreateWithAddress(nil, &zeroAddress) else {
-            throw NetworkMonitorError.failedToCreate(SCError())
+            throw Error.failedToCreate(SCError())
         }
         self.init(ref: reachability,
                   updateHandler: updateHandler,
@@ -93,11 +93,11 @@ public final class NetworkMonitor {
     /// - Parameters:
     ///   - host: The host who's reachability you wish to monitor
     ///   - updateHandler: The closure used to observe reachability updates
-    /// - Throws: An error of type ``NetworkMonitorError``
+    /// - Throws: An error of type ``NetworkMonitor.Error``
     public convenience init(host: String,
                             updateHandler: @escaping UpdateHandler) throws {
         guard let reachability = SCNetworkReachabilityCreateWithName(nil, host) else {
-            throw NetworkMonitorError.failedToCreate(SCError())
+            throw Error.failedToCreate(SCError())
         }
         self.init(ref: reachability,
                   updateHandler: updateHandler,
@@ -108,13 +108,13 @@ public final class NetworkMonitor {
     ///
     /// Use this initializer to respond to reachability updates with an instance of an object that conforms to ``NetworkMonitorDelegate``
     /// - Parameter delegate: The delegate object used to observe reachability updates
-    /// - Throws: An error of type ``NetworkMonitorError``
+    /// - Throws: An error of type ``NetworkMonitor.Error``
     public convenience init(delegate: NetworkMonitorDelegate) throws {
         var zeroAddress = sockaddr()
         zeroAddress.sa_len = UInt8(MemoryLayout<sockaddr>.size)
         zeroAddress.sa_family = sa_family_t(AF_INET)
         guard let reachability = SCNetworkReachabilityCreateWithAddress(nil, &zeroAddress) else {
-            throw NetworkMonitorError.failedToCreate(SCError())
+            throw Error.failedToCreate(SCError())
         }
         self.init(ref: reachability,
                   updateHandler: nil,
@@ -127,10 +127,10 @@ public final class NetworkMonitor {
     /// - Parameters:
     ///   - host: The host who's reachability you wish to monitor
     ///   - delegate: The delegate object used to observe reachability updates
-    /// - Throws: An error of type ``NetworkMonitorError``
+    /// - Throws: An error of type ``NetworkMonitor.Error``
     public convenience init(host: String, delegate: NetworkMonitorDelegate) throws {
         guard let reachability = SCNetworkReachabilityCreateWithName(nil, host) else {
-            throw NetworkMonitorError.failedToCreate(SCError())
+            throw Error.failedToCreate(SCError())
         }
         self.init(ref: reachability,
                   updateHandler: nil,
@@ -139,8 +139,11 @@ public final class NetworkMonitor {
 
     // MARK: - API
 
+    /// Specialized [`Result`](https://developer.apple.com/documentation/swift/result) delivred by a ``NetworkMonitor`` to it's ``updateHandler-swift.property``
+    public typealias Result = Swift.Result<Reachability, Error>
+
     /// The closure type used to observe reachability updates
-    public typealias UpdateHandler = (NetworkMonitor, Result<Reachability, NetworkMonitorError>) -> Void
+    public typealias UpdateHandler = (NetworkMonitor, NetworkMonitor.Result) -> Void
 
     /// The closure used to observe reachability updates
     ///
@@ -148,7 +151,7 @@ public final class NetworkMonitor {
     ///
     /// ```swift
     /// func setUpdateHandler(on monitor: NetworkMonitor) {
-    ///     let updateHandler: NetworkMonitor.UpdateHandler = { (monitor: NetworkMonitor, result: Result<Reachability, NetworkMonitorError>) in
+    ///     let updateHandler: NetworkMonitor.UpdateHandler = { (monitor: NetworkMonitor, result: NetworkMonitor.Result) in
     ///         do {
     ///             let reachability = try result.get()
     ///             // Do something with `reachability`
@@ -177,7 +180,7 @@ public final class NetworkMonitor {
     ///     // Handle error
     /// }
     /// ```
-    public var reachability: AsyncThrowingStream<Reachability, Error> {
+    public var reachability: AsyncThrowingStream<Reachability, Swift.Error> {
         stream
     }
 
@@ -213,7 +216,7 @@ public final class NetworkMonitor {
     ///         // Do something with `isReachable`
     ///     }
     /// ```
-    public var reachabilityPublisher: AnyPublisher<Reachability, NetworkMonitorError> {
+    public var reachabilityPublisher: AnyPublisher<Reachability, Error> {
         reachabilitySubject
             .prepend(try? currentReachability)
             .compactMap { $0 }
@@ -232,18 +235,18 @@ public final class NetworkMonitor {
     }
 
     private var ref: SCNetworkReachability
-    private var stream: AsyncThrowingStream<Reachability, Error>!
-    private var streamContinuation: AsyncThrowingStream<Reachability, Error>.Continuation!
-    private var reachabilitySubject = CurrentValueSubject<Reachability?, NetworkMonitorError>(nil)
+    private var stream: AsyncThrowingStream<Reachability, Swift.Error>!
+    private var streamContinuation: AsyncThrowingStream<Reachability, Swift.Error>.Continuation!
+    private var reachabilitySubject = CurrentValueSubject<Reachability?, Error>(nil)
 
-    private var flags: Result<SCNetworkReachabilityFlags?, NetworkMonitorError> = .success(nil) {
+    private var flags: Swift.Result<SCNetworkReachabilityFlags?, Error> = .success(nil) {
         didSet {
             if flags != oldValue {
                 do {
                     let flags = try flags.get()
                     succeed(with: flags)
                 } catch {
-                    fail(with: error as! NetworkMonitorError)
+                    fail(with: error as! Error)
                 }
             }
         }
@@ -314,7 +317,7 @@ public final class NetworkMonitor {
         }
     }
 
-    private func fail(with error: NetworkMonitorError) {
+    private func fail(with error: Error) {
         streamContinuation.finish(throwing: error)
         reachabilitySubject.send(completion: .failure(error))
         Task {
@@ -341,5 +344,41 @@ public final class NetworkMonitor {
         SCNetworkReachabilitySetCallback(ref, nil, nil)
         SCNetworkReachabilityUnscheduleFromRunLoop(ref, CFRunLoopGetCurrent(), CFRunLoopMode.defaultMode.rawValue)
         complete()
+    }
+}
+
+public extension NetworkMonitor {
+
+    /// Errors that could cause a ``NetworkMonitor`` to fail
+    enum Error: LocalizedError, Equatable, Hashable, Sendable {
+
+        // MARK: - Cases
+
+        /// An error indicating the SystemConfiguration reachability monitor could not be initialized
+        case failedToCreate(Int32)
+
+        /// An error indicating the reachability callback could not be configured
+        case failedToStartCallback(Int32)
+
+        /// An error indicating the rachability observation could not be scheduled
+        case failedToSetRunLoop(Int32)
+
+        /// An error indicating the reachability couldn't be obtained from the system
+        case failedToGetFlags(Int32)
+
+        // MARK: - LocalizedError
+
+        public var errorDescription: String? {
+            switch self {
+            case let .failedToCreate(code):
+                return "Couldn't create system reachability reference with SCError code \(code)"
+            case let .failedToStartCallback(code):
+                return "Couldn't start system observability callback with SCError code \(code)"
+            case let .failedToSetRunLoop(code):
+                return "Couldn't schedule system observability callback with SCError code \(code)"
+            case let .failedToGetFlags(code):
+                return "Couldn't get system reachability flags with SCError code \(code)"
+            }
+        }
     }
 }
