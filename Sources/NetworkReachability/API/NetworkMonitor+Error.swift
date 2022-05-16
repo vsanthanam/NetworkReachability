@@ -28,7 +28,7 @@ import Foundation
 public extension NetworkMonitor {
 
     /// Errors that could cause a ``NetworkMonitor`` to fail
-    enum Error: LocalizedError, Equatable, Hashable, Sendable {
+    enum Error: LocalizedError, Equatable, Hashable, Sendable, CustomStringConvertible {
 
         // MARK: - Cases
 
@@ -70,6 +70,20 @@ public extension NetworkMonitor {
             case let .failedToGetFlags(code):
                 return "SCError Code \(code)"
             }
+        }
+
+        public var recoverySuggestion: String? {
+            "There is not a lot you can do with this error at runtime, but it can help you with debugging"
+        }
+
+        public var helpAnchor: String? {
+            "If you think error was caused by a bug in the library, create an issue on GitHub and include this information."
+        }
+
+        // MARK: - CustomStringConvertible
+
+        public var description: String {
+            [errorDescription!, " ", failureReason!].joined()
         }
     }
 }
