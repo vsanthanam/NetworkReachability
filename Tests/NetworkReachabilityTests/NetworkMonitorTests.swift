@@ -104,9 +104,9 @@ final class NetworkMonitorTests: XCTestCase {
     }
 
     func test_hostClosure() {
-        let expectation = expectation(description: "apple.com")
+        let expectation = expectation(description: "pass")
         do {
-            _ = try NetworkMonitor() { _, result in
+            _ = try NetworkMonitor(host: "apple.com") { _, result in
                 do {
                     let reachability = try result.get()
                     if reachability.isReachable {
@@ -122,4 +122,144 @@ final class NetworkMonitorTests: XCTestCase {
         }
     }
 
+    func test_standardDelegate() {
+        let expectation = expectation(description: "pass")
+
+        final class Delegate: NetworkMonitorDelegate {
+            init(_ expectation: XCTestExpectation) {
+                self.expectation = expectation
+            }
+
+            let expectation: XCTestExpectation
+            func networkMonitor(_ monitor: NetworkMonitor, didUpdateReachability reachability: Reachability) {
+                expectation.fulfill()
+            }
+
+            func networkMonitor(_ monitor: NetworkMonitor, didFailWithError error: Error) {
+                XCTFail()
+            }
+        }
+
+        let delegate = Delegate(expectation)
+
+        do {
+            _ = try NetworkMonitor(delegate: delegate)
+            waitForExpectations(timeout: 5)
+        } catch {
+            XCTFail()
+        }
+    }
+
+    func test_hostDelegate() {
+
+        final class Delegate: NetworkMonitorDelegate {
+            init(_ expectation: XCTestExpectation) {
+                self.expectation = expectation
+            }
+
+            let expectation: XCTestExpectation
+            func networkMonitor(_ monitor: NetworkMonitor, didUpdateReachability reachability: Reachability) {
+                expectation.fulfill()
+            }
+
+            func networkMonitor(_ monitor: NetworkMonitor, didFailWithError error: Error) {
+                XCTFail()
+            }
+        }
+
+        let expectation = expectation(description: "pass")
+        let delegate = Delegate(expectation)
+
+        do {
+            _ = try NetworkMonitor(host: "apple.com",
+                                   delegate: delegate)
+            waitForExpectations(timeout: 5)
+        } catch {
+            XCTFail()
+        }
+    }
+
+    func test_standardNotification() {
+        class Observer {
+
+            init(_ expectation: XCTestExpectation) {
+                self.expectation = expectation
+                observe()
+            }
+
+            func observe() {
+                NotificationCenter.default.addObserver(self, selector: #selector(fulfill(_:)), name: .reachabilityChanged, object: nil)
+            }
+
+            @objc
+            func fulfill(_ notification: Notification) {
+                guard let monitor = notification.object as? NetworkMonitor,
+                      let reachable = try? monitor.currentReachability.isReachable,
+                      reachable else {
+                    XCTFail()
+                    return
+                }
+                expectation.fulfill()
+            }
+
+            let expectation: XCTestExpectation
+
+            deinit {
+                NotificationCenter.default.removeObserver(self)
+            }
+        }
+
+        let expectation = expectation(description: "pass")
+        let observer = Observer(expectation)
+
+        do {
+            _ = try NetworkMonitor()
+            waitForExpectations(timeout: 5)
+            print(observer)
+        } catch {
+            XCTFail()
+        }
+    }
+
+    func test_hostNotification() {
+        class Observer {
+
+            init(_ expectation: XCTestExpectation) {
+                self.expectation = expectation
+                observe()
+            }
+
+            func observe() {
+                NotificationCenter.default.addObserver(self, selector: #selector(fulfill(_:)), name: .reachabilityChanged, object: nil)
+            }
+
+            @objc
+            func fulfill(_ notification: Notification) {
+                guard let monitor = notification.object as? NetworkMonitor,
+                      let reachable = try? monitor.currentReachability.isReachable,
+                      reachable else {
+                    XCTFail()
+                    return
+                }
+                expectation.fulfill()
+            }
+
+            let expectation: XCTestExpectation
+
+            deinit {
+                NotificationCenter.default.removeObserver(self)
+            }
+        }
+
+        let expectation = expectation(description: "pass")
+        let observer = Observer(expectation)
+
+        do {
+            _ = try NetworkMonitor(host: "apple.com")
+            waitForExpectations(timeout: 5)
+            print(observer)
+        } catch {
+            XCTFail()
+        }
+    }
 }

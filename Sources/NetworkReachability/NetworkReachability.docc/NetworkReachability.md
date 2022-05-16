@@ -117,13 +117,13 @@ final class MyObject: NetworkMonitorDelegate {
         monitor = nil
     }
     
-    func monitor(_ monitor: NetworkMonitor, didUpdateReachability reachability: Reachability) {
+    func networkMonitor(_ monitor: NetworkMonitor, didUpdateReachability reachability: Reachability) {
         switch reachability {
             // do something
         }
     }
     
-    func monitor(_ monitor: NetworkMonitor, didFailWithError error: Error) {
+    func networkMonitor(_ monitor: NetworkMonitor, didFailWithError error: Error) {
         // handle error
     }
 }

@@ -33,12 +33,12 @@ public protocol NetworkMonitorDelegate: AnyObject {
     ///   - monitor: The network monitor who's eachability changed
     ///   - reachability: The new reachability
     @MainActor
-    func monitor(_ monitor: NetworkMonitor, didUpdateReachability reachability: Reachability)
+    func networkMonitor(_ monitor: NetworkMonitor, didUpdateReachability reachability: Reachability)
 
     /// Sent to the delegate when the network monitor failed with an error
     /// - Parameters:
     ///   - monitor: The network monitor that failed
     ///   - error: The error that caused the monitor to fail
     @MainActor
-    func monitor(_ monitor: NetworkMonitor, didFailWithError error: Error)
+    func networkMonitor(_ monitor: NetworkMonitor, didFailWithError error: Error)
 }
