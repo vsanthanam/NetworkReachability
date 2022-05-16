@@ -1,0 +1,75 @@
+@Tutorial(time: 5) {
+    @Intro(title: "Observing Reachability Updates") {
+        This toturial will cover several different ways you can use `NetworkReachability` to observe the changes in network reachability over your application's lifecycle.
+    }
+    @Section(title: "Structured Concurrency") {
+        @ContentAndMedia {
+            This section will teach you how to use observe changes in network reachability using Structured Concurrency
+        }
+        @Steps {
+            @Step {
+                Create a class that will house your `NetworkMonitor` instance.
+                @Code(name: "MyObject.swift", file: "MyObject.swift")
+            }
+            @Step {
+                Create a `Task` instance variable to hold a reference to your reachability process.
+                @Code(name: "MyObject.swift", file: "Concurrency1.swift")
+            }
+            @Step {
+                Create a function which returns a `Task`. That function should start by creating a `NetworkMonitor`.
+                @Code(name: "MyObject.swift", file: "Concurrency2.swift")
+            }
+            @Step {
+                Asynchronously iterate over the monitor's `.reachability` property.
+                @Code(name: "MyObject.swift", file: "Concurrency3.swift")
+            }
+            @Step {
+                Handle new reachability updates in the loop.
+                @Code(name: "MyObject.swift", file: "Concurrency4.swift")
+            }
+            @Step {
+                Make sure to add code to handle any potential errors.
+                @Code(name: "MyObject.swift", file: "Concurrency5.swift")
+            }
+            @Step {
+                Create a method that starts the task to begin observing updates
+                @Code(name: "MyObject.swift", file: "Concurrency6.swift")
+            }
+            @Step {
+                Create a method that cancels the task and removes it from memory to stop observing updates
+                @Code(name: "MyObject.swift", file: "Concurrency7.swift")
+            }
+        }
+    }
+    @Section(title: "Delegation") {
+        @ContentAndMedia {
+            This section will teach you how to use observe changes in network reachability using Delegation.
+        }
+        @Steps {
+            @Step {
+                Create a class that will house your `NetworkMonitor` instance.
+                @Code(name: "MyObject.swift", file: "MyObject.swift")
+            }
+            @Step {
+                Make your class conform to `NetworkMonitorDelegate`
+                @Code(name: "MyObject.swift", file: "Delegation1.swift")
+            }
+            @Step {
+                Add code to handle reachability updates and errors
+                @Code(name: "MyObject.swift", file: "Delegation2.swift")
+            }
+            @Step {
+                Add an instance variable for the `NetworkMonitor`
+                @Code(name: "MyObject.swift", file: "Delegation3.swift")
+            }
+            @Step {
+                Add a method to initialize the monitor with a delegate. Observation begins immediately.
+                @Code(name: "MyObject.swift", file: "Delegation4.swift")
+            }
+            @Step {
+                Add a method to remove the monitor from memory.
+                @Code(name: "MyClass.swift", file: "Delegation5.swift")
+            }
+        }
+    }
+}

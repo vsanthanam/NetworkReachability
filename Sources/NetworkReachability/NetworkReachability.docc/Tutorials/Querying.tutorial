@@ -1,0 +1,32 @@
+@Tutorial(time: 15) {
+    @Intro(title: "Querying Reachability Status") {
+        This tutorial will tech you how to use NetworkReachability.
+    }
+    @Section(title: "Querying Synchronously") {
+        @ContentAndMedia {
+            This section will teach you how to use NetworkReachability with Structured Concurrency
+        }
+        @Steps {
+            @Step {
+                Create a class that will house your `NetworkMonitor` instance.
+                @Code(name: "MyObject.swift", file: "MyObject.swift")
+            }
+            @Step {
+                Create a `NetworkMonitor` instance
+                @Code(name: "MyObject.swift", file: "Synchronous1.swift")
+            }
+            @Step {
+                Retrieve the current reachability from the monitor
+                @Code(name: "MyObject.swift", file: "Synchronous2.swift")
+            }
+            @Step {
+                Add code to handle the current reachability
+                @Code(name: "MyObject.swift", file: "Synchronous3.swift")
+            }
+            @Step {
+                Add code to handle errors
+                @Code(name: "MyObject.swift", file: "Synchronous4.swift")
+            }
+        }
+    }
+}

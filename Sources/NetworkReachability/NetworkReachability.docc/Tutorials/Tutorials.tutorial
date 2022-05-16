@@ -1,0 +1,9 @@
+@Tutorials(name: "Network Reachability") {
+    @Intro(title: "Tutorials") {
+        Learn how to use NetworkReachability
+    }
+    @Chapter(name: "Reachability Basics") {
+        @TutorialReference(tutorial: "doc:Querying")
+        @TutorialReference(tutorial: "doc:BasicObserving")
+    }
+}
