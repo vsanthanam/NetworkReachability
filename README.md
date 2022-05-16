@@ -7,7 +7,6 @@
   <img src="https://img.shields.io/github/license/vsanthanam/NetworkReachability" />
   <img src="https://img.shields.io/github/v/release/vsanthanam/NetworkReachability" />
   <img src="https://img.shields.io/github/workflow/status/vsanthanam/NetworkReachability/Swift" />
-  <img src="https://img.shields.io/badge/Xcode-13.3-blue" />
   <img src="https://img.shields.io/badge/Swift-5.6-critical" />
   <img src="https://img.shields.io/badge/Platforms-iOS%20%7C%20macOS%20%7C%20tvOS%20%7C%20watchOS-inactive" />
 </p>
