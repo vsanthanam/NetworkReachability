@@ -116,7 +116,7 @@ public final class NetworkMonitor {
     public typealias Result = Swift.Result<Reachability, Error>
 
     /// The closure type used to observe reachability updates
-    public typealias UpdateHandler = @MainActor (NetworkMonitor, NetworkMonitor.Result) -> Void
+    public typealias UpdateHandler = @MainActor(NetworkMonitor, NetworkMonitor.Result) -> Void
 
     /// The closure used to observe reachability updates
     ///
@@ -191,7 +191,6 @@ public final class NetworkMonitor {
     /// ```
     public var reachabilityPublisher: AnyPublisher<Reachability, Error> {
         reachabilitySubject
-            .prepend(try? currentReachability)
             .compactMap { $0 }
             .removeDuplicates()
             .eraseToAnyPublisher()
@@ -204,6 +203,7 @@ public final class NetworkMonitor {
                  delegate: NetworkMonitorDelegate?) {
         self.ref = ref
         self.updateHandler = updateHandler
+        self.delegate = delegate
         setUp()
     }
 
@@ -214,7 +214,7 @@ public final class NetworkMonitor {
 
     private var flags: Swift.Result<SCNetworkReachabilityFlags?, Error> = .success(nil) {
         didSet {
-            if flags != oldValue {
+            if flags.map(\.?.reachability) != oldValue.map(\.?.reachability) {
                 do {
                     let flags = try flags.get()
                     succeed(with: flags)
@@ -283,7 +283,7 @@ public final class NetworkMonitor {
         reachabilitySubject.send(reachability)
         Task {
             await postNotification()
-            await delegate?.monitor(self, didUpdateReachability: reachability)
+            await delegate?.networkMonitor(self, didUpdateReachability: reachability)
             await updateHandler?(self, .success(reachability))
         }
     }
@@ -294,7 +294,7 @@ public final class NetworkMonitor {
         Task {
             await postNotification()
             await updateHandler?(self, .failure(error))
-            await delegate?.monitor(self, didFailWithError: error)
+            await delegate?.networkMonitor(self, didFailWithError: error)
         }
     }
 
