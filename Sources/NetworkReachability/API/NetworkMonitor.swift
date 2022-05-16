@@ -116,7 +116,7 @@ public final class NetworkMonitor {
     public typealias Result = Swift.Result<Reachability, Error>
 
     /// The closure type used to observe reachability updates
-    public typealias UpdateHandler = (NetworkMonitor, NetworkMonitor.Result) -> Void
+    public typealias UpdateHandler = @MainActor (NetworkMonitor, NetworkMonitor.Result) -> Void
 
     /// The closure used to observe reachability updates
     ///
@@ -282,11 +282,9 @@ public final class NetworkMonitor {
         streamContinuation.yield(reachability)
         reachabilitySubject.send(reachability)
         Task {
-            await MainActor.run {
-                postNotification()
-                delegate?.monitor(self, didUpdateReachability: reachability)
-                updateHandler?(self, .success(reachability))
-            }
+            await postNotification()
+            await delegate?.monitor(self, didUpdateReachability: reachability)
+            await updateHandler?(self, .success(reachability))
         }
     }
 
@@ -294,11 +292,9 @@ public final class NetworkMonitor {
         streamContinuation.finish(throwing: error)
         reachabilitySubject.send(completion: .failure(error))
         Task {
-            await MainActor.run {
-                postNotification()
-                delegate?.monitor(self, didFailWithError: error)
-                updateHandler?(self, .failure(error))
-            }
+            await postNotification()
+            await updateHandler?(self, .failure(error))
+            await delegate?.monitor(self, didFailWithError: error)
         }
     }
 
@@ -307,6 +303,7 @@ public final class NetworkMonitor {
         reachabilitySubject.send(completion: .finished)
     }
 
+    @MainActor
     private func postNotification() {
         NotificationCenter.default.post(name: .reachabilityChanged, object: self)
     }
