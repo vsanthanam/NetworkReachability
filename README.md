@@ -1,14 +1,20 @@
 # NetworkReachability
 
 <p align="center">
-  <img width="330" height="190" src="Images/Card.svg">
-  <br />
-  <br />
-  <img src="https://img.shields.io/github/license/vsanthanam/NetworkReachability" />
-  <img src="https://img.shields.io/github/v/release/vsanthanam/NetworkReachability" />
-  <img src="https://img.shields.io/github/workflow/status/vsanthanam/NetworkReachability/Swift" />
-  <img src="https://img.shields.io/badge/Swift-5.6-critical" />
-  <img src="https://img.shields.io/badge/Platforms-iOS%20%7C%20macOS%20%7C%20tvOS%20%7C%20watchOS-inactive" />
+    <img width="330" height="190" src="Images/Card.svg">
+    <br />
+    <br />
+    <a href="https://github.com/vsanthanam/NetworkReachability/blob/main/LICENSE">
+        <img src="https://img.shields.io/github/license/vsanthanam/NetworkReachability" />
+    </a>
+    <a href="https://github.com/vsanthanam/NetworkReachability/releases">
+        <img src="https://img.shields.io/github/v/release/vsanthanam/NetworkReachability" />
+    </a>
+    <a href="https://github.com/vsanthanam/NetworkReachability/actions/workflows/swift.yml">
+        <img src="https://img.shields.io/github/workflow/status/vsanthanam/NetworkReachability/Swift" />
+    </a>
+    <img src="https://img.shields.io/badge/Swift-5.6-critical" />
+    <img src="https://img.shields.io/badge/Platforms-iOS%20%7C%20macOS%20%7C%20tvOS%20%7C%20watchOS-inactive" />
 </p>
 
 NetworkReachability is a replacement for Apple's [SystemConfiguration](https://developer.apple.com/documentation/systemconfiguration) [Network Reachability APIs](https://developer.apple.com/documentation/systemconfiguration/scnetworkreachability?language=swift). Because these APIs were originally written in C, they are old and cumbersome to use from Swift. NetworkReachability wraps these APIs in Swift and provides a modern interface for the most common use cases.
