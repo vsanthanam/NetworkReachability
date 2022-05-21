@@ -23,7 +23,13 @@ let package = Package(
     targets: [
         .target(
             name: "NetworkReachability",
-            dependencies: []
+            dependencies: [],
+            cxxSettings: [
+                .unsafeFlags([
+                    "-Xfrontend -warn-concurrency",
+                    "-Xfrontend -enable-actor-data-race-checks"
+                ])
+            ]
         ),
         .testTarget(
             name: "NetworkReachabilityTests",
