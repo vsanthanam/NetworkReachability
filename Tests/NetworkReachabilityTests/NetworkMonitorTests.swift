@@ -51,6 +51,22 @@ final class NetworkMonitorTests: XCTestCase {
         }
     }
 
+    func test_hostSynchronous_fails() {
+        do {
+            _ = try NetworkMonitor(host: "")
+            XCTFail()
+        } catch {
+            guard let error = error as? NetworkMonitor.Error else {
+                XCTFail()
+                return
+            }
+            guard case .failedToCreate = error else {
+                XCTFail()
+                return
+            }
+        }
+    }
+
     func test_standardConcurrency() {
         let expectation = expectation(description: "pass")
 
@@ -84,6 +100,24 @@ final class NetworkMonitorTests: XCTestCase {
             }
         }
         waitForExpectations(timeout: 5, handler: nil)
+    }
+
+    func test_hostConcurrency_fail() async {
+        do {
+            for try await _ in NetworkMonitor.reachability(forHost: "") {
+                XCTFail()
+            }
+
+        } catch {
+            guard let error = error as? NetworkMonitor.Error else {
+                XCTFail()
+                return
+            }
+            guard case .failedToCreate = error else {
+                XCTFail()
+                return
+            }
+        }
     }
 
     func test_standardClosure() {
@@ -124,6 +158,24 @@ final class NetworkMonitorTests: XCTestCase {
         }
     }
 
+    func test_hostClosure_fail() {
+        do {
+            _ = try NetworkMonitor(host: "") { _, result in
+                XCTFail()
+            }
+            XCTFail()
+        } catch {
+            guard let error = error as? NetworkMonitor.Error else {
+                XCTFail()
+                return
+            }
+            guard case .failedToCreate = error else {
+                XCTFail()
+                return
+            }
+        }
+    }
+
     func test_standardPublisher() {
         let expectation = expectation(description: "pass")
         cancellable = NetworkMonitor
@@ -148,6 +200,33 @@ final class NetworkMonitorTests: XCTestCase {
             .sink { isReachable in
                 XCTAssertTrue(isReachable)
                 expectation.fulfill()
+            }
+        waitForExpectations(timeout: 5)
+    }
+
+    func test_hostPublisher_fail() {
+        let expectation = expectation(description: "pass")
+        cancellable = NetworkMonitor
+            .reachabilityPublisher(forHost: "")
+            .map(\.isReachable)
+            .removeDuplicates()
+            .sink { result in
+                expectation.fulfill()
+                switch result {
+                case let .failure(error):
+                    guard let error = error as? NetworkMonitor.Error else {
+                        XCTFail()
+                        return
+                    }
+                    guard case .failedToCreate = error else {
+                        XCTFail()
+                        return
+                    }
+                case .finished:
+                    XCTFail()
+                }
+            } receiveValue: { _ in
+                XCTFail()
             }
         waitForExpectations(timeout: 5)
     }
@@ -206,6 +285,37 @@ final class NetworkMonitorTests: XCTestCase {
             waitForExpectations(timeout: 5)
         } catch {
             XCTFail()
+        }
+    }
+
+    func test_hostDelegate_fail() {
+
+        final class Delegate: NetworkMonitorDelegate {
+            init() {}
+            func networkMonitor(_ monitor: NetworkMonitor, didUpdateReachability reachability: Reachability) {
+                XCTFail()
+            }
+
+            func networkMonitor(_ monitor: NetworkMonitor, didFailWithError error: Error) {
+                XCTFail()
+            }
+        }
+
+        let delegate = Delegate()
+
+        do {
+            _ = try NetworkMonitor(host: "",
+                                   delegate: delegate)
+            XCTFail()
+        } catch {
+            guard let error = error as? NetworkMonitor.Error else {
+                XCTFail()
+                return
+            }
+            guard case .failedToCreate = error else {
+                XCTFail()
+                return
+            }
         }
     }
 
@@ -290,6 +400,44 @@ final class NetworkMonitorTests: XCTestCase {
             print(observer)
         } catch {
             XCTFail()
+        }
+    }
+
+    func test_hostNotification_fail() {
+        final class Observer {
+
+            init() {
+                observe()
+            }
+
+            func observe() {
+                NotificationCenter.default.addObserver(self, selector: #selector(fulfill(_:)), name: .reachabilityChanged, object: nil)
+            }
+
+            @objc
+            func fulfill(_ notification: Notification) {
+                XCTFail()
+            }
+
+            deinit {
+                NotificationCenter.default.removeObserver(self)
+            }
+        }
+
+        _ = Observer()
+
+        do {
+            _ = try NetworkMonitor(host: "")
+            XCTFail()
+        } catch {
+            guard let error = error as? NetworkMonitor.Error else {
+                XCTFail()
+                return
+            }
+            guard case .failedToCreate = error else {
+                XCTFail()
+                return
+            }
         }
     }
 

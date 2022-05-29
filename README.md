@@ -27,8 +27,6 @@ NetworkReachability supports synchronous reachability queries, as well as consta
 * [Swift Structured Concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html)
 * [Combine](https://developer.apple.com/documentation/combine)
 
-Large parts of the library's design are inspired by [this project](https://github.com/ashleymills/Reachability.swift) by [Ashley Mills](https://github.com/ashleymills), which was written before Swift 5.5 and the introduction of structured concurrency.
-
 ## Installation
 
 NetworkReachability is currently distributed exclusively through the [Swift Package Manager](https://www.swift.org/package-manager/). 
