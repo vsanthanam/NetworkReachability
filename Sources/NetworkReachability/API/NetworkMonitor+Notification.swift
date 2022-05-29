@@ -27,7 +27,7 @@ import Foundation
 
 public extension NetworkMonitor {
 
-    /// A notification posted by a ``NetworkMonitor`` when its eachability changes or fails.
+    /// A notification posted by a ``NetworkMonitor`` when its reachability changes or fails.
     static let reachabilityChangedNotificationName = Notification.Name("reachabilityChanged")
 
 }
