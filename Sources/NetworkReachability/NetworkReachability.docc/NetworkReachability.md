@@ -13,7 +13,9 @@ NetworkReachability supports with the following Apple platform releases:
 
 ## Usage
 
-Basic usage of NetworkReachability is the same regardless of your observability mechanism. Initialize an instance of ``NetworkMonitor`` and retain it in memory. From there, you can observe changes using one of the mechanisms described below.
+To determine the current reachability status. Initialize an instance of ``NetworkMonitor`` and access `reachability` property. You can also pass in an optional delegate or update handler to recieve reachability status updates on the main thread. ``NetworkMonitor`` instances also fire notifications through `NotificationCenter.default`. See the examples these patterns and more below.
+
+## Examples
 
 ### Synchronously
 
@@ -25,7 +27,7 @@ final class MyObject {
     func checkReachability() {
         do {
             let monitor = try NetworkMonitor()
-            let reachability = try monitor.currentReachability
+            let reachability = try monitor.reachability
             switch reachability {
                 // do something
             }
@@ -58,7 +60,7 @@ final class MyObject {
         Task {
             do {
                 let monitor = try NetworkMonitor()
-                for try await reachability in monitor.reachability {
+                for try await reachability in NetworkMonitor.reachability {
                     switch reachability {
                         // do something
                     }
@@ -137,12 +139,10 @@ import NetworkReachability
 
 final class MyObject {
 
-    var monitor: NetworkMonitor?
     var cancellable: AnyCancellable?
     
     func startObserving() throws {
-        monitor = try NetworkMonitor()
-        cancellable = monitor?.reachabilityPublisher
+        cancellable = NetworkMonitor.reachabilityPublisher
             .sink { completion in
                     // handle completion
                 } receiveValue: { reachability in 
@@ -153,9 +153,8 @@ final class MyObject {
     }
     
     func stopObserving() {
-        cancellable?.stop()
+        cancellable?.cancel()
         cancellable = nil
-        monitor = nil
     }
 }
 ```
@@ -183,7 +182,7 @@ final class MyObject {
     func handleReachability(_ notification: Notification) {
         guard let monitor = notification.object as? NetworkMonitor else { return }
         do {
-            let reachability = try monitor.currentReachability
+            let reachability = try monitor.reachability
             switch reachability {
                 // do something
             }
