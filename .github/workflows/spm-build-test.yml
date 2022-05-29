@@ -1,4 +1,4 @@
-name: Swift
+name: spm-build-test
 
 on:
   push:
