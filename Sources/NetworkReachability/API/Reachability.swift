@@ -59,7 +59,7 @@ public enum Reachability: Equatable, Hashable, Sendable, CustomStringConvertible
     public var description: String {
         switch self {
         case .unknown:
-            return "Unknown Status"
+            return "Unknown Reachability Status"
         case .unavailable:
             return "Network Offline"
         case .wwan:

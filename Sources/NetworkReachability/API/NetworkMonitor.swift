@@ -32,13 +32,13 @@ import SystemConfiguration
 /// Create an instance of this object and retain it in memory.
 ///
 /// You can observe reachability changes in several ways:
-/// - Synchronously, using the ``currentReachability`` property.
+/// - Synchronously, using the ``reachability-swift.property`` instance variable
 /// - Using delegation via ``NetworkMonitorDelegate``.
-/// - Using structured concurrency via the ``reachability`` property.
-/// - Using [Combine](https://developer.apple.com/documentation/combine), via the ``reachabilityPublisher`` property.
-/// - Using a provided closure via the ``updateHandler-swift.property`` property.
+/// - Using [structured concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html) via the ``reachability-swift.type.property`` static variable.
+/// - Using [Combine](https://developer.apple.com/documentation/combine), via the ``reachabilityPublisher`` static variable.
+/// - Using a provided closure via the ``updateHandler-swift.property`` instance variable.
 /// - Using notification observers on [`NotificationCenter.default`](https://developer.apple.com/documentation/foundation/notificationcenter).
-public final class NetworkMonitor: Sendable {
+public final class NetworkMonitor {
 
     // MARK: - Initializers
 
@@ -104,7 +104,8 @@ public final class NetworkMonitor: Sendable {
     ///   - host: The host who's reachability you wish to monitor
     ///   - delegate: The delegate object used to observe reachability updates
     /// - Throws: An error of type ``Error``
-    public convenience init(host: String, delegate: NetworkMonitorDelegate) throws {
+    public convenience init(host: String,
+                            delegate: NetworkMonitorDelegate) throws {
         self.init(ref: try .forHost(host),
                   updateHandler: nil,
                   delegate: delegate)
@@ -140,24 +141,7 @@ public final class NetworkMonitor: Sendable {
     /// The delegate object used to observe reachability updates
     public weak var delegate: NetworkMonitorDelegate?
 
-    /// An [`AsyncSequence`](https://developer.apple.com/documentation/swift/asyncsequence) of reachability updates
-    ///
-    /// Use [structured concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html) to iterate over reachability updates
-    ///
-    /// ```swift
-    /// do {
-    ///     for try await reachability in monitor.reachability {
-    ///         // Do something with `reachability`
-    ///     }
-    /// } catch {
-    ///     // Handle error
-    /// }
-    /// ```
-    public var reachability: AsyncThrowingStream<Reachability, Swift.Error> {
-        stream
-    }
-
-    /// The current reachability updates
+    /// The current reachability status
     ///
     /// Use this property to retrieve the current reachability reachability in a synchronous context:
     ///
@@ -170,47 +154,42 @@ public final class NetworkMonitor: Sendable {
     /// }
     /// ```
     /// - Throws: An error of type ``Error``
-    public var currentReachability: Reachability {
+    public var reachability: Reachability {
         get throws {
             refreshFlags()
             return try flags.get()?.reachability ?? .unavailable
         }
     }
 
-    /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of reachability updates
-    ///
-    /// Use this property to observe reachability updates with [Combine](https://developer.apple.com/documentation/combine).
-    ///
-    /// ```swift
-    /// let cancellable = monitor.reachabilityPublisher
-    ///     .map(\.isReachable)
-    ///     .replaceError(with: false)
-    ///     .sink { isReachable in
-    ///         // Do something with `isReachable`
-    ///     }
-    /// ```
-    public var reachabilityPublisher: AnyPublisher<Reachability, Error> {
-        reachabilitySubject
-            .compactMap { $0 }
-            .removeDuplicates()
-            .eraseToAnyPublisher()
-    }
-
     // MARK: - Private
 
     private init(ref: SCNetworkReachability,
                  updateHandler: UpdateHandler?,
-                 delegate: NetworkMonitorDelegate?) {
+                 delegate: NetworkMonitorDelegate?,
+                 continuation: ((Result) -> Void)? = nil) {
         self.ref = ref
         self.updateHandler = updateHandler
         self.delegate = delegate
+        self.continuation = continuation
         setUp()
     }
 
+    convenience init(continuation: @escaping (Result) -> Void) throws {
+        self.init(ref: try .general,
+                  updateHandler: nil,
+                  delegate: nil,
+                  continuation: continuation)
+    }
+
+    convenience init(host: String, continuation: @escaping (Result) -> Void) throws {
+        self.init(ref: try .forHost(host),
+                  updateHandler: nil,
+                  delegate: nil,
+                  continuation: continuation)
+    }
+
     private var ref: SCNetworkReachability
-    private var stream: AsyncThrowingStream<Reachability, Swift.Error>!
-    private var streamContinuation: AsyncThrowingStream<Reachability, Swift.Error>.Continuation!
-    private var reachabilitySubject = CurrentValueSubject<Reachability?, Error>(nil)
+    private var continuation: ((Result) -> Void)?
 
     private var flags: Swift.Result<SCNetworkReachabilityFlags?, Error> = .success(nil) {
         didSet {
@@ -226,10 +205,6 @@ public final class NetworkMonitor: Sendable {
     }
 
     private func setUp() {
-        stream = .init(bufferingPolicy: .bufferingNewest(1)) { continuation in
-            self.streamContinuation = continuation
-        }
-
         let callback: SCNetworkReachabilityCallBack = { (reachability, flags, info) in
             guard let info = info else { return }
             let weakMonitor = Unmanaged<WeakReference<NetworkMonitor>>.fromOpaque(info).takeUnretainedValue()
@@ -279,28 +254,21 @@ public final class NetworkMonitor: Sendable {
 
     private func succeed(with flags: SCNetworkReachabilityFlags?) {
         let reachability = flags.map(\.reachability) ?? .unknown
-        streamContinuation.yield(reachability)
-        reachabilitySubject.send(reachability)
+        continuation?(.success(reachability))
         Task {
             await postNotification()
-            await delegate?.networkMonitor(self, didUpdateReachability: reachability)
+            await updateDelegate(reachability: reachability)
             await updateHandler?(self, .success(reachability))
         }
     }
 
     private func fail(with error: Error) {
-        streamContinuation.finish(throwing: error)
-        reachabilitySubject.send(completion: .failure(error))
+        continuation?(.failure(error))
         Task {
             await postNotification()
+            await failDelegate(error)
             await updateHandler?(self, .failure(error))
-            await delegate?.networkMonitor(self, didFailWithError: error)
         }
-    }
-
-    private func complete() {
-        streamContinuation.finish(throwing: nil)
-        reachabilitySubject.send(completion: .finished)
     }
 
     @MainActor
@@ -308,11 +276,20 @@ public final class NetworkMonitor: Sendable {
         NotificationCenter.default.post(name: .reachabilityChanged, object: self)
     }
 
+    @MainActor
+    private func updateDelegate(reachability: Reachability) {
+        delegate?.networkMonitor(self, didUpdateReachability: reachability)
+    }
+
+    @MainActor
+    private func failDelegate(_ error: Error) {
+        delegate?.networkMonitor(self, didFailWithError: error)
+    }
+
     // MARK: - Deinit
 
     deinit {
         SCNetworkReachabilitySetCallback(ref, nil, nil)
         SCNetworkReachabilityUnscheduleFromRunLoop(ref, CFRunLoopGetCurrent(), CFRunLoopMode.defaultMode.rawValue)
-        complete()
     }
 }

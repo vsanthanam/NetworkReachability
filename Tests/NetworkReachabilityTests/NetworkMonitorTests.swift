@@ -23,15 +23,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+import Combine
 @testable import NetworkReachability
 import XCTest
 
 final class NetworkMonitorTests: XCTestCase {
 
+    var cancellable: AnyCancellable?
+
     func test_standardSynchronous() {
         do {
             let monitor = try NetworkMonitor()
-            let reachability = try monitor.currentReachability
+            let reachability = try monitor.reachability
             XCTAssertTrue(reachability.isReachable)
         } catch {
             XCTFail()
@@ -41,7 +44,7 @@ final class NetworkMonitorTests: XCTestCase {
     func test_hostSynchronous() {
         do {
             let monitor = try NetworkMonitor(host: "apple.com")
-            let reachability = try monitor.currentReachability
+            let reachability = try monitor.reachability
             XCTAssertTrue(reachability.isReachable)
         } catch {
             XCTFail()
@@ -50,37 +53,37 @@ final class NetworkMonitorTests: XCTestCase {
 
     func test_standardConcurrency() {
         let expectation = expectation(description: "pass")
+
         Task {
             do {
-                let monitor = try NetworkMonitor()
-                for try await reachability in monitor.reachability {
+                for try await reachability in NetworkMonitor.reachability {
                     if reachability.isReachable {
                         expectation.fulfill()
                     }
                 }
+
             } catch {
                 XCTFail()
             }
         }
-
         waitForExpectations(timeout: 5, handler: nil)
     }
 
     func test_hostConcurrency() {
         let expectation = expectation(description: "pass")
+
         Task {
             do {
-                let monitor = try NetworkMonitor(host: "apple.com")
-                for try await reachability in monitor.reachability {
+                for try await reachability in NetworkMonitor.reachability(forHost: "apple.com") {
                     if reachability.isReachable {
                         expectation.fulfill()
                     }
                 }
+
             } catch {
                 XCTFail()
             }
         }
-
         waitForExpectations(timeout: 5, handler: nil)
     }
 
@@ -120,6 +123,34 @@ final class NetworkMonitorTests: XCTestCase {
         } catch {
             XCTFail()
         }
+    }
+
+    func test_standardPublisher() {
+        let expectation = expectation(description: "pass")
+        cancellable = NetworkMonitor
+            .reachabilityPublisher
+            .map(\.isReachable)
+            .replaceError(with: false)
+            .removeDuplicates()
+            .sink { isReachable in
+                XCTAssertTrue(isReachable)
+                expectation.fulfill()
+            }
+        waitForExpectations(timeout: 5)
+    }
+
+    func test_hostPublisher() {
+        let expectation = expectation(description: "pass")
+        cancellable = NetworkMonitor
+            .reachabilityPublisher(forHost: "apple.com")
+            .map(\.isReachable)
+            .replaceError(with: false)
+            .removeDuplicates()
+            .sink { isReachable in
+                XCTAssertTrue(isReachable)
+                expectation.fulfill()
+            }
+        waitForExpectations(timeout: 5)
     }
 
     func test_standardDelegate() {
@@ -194,7 +225,7 @@ final class NetworkMonitorTests: XCTestCase {
             @objc
             func fulfill(_ notification: Notification) {
                 guard let monitor = notification.object as? NetworkMonitor,
-                      let reachable = try? monitor.currentReachability.isReachable,
+                      let reachable = try? monitor.reachability.isReachable,
                       reachable else {
                     XCTFail()
                     return
@@ -236,7 +267,7 @@ final class NetworkMonitorTests: XCTestCase {
             @objc
             func fulfill(_ notification: Notification) {
                 guard let monitor = notification.object as? NetworkMonitor,
-                      let reachable = try? monitor.currentReachability.isReachable,
+                      let reachable = try? monitor.reachability.isReachable,
                       reachable else {
                     XCTFail()
                     return
@@ -261,5 +292,9 @@ final class NetworkMonitorTests: XCTestCase {
         } catch {
             XCTFail()
         }
+    }
+
+    deinit {
+        cancellable?.cancel()
     }
 }
