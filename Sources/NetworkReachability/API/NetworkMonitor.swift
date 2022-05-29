@@ -43,6 +43,9 @@ public final class NetworkMonitor {
     // MARK: - Initializers
 
     /// Create a network monitor
+    ///
+    /// - Note: A `NetworkMonitor` begins observing and publishing reachability updates immediately after initialization.
+    ///
     /// - Throws: An error of type ``Error``
     public convenience init() throws {
         self.init(ref: try .general,
@@ -53,7 +56,11 @@ public final class NetworkMonitor {
     /// Create a network monitor for a specific host
     ///
     /// Use this initializer to monitor reachability updates for a specific host
+    ///
     /// - Parameter host: The host who's reachability you wish to monitor
+    ///
+    /// - Note: A `NetworkMonitor` begins observing and publishing reachability updates immediately after initialization.
+    ///
     /// - Throws: An error of type ``Error``
     public convenience init(host: String) throws {
         self.init(ref: try .forHost(host),
@@ -64,7 +71,11 @@ public final class NetworkMonitor {
     /// Create a network monitor with a closure used to respond to reachability changes
     ///
     /// Use this initializer to respond to reachability updates with a closure
+    ///
     /// - Parameter updateHandler: The closure used to observe reachability updates
+    ///
+    /// - Note: A `NetworkMonitor` begins observing and publishing reachability updates immediately after initialization.
+    ///
     /// - Throws: An error of type ``Error``
     public convenience init(updateHandler: @escaping UpdateHandler) throws {
         self.init(ref: try .general,
@@ -75,9 +86,13 @@ public final class NetworkMonitor {
     /// Create a network monitor for a specific host, with a closure used to respond to reachability changes
     ///
     /// Use this initializer to respond to reachability updates for a specific host with a closure
+    ///
     /// - Parameters:
     ///   - host: The host who's reachability you wish to monitor
     ///   - updateHandler: The closure used to observe reachability updates
+    ///
+    /// - Note: A `NetworkMonitor` begins observing and publishing reachability updates immediately after initialization.
+    ///
     /// - Throws: An error of type ``Error``
     public convenience init(host: String,
                             updateHandler: @escaping UpdateHandler) throws {
@@ -89,7 +104,11 @@ public final class NetworkMonitor {
     /// Create a network monitor with a delegate object used to respond to reachability changes
     ///
     /// Use this initializer to respond to reachability updates with an instance of an object that conforms to ``NetworkMonitorDelegate``
+    ///
     /// - Parameter delegate: The delegate object used to observe reachability updates
+    ///
+    /// - Note: A `NetworkMonitor` begins observing and publishing reachability updates immediately after initialization.
+    ///
     /// - Throws: An error of type ``Error``
     public convenience init(delegate: NetworkMonitorDelegate) throws {
         self.init(ref: try .general,
@@ -100,9 +119,13 @@ public final class NetworkMonitor {
     /// Create a network monitor for a specific host, with a delegate object used to respond to reachability changes
     ///
     /// Use this initializer to respond to reachability updates with an instance of an object that conforms to ``NetworkMonitorDelegate`
+    ///
     /// - Parameters:
     ///   - host: The host who's reachability you wish to monitor
     ///   - delegate: The delegate object used to observe reachability updates
+    ///
+    /// - Note: A `NetworkMonitor` begins observing and publishing reachability updates immediately after initialization.
+    ///
     /// - Throws: An error of type ``Error``
     public convenience init(host: String,
                             delegate: NetworkMonitorDelegate) throws {
@@ -159,6 +182,7 @@ public final class NetworkMonitor {
     ///     // Handle error
     /// }
     /// ```
+    ///
     /// - Throws: An error of type ``Error``
     public var reachability: Reachability {
         get throws {
