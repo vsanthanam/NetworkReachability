@@ -147,7 +147,7 @@ public final class NetworkMonitor {
     ///
     /// ```swift
     /// do {
-    ///     let reachability = try monitor.currentReachability
+    ///     let reachability = try monitor.reachability
     ///     // Do something with `reachability`
     /// } catch {
     ///     // Handle error
