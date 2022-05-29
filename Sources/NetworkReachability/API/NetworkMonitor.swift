@@ -136,9 +136,15 @@ public final class NetworkMonitor {
     ///     monitor.updateHandler = updateHandler
     /// }
     /// ```
+    ///
+    /// - Note: The closure only recieves status changes that occured after it was assigned. To recieve every status update, including the reachability status at the time the monitor was initialized, pass in the closure on initialization of the monitor.
     public var updateHandler: UpdateHandler?
 
     /// The delegate object used to observe reachability updates
+    ///
+    /// See ``NetworkMonitorDelegate`` for more information.
+    ///
+    /// - Note: The delegate only recieves status changes that occured after it was assigned. To recieve every status update, including the reachability status at the time the monitor was initialized, pass in the delegate on initialization of the monitor.
     public weak var delegate: NetworkMonitorDelegate?
 
     /// The current reachability status
@@ -147,7 +153,7 @@ public final class NetworkMonitor {
     ///
     /// ```swift
     /// do {
-    ///     let reachability = try monitor.currentReachability
+    ///     let reachability = try monitor.reachability
     ///     // Do something with `reachability`
     /// } catch {
     ///     // Handle error

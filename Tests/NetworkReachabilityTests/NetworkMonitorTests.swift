@@ -253,7 +253,7 @@ final class NetworkMonitorTests: XCTestCase {
     }
 
     func test_hostNotification() {
-        class Observer {
+        final class Observer {
 
             init(_ expectation: XCTestExpectation) {
                 self.expectation = expectation

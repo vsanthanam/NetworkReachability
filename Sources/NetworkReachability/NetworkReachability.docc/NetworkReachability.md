@@ -13,7 +13,7 @@ NetworkReachability supports with the following Apple platform releases:
 
 ## Usage
 
-To determine the current reachability status. Initialize an instance of ``NetworkMonitor`` and access `reachability` property. You can also pass in an optional delegate or update handler to recieve reachability status updates on the main thread. ``NetworkMonitor`` instances also fire notifications through `NotificationCenter.default`. See the examples these patterns and more below.
+To determine the current reachability status. Initialize an instance of ``NetworkMonitor`` and access its `reachability` property. You can also pass in an optional delegate or update handler to recieve reachability status updates on the main thread. ``NetworkMonitor`` instances also fire notifications through `NotificationCenter.default`. See the examples these patterns as well as others below.
 
 ## Examples
 
@@ -41,6 +41,7 @@ final class MyObject {
 ### Asynchronously
 
 ```swift
+import Foundation
 import NetworkReachability
 
 final class MyObject {
@@ -59,7 +60,6 @@ final class MyObject {
     func observeReachability() -> Task<Void, Error> {
         Task {
             do {
-                let monitor = try NetworkMonitor()
                 for try await reachability in NetworkMonitor.reachability {
                     switch reachability {
                         // do something
@@ -162,12 +162,12 @@ final class MyObject {
 ### NotificationCenter
 
 ```swift
-import NetworkMonitor
+import Foundation
+import NetworkReachability
 
 final class MyObject {
 
     var monitor: NetworkMonitor?
-    var cancellable: AnyCancellable?
     
     func startObserving() throws {
         monitor = try NetworkMonitor(delegate: self)
@@ -176,6 +176,7 @@ final class MyObject {
     
     func stopObserving() {
         NotificationCenter.default.removeObserver(self, name: .reachabilityChanged)
+        monitor = nil
     }
     
     @objc

@@ -69,8 +69,10 @@ public extension NetworkMonitor {
 
         // MARK: - Publisher
 
+        /// The kind of values published by this publisher.
         public typealias Output = Reachability
 
+        /// The kind of errors this publisher might publish.
         public typealias Failure = Swift.Error
 
         public func receive<S>(subscriber: S) where S: Subscriber, Failure == S.Failure, Reachability == S.Input {

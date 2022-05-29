@@ -27,7 +27,7 @@ import Foundation
 
 public extension NetworkMonitor {
 
-    /// Errors that could cause a ``NetworkMonitor`` to fail
+    /// Errors that might cause a ``NetworkMonitor`` to fail
     enum Error: LocalizedError, Equatable, Hashable, Sendable, CustomStringConvertible {
 
         // MARK: - Cases
@@ -73,7 +73,7 @@ public extension NetworkMonitor {
         }
 
         public var recoverySuggestion: String? {
-            "There is not a lot you can do with this error at runtime, but it can help you with debugging"
+            "There is not a lot you can do with this error at runtime, but it can help you with debugging."
         }
 
         public var helpAnchor: String? {
@@ -83,7 +83,7 @@ public extension NetworkMonitor {
         // MARK: - CustomStringConvertible
 
         public var description: String {
-            [errorDescription!, " ", failureReason!].joined()
+            [errorDescription!, ": ", failureReason!].joined()
         }
     }
 }
