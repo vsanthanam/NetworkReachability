@@ -61,7 +61,6 @@ final class NetworkMonitorTests: XCTestCase {
                         expectation.fulfill()
                     }
                 }
-
             } catch {
                 XCTFail()
             }
