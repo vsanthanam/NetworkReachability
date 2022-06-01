@@ -25,6 +25,7 @@
 
 import Foundation
 
+@available(macOS 10.13, iOS 11, watchOS 4, tvOS 11, *)
 public extension NetworkMonitor {
 
     /// Errors that might cause a ``NetworkMonitor`` to fail

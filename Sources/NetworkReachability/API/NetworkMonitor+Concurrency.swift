@@ -25,6 +25,7 @@
 
 import Foundation
 
+@available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *)
 public extension NetworkMonitor {
 
     /// An [`AsyncSequence`](https://developer.apple.com/documentation/swift/asyncsequence) of reachability updates
@@ -40,7 +41,6 @@ public extension NetworkMonitor {
     ///     // Handle error
     /// }
     /// ```
-    @available(macOS 10.15, iOS 13, watchOS 7, tvOS 13, *)
     static var reachability: AsyncThrowingStream<Reachability, Swift.Error> {
         .init(bufferingPolicy: .bufferingNewest(1)) { continuation in
             do {
@@ -71,7 +71,6 @@ public extension NetworkMonitor {
     ///     // Handle error
     /// }
     /// ```
-    @available(macOS 10.15, iOS 13, watchOS 7, tvOS 13, *)
     static func reachability(forHost host: String) -> AsyncThrowingStream<Reachability, Swift.Error> {
         .init(bufferingPolicy: .bufferingNewest(1)) { continuation in
             do {

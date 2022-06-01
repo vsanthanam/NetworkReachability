@@ -26,6 +26,7 @@
 import Foundation
 
 /// The available network reachability status
+@available(macOS 10.13, iOS 11, watchOS 4, tvOS 11, *)
 public enum Reachability: Equatable, Hashable, Sendable, CustomStringConvertible {
 
     // MARK: - Cases
