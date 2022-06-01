@@ -13,8 +13,12 @@
     <a href="https://github.com/vsanthanam/NetworkReachability/actions/workflows/swift.yml">
         <img src="https://img.shields.io/github/workflow/status/vsanthanam/NetworkReachability/Swift" />
     </a>
-    <img src="https://img.shields.io/badge/Swift-5.6-critical" />
-    <img src="https://img.shields.io/badge/Platforms-iOS%20%7C%20macOS%20%7C%20tvOS%20%7C%20watchOS-inactive" />
+    <a href="https://swift.org">
+        <img src="https://img.shields.io/badge/swift-5.6-critical" />
+    </a>
+    <a href="https://developer.apple.com">
+        <img src="https://img.shields.io/badge/platform-iOS%2011%20%7C%20macOS%2012.13%20%7C%20tvOS%2011%20%7C%20watchOS%204-lightgrey" />
+    </a>
 </p>
 
 NetworkReachability is a replacement for Apple's [SystemConfiguration](https://developer.apple.com/documentation/systemconfiguration) [Network Reachability APIs](https://developer.apple.com/documentation/systemconfiguration/scnetworkreachability?language=swift). Because these APIs were originally written in C, they are old and cumbersome to use from Swift. NetworkReachability wraps these APIs in Swift and provides a modern interface for the most common use cases.

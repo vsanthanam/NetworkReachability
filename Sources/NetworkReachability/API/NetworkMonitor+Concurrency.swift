@@ -40,6 +40,7 @@ public extension NetworkMonitor {
     ///     // Handle error
     /// }
     /// ```
+    @available(macOS 10.15, iOS 13, watchOS 7, tvOS 13, *)
     static var reachability: AsyncThrowingStream<Reachability, Swift.Error> {
         .init(bufferingPolicy: .bufferingNewest(1)) { continuation in
             do {
@@ -70,6 +71,7 @@ public extension NetworkMonitor {
     ///     // Handle error
     /// }
     /// ```
+    @available(macOS 10.15, iOS 13, watchOS 7, tvOS 13, *)
     static func reachability(forHost host: String) -> AsyncThrowingStream<Reachability, Swift.Error> {
         .init(bufferingPolicy: .bufferingNewest(1)) { continuation in
             do {
