@@ -46,7 +46,7 @@ dependencies: [
 To add NetworkReachability as a dependency to an Xcode Project: 
 
 - Choose `File` → `Add Packages...`
-- Enter package URL `https://github.com/vsanthanam/NetworkReachability.git` and select your release and of choice.
+- Enter package URL `https://github.com/vsanthanam/NetworkReachability.git` and select your release of choice.
 
 Other distribution mechanisms like CocoaPods or Carthage may be added in the future.
 
