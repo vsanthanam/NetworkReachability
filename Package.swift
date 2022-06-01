@@ -6,10 +6,10 @@ import PackageDescription
 let package = Package(
     name: "NetworkReachability",
     platforms: [
-        .iOS(.v13),
-        .macOS(.v10_15),
-        .tvOS(.v13),
-        .watchOS(.v6)
+        .iOS(.v11),
+        .macOS(.v10_13),
+        .tvOS(.v11),
+        .watchOS(.v4)
     ],
     products: [
         .library(

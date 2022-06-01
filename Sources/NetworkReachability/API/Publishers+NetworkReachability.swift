@@ -26,6 +26,7 @@
 import Combine
 import Foundation
 
+@available(macOS 10.15, iOS 13, watchOS 7, tvOS 13, *)
 public extension Publishers {
 
     /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of reachability updates

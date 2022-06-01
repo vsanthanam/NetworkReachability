@@ -23,7 +23,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import Combine
+import Dispatch
 import Foundation
 import SystemConfiguration
 
@@ -118,7 +118,7 @@ public final class NetworkMonitor {
 
     /// Create a network monitor for a specific host, with a delegate object used to respond to reachability changes
     ///
-    /// Use this initializer to respond to reachability updates with an instance of an object that conforms to ``NetworkMonitorDelegate`
+    /// Use this initializer to respond to reachability updates with an instance of an object that conforms to ``NetworkMonitorDelegate``
     ///
     /// - Parameters:
     ///   - host: The host who's reachability you wish to monitor
@@ -140,7 +140,7 @@ public final class NetworkMonitor {
     public typealias Result = Swift.Result<Reachability, Error>
 
     /// The closure type used to observe reachability updates
-    public typealias UpdateHandler = @MainActor(NetworkMonitor, NetworkMonitor.Result) -> Void
+    public typealias UpdateHandler = (NetworkMonitor, NetworkMonitor.Result) -> Void
 
     /// The closure used to observe reachability updates
     ///
@@ -160,14 +160,16 @@ public final class NetworkMonitor {
     /// }
     /// ```
     ///
-    /// - Note: The closure only recieves status changes that occured after it was assigned. To recieve every status update, including the reachability status at the time the monitor was initialized, pass in the closure on initialization of the monitor.
+    /// - Tip: The closure only recieves status changes that occured after it was assigned. To recieve every status update, including the reachability status at the time the monitor was initialized, pass in the closure on initialization of the monitor.
+    ///
+    /// - Note: Instances of ``NetworkMonitor`` will always invoke this closure the main thread.
     public var updateHandler: UpdateHandler?
 
     /// The delegate object used to observe reachability updates
     ///
     /// See ``NetworkMonitorDelegate`` for more information.
     ///
-    /// - Note: The delegate only recieves status changes that occured after it was assigned. To recieve every status update, including the reachability status at the time the monitor was initialized, pass in the delegate on initialization of the monitor.
+    /// - Tip: The delegate only recieves status changes that occured after it was assigned. To recieve every status update, including the reachability status at the time the monitor was initialized, pass in the delegate on initialization of the monitor.
     public weak var delegate: NetworkMonitorDelegate?
 
     /// The current reachability status
@@ -285,34 +287,64 @@ public final class NetworkMonitor {
     private func succeed(with flags: SCNetworkReachabilityFlags?) {
         let reachability = flags.map(\.reachability) ?? .unknown
         continuation?(.success(reachability))
-        Task {
-            await postNotification()
-            await updateDelegate(reachability: reachability)
-            await updateHandler?(self, .success(reachability))
+        if #available(macOS 10.15, iOS 13, watchOS 7, tvOS 13, *) {
+            Task {
+                await postNotification()
+                await updateDelegate(reachability: reachability)
+                await MainActor.run { updateHandler?(self, .success(reachability)) }
+            }
+        } else {
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.unsafePostNotification()
+                self.unsafeUpdateDelegate(reachability: reachability)
+                self.updateHandler?(self, .success(reachability))
+            }
         }
     }
 
     private func fail(with error: Error) {
         continuation?(.failure(error))
-        Task {
-            await postNotification()
-            await failDelegate(error)
-            await updateHandler?(self, .failure(error))
+        if #available(macOS 10.15, iOS 13, watchOS 7, tvOS 13, *) {
+            Task {
+                await postNotification()
+                await failDelegate(error)
+                await MainActor.run { updateHandler?(self, .failure(error)) }
+            }
+        } else {
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.unsafePostNotification()
+                self.unsafeFailDelegate(error)
+                self.updateHandler?(self, .failure(error))
+            }
         }
     }
 
     @MainActor
     private func postNotification() {
+        unsafePostNotification()
+    }
+
+    private func unsafePostNotification() {
         NotificationCenter.default.post(name: .reachabilityChanged, object: self)
     }
 
     @MainActor
     private func updateDelegate(reachability: Reachability) {
+        unsafeUpdateDelegate(reachability: reachability)
+    }
+
+    private func unsafeUpdateDelegate(reachability: Reachability) {
         delegate?.networkMonitor(self, didUpdateReachability: reachability)
     }
 
     @MainActor
     private func failDelegate(_ error: Error) {
+        unsafeFailDelegate(error)
+    }
+
+    private func unsafeFailDelegate(_ error: Error) {
         delegate?.networkMonitor(self, didFailWithError: error)
     }
 
