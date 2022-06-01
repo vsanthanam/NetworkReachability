@@ -26,6 +26,7 @@
 import Foundation
 
 /// A protocol used to observe reachability changes from a ``NetworkMonitor``
+@available(macOS 10.13, iOS 11, watchOS 4, tvOS 11, *)
 public protocol NetworkMonitorDelegate: AnyObject {
 
     /// Sent to the delegate when the reachability changes

@@ -38,6 +38,7 @@ import SystemConfiguration
 /// - Using [Combine](https://developer.apple.com/documentation/combine), via the ``reachabilityPublisher`` static variable.
 /// - Using a provided closure via the ``updateHandler-swift.property`` instance variable.
 /// - Using notification observers on [`NotificationCenter.default`](https://developer.apple.com/documentation/foundation/notificationcenter).
+@available(macOS 10.13, iOS 11, watchOS 4, tvOS 11, *)
 public final class NetworkMonitor {
 
     // MARK: - Initializers
@@ -287,7 +288,7 @@ public final class NetworkMonitor {
     private func succeed(with flags: SCNetworkReachabilityFlags?) {
         let reachability = flags.map(\.reachability) ?? .unknown
         continuation?(.success(reachability))
-        if #available(macOS 10.15, iOS 13, watchOS 7, tvOS 13, *) {
+        if #available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *) {
             Task {
                 await postNotification()
                 await updateDelegate(reachability: reachability)
@@ -305,7 +306,7 @@ public final class NetworkMonitor {
 
     private func fail(with error: Error) {
         continuation?(.failure(error))
-        if #available(macOS 10.15, iOS 13, watchOS 7, tvOS 13, *) {
+        if #available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *) {
             Task {
                 await postNotification()
                 await failDelegate(error)

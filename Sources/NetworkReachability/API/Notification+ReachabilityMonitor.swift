@@ -25,6 +25,7 @@
 
 import Foundation
 
+@available(macOS 10.13, iOS 11, watchOS 4, tvOS 11, *)
 public extension Notification.Name {
 
     /// A notification posted by a ``NetworkMonitor`` when its reachability changes or fails.
