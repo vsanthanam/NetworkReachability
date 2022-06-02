@@ -30,15 +30,17 @@ public extension NetworkMonitor {
 
     /// An [`AsyncSequence`](https://developer.apple.com/documentation/swift/asyncsequence) of reachability updates
     ///
-    /// Use [structured concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html) to iterate over reachability updates
+    /// Use [Swift Concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html) to iterate over reachability updates in an asynchronous context.
     ///
     /// ```swift
-    /// do {
-    ///     for try await reachability in NetworkMonitor.reachability {
-    ///         // Do something with `reachability`
+    /// func observe() async throws {
+    ///     do {
+    ///         for try await reachability in NetworkMonitor.reachability {
+    ///             // Do something with `reachability`
+    ///         }
+    ///     } catch {
+    ///         // Handle error
     ///     }
-    /// } catch {
-    ///     // Handle error
     /// }
     /// ```
     static var reachability: AsyncThrowingStream<Reachability, Swift.Error> {
@@ -60,15 +62,17 @@ public extension NetworkMonitor {
 
     /// An [`AsyncSequence`](https://developer.apple.com/documentation/swift/asyncsequence) of reachability updates for a specific host
     ///
-    /// Use [structured concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html) to iterate over reachability updates
+    /// Use [Swift Concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html) to iterate over reachability updates in an asynchronous context.
     ///
     /// ```swift
-    /// do {
-    ///     for try await reachability in NetworkMonitor.reachability(forHost: "apple.com") {
-    ///         // Do something with `reachability`
+    /// func observe() async throws {
+    ///     do {
+    ///         for try await reachability in NetworkMonitor.reachability(forHost: "apple.com") {
+    ///             // Do something with `reachability`
+    ///         }
+    ///     } catch {
+    ///         // Handle error
     ///     }
-    /// } catch {
-    ///     // Handle error
     /// }
     /// ```
     static func reachability(forHost host: String) -> AsyncThrowingStream<Reachability, Swift.Error> {
