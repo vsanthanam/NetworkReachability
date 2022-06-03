@@ -23,122 +23,124 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import Combine
-import Foundation
+#if canImport(Combine)
+    import Combine
+    import Foundation
 
-@available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *)
-public extension NetworkMonitor {
+    @available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *)
+    public extension NetworkMonitor {
 
-    /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of reachability updates
-    ///
-    /// Use this property to observe reachability updates with [Combine](https://developer.apple.com/documentation/combine).
-    ///
-    /// ```swift
-    /// let cancellable = NetworkMonitor.reachabilityPublisher
-    ///     .map(\.isReachable)
-    ///     .removeDuplicates()
-    ///     .replaceError(with: false)
-    ///     .sink { isReachable in
-    ///         // Do something with `isReachable`
-    ///     }
-    /// ```
-    static var reachabilityPublisher: NetworkMonitor.Publisher {
-        .init()
-    }
-
-    /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of reachability updates for a specific host
-    ///
-    /// Use this property to observe reachability updates with [Combine](https://developer.apple.com/documentation/combine).
-    ///
-    /// ```swift
-    /// let cancellable = NetworkMonitor.reachabilityPublisher(forHost: "apple.com")
-    ///     .map(\.isReachable)
-    ///     .removeDuplicates()
-    ///     .replaceError(with: false)
-    ///     .sink { isReachable in
-    ///         // Do something with `isReachable`
-    ///     }
-    /// ```
-    static func reachabilityPublisher(forHost host: String) -> NetworkMonitor.Publisher {
-        .init(host: host)
-    }
-
-    /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) used to observe reachability updates for use with [Combine](https://developer.apple.com/documentation/combine).
-    ///
-    /// See ``reachabilityPublisher`` for usage.
-    struct Publisher: Combine.Publisher {
-
-        // MARK: - Publisher
-
-        /// The kind of values published by this publisher.
-        public typealias Output = Reachability
-
-        /// The kind of errors this publisher might publish.
-        public typealias Failure = Swift.Error
-
-        public func receive<S>(subscriber: S) where S: Subscriber, Failure == S.Failure, Reachability == S.Input {
-            let subscription = ReachabilitySubscription(subscriber: subscriber, host: host)
-            subscriber.receive(subscription: subscription)
+        /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of reachability updates
+        ///
+        /// Use this property to observe reachability updates with [Combine](https://developer.apple.com/documentation/combine).
+        ///
+        /// ```swift
+        /// let cancellable = NetworkMonitor.reachabilityPublisher
+        ///     .map(\.isReachable)
+        ///     .removeDuplicates()
+        ///     .replaceError(with: false)
+        ///     .sink { isReachable in
+        ///         // Do something with `isReachable`
+        ///     }
+        /// ```
+        static var reachabilityPublisher: NetworkMonitor.Publisher {
+            .init()
         }
 
-        // MARK: - Private
-
-        init(host: String? = nil) {
-            self.host = host
+        /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of reachability updates for a specific host
+        ///
+        /// Use this property to observe reachability updates with [Combine](https://developer.apple.com/documentation/combine).
+        ///
+        /// ```swift
+        /// let cancellable = NetworkMonitor.reachabilityPublisher(forHost: "apple.com")
+        ///     .map(\.isReachable)
+        ///     .removeDuplicates()
+        ///     .replaceError(with: false)
+        ///     .sink { isReachable in
+        ///         // Do something with `isReachable`
+        ///     }
+        /// ```
+        static func reachabilityPublisher(forHost host: String) -> NetworkMonitor.Publisher {
+            .init(host: host)
         }
 
-        private var host: String?
+        /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) used to observe reachability updates for use with [Combine](https://developer.apple.com/documentation/combine).
+        ///
+        /// See ``reachabilityPublisher`` for usage.
+        struct Publisher: Combine.Publisher {
 
-    }
+            // MARK: - Publisher
 
-    private final class ReachabilitySubscription<S: Subscriber>: Subscription where S.Input == Reachability, S.Failure == Swift.Error {
+            /// The kind of values published by this publisher.
+            public typealias Output = Reachability
 
-        // MARK: - Initializers
+            /// The kind of errors this publisher might publish.
+            public typealias Failure = Swift.Error
 
-        init(subscriber: S?, host: String?) {
-            self.subscriber = subscriber
-            self.host = host
-        }
-
-        // MARK: - Subscription
-
-        func request(_ demand: Subscribers.Demand) {
-            requested += 1
-            do {
-                let continuation: (NetworkMonitor.Result) -> Void = { [weak self] result in
-                    guard let self = self,
-                          let subscriber = self.subscriber,
-                          self.requested > .none else { return }
-                    self.requested -= .max(1)
-                    do {
-                        let reachability = try result.get()
-                        let newDemand = subscriber.receive(reachability)
-                        self.requested += newDemand
-                    } catch {
-                        subscriber.receive(completion: .failure(error))
-                    }
-                }
-                if let host = host {
-                    networkMonitor = try NetworkMonitor(host: host, continuation: continuation)
-                } else {
-                    networkMonitor = try NetworkMonitor(continuation: continuation)
-                }
-            } catch {
-                subscriber?.receive(completion: .failure(error))
+            public func receive<S>(subscriber: S) where S: Subscriber, Failure == S.Failure, Reachability == S.Input {
+                let subscription = ReachabilitySubscription(subscriber: subscriber, host: host)
+                subscriber.receive(subscription: subscription)
             }
+
+            // MARK: - Private
+
+            init(host: String? = nil) {
+                self.host = host
+            }
+
+            private var host: String?
+
         }
 
-        func cancel() {
-            networkMonitor = nil
+        private final class ReachabilitySubscription<S: Subscriber>: Subscription where S.Input == Reachability, S.Failure == Swift.Error {
+
+            // MARK: - Initializers
+
+            init(subscriber: S?, host: String?) {
+                self.subscriber = subscriber
+                self.host = host
+            }
+
+            // MARK: - Subscription
+
+            func request(_ demand: Subscribers.Demand) {
+                requested += 1
+                do {
+                    let continuation: (NetworkMonitor.Result) -> Void = { [weak self] result in
+                        guard let self = self,
+                              let subscriber = self.subscriber,
+                              self.requested > .none else { return }
+                        self.requested -= .max(1)
+                        do {
+                            let reachability = try result.get()
+                            let newDemand = subscriber.receive(reachability)
+                            self.requested += newDemand
+                        } catch {
+                            subscriber.receive(completion: .failure(error))
+                        }
+                    }
+                    if let host = host {
+                        networkMonitor = try NetworkMonitor(host: host, continuation: continuation)
+                    } else {
+                        networkMonitor = try NetworkMonitor(continuation: continuation)
+                    }
+                } catch {
+                    subscriber?.receive(completion: .failure(error))
+                }
+            }
+
+            func cancel() {
+                networkMonitor = nil
+            }
+
+            // MARK: - Private
+
+            private var subscriber: S?
+            private var networkMonitor: NetworkMonitor?
+            private var requested: Subscribers.Demand = .none
+            private var host: String?
+
         }
-
-        // MARK: - Private
-
-        private var subscriber: S?
-        private var networkMonitor: NetworkMonitor?
-        private var requested: Subscribers.Demand = .none
-        private var host: String?
 
     }
-
-}
+#endif
