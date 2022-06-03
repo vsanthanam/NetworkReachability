@@ -23,25 +23,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import Combine
-import Foundation
+#if canImport(Combine)
+    import Combine
+    import Foundation
 
-@available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *)
-public extension Publishers {
+    @available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *)
+    public extension Publishers {
 
-    /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of reachability updates
-    ///
-    /// Use this property to observe reachability updates with [Combine](https://developer.apple.com/documentation/combine).
-    ///
-    /// ```swift
-    /// let cancellable = NetworkMonitor.reachabilityPublisher
-    ///     .map(\.isReachable)
-    ///     .removeDuplicates()
-    ///     .replaceError(with: false)
-    ///     .sink { isReachable in
-    ///         // Do something with `isReachable`
-    ///     }
-    /// ```
-    typealias ReachabilityPublisher = NetworkMonitor.Publisher
+        /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of reachability updates
+        ///
+        /// Use this property to observe reachability updates with [Combine](https://developer.apple.com/documentation/combine).
+        ///
+        /// ```swift
+        /// let cancellable = NetworkMonitor.reachabilityPublisher
+        ///     .map(\.isReachable)
+        ///     .removeDuplicates()
+        ///     .replaceError(with: false)
+        ///     .sink { isReachable in
+        ///         // Do something with `isReachable`
+        ///     }
+        /// ```
+        typealias ReachabilityPublisher = NetworkMonitor.Publisher
 
-}
+    }
+#endif
