@@ -1,5 +1,5 @@
 // NetworkReachabiliy
-// Publishers+NetworkReachability.swift
+// NetworkMonitor+NWPath.swift
 //
 // MIT License
 //
@@ -23,17 +23,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if canImport(Combine)
-    import Combine
+#if canImport(Network)
     import Foundation
+    import Network
 
-    @available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *)
-    public extension Publishers {
+    @available(iOS 13.0, macOS 10.15, watchOS 6.0, tvOS 13.0, *)
+    public extension NetworkMonitor {
 
-        /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of reachability updates
-        typealias ReachabilityPublisher = NetworkMonitor.Publisher
-
-        /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of network path updates
-        typealias NetworkPathPublisher = NetworkMonitor.NetworkPathPublisher
+        /// Retrieve the available network path observed by the monitor in an asynchronous context
+        ///
+        /// ```swift
+        /// func updatePath() async {
+        ///     let path = await NetworkMonitor.networkPath
+        ///     // Do something with `path`
+        /// }
+        /// ```
+        static var networkPath: NWPath {
+            get async {
+                await withUnsafeContinuation { continuation in
+                    let pathMonitor = NWPathMonitor()
+                    pathMonitor.pathUpdateHandler = { path in
+                        pathMonitor.cancel()
+                        continuation.resume(with: .success(path))
+                    }
+                    pathMonitor.start(queue: .networkMonitorQueue)
+                }
+            }
+        }
     }
 #endif

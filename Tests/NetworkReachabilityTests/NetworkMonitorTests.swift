@@ -24,6 +24,7 @@
 // SOFTWARE.
 
 import Combine
+import Network
 @testable import NetworkReachability
 import XCTest
 
@@ -439,6 +440,41 @@ final class NetworkMonitorTests: XCTestCase {
                 return
             }
         }
+    }
+
+    func test_path_async() async {
+        let path = await NetworkMonitor.networkPath
+        XCTAssertEqual(path.status, .satisfied)
+    }
+
+    func test_path_asynchronous_stream() {
+        let expectation = expectation(description: "pass")
+
+        Task {
+            for await path in NetworkMonitor.networkPathUpdates {
+                if path.status == .satisfied {
+                    expectation.fulfill()
+                } else {
+                    XCTFail()
+                }
+            }
+        }
+        waitForExpectations(timeout: 5, handler: nil)
+    }
+
+    func test_path_combine() {
+        let expectation = expectation(description: "pass")
+        cancellable = NetworkMonitor
+            .networkPathPublisher
+            .map { path in
+                path.status == .satisfied
+            }
+            .removeDuplicates()
+            .sink { isReachable in
+                XCTAssertTrue(isReachable)
+                expectation.fulfill()
+            }
+        waitForExpectations(timeout: 5)
     }
 
     deinit {
