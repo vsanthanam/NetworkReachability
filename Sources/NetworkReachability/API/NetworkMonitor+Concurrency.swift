@@ -92,3 +92,78 @@ public extension NetworkMonitor {
         }
     }
 }
+
+#if canImport(Network)
+
+    import Network
+
+    @available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *)
+    public extension NetworkMonitor {
+
+        /// An [`AsyncSequence`](https://developer.apple.com/documentation/swift/asyncsequence) of network path updates
+        ///
+        /// Use [Swift Concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html) to iterate over network path updates in an asynchronous context.
+        ///
+        /// ```swift
+        /// func observe() async throws {
+        ///     for await path in NetworkMonitor.networkPathUpdates {
+        ///         // Do something with `reachability`
+        ///     }
+        /// }
+        /// ```
+        static var networkPathUpdates: AsyncStream<NWPath> {
+            .init(bufferingPolicy: .bufferingNewest(1)) { continuation in
+                let monitor = NWPathMonitor()
+                monitor.pathUpdateHandler = { path in
+                    continuation.yield(path)
+                }
+                monitor.start(queue: .networkMonitorQueue)
+            }
+        }
+
+        /// An [`AsyncSequence`](https://developer.apple.com/documentation/swift/asyncsequence) of network path updates for specific interfaces that are not explicitly prohibited.
+        ///
+        /// Use [Swift Concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html) to iterate over network path updates in an asynchronous context.
+        ///
+        /// ```swift
+        /// func observe() async throws {
+        ///     for await path in NetworkMonitor.networkPathUpdates {
+        ///         // Do something with `reachability`
+        ///     }
+        /// }
+        /// ```
+        static func networkPathUpdates(requiringInterfaceType interfaceType: NWInterface.InterfaceType) -> AsyncStream<NWPath> {
+            .init(bufferingPolicy: .bufferingNewest(1)) { continuation in
+                let monitor = NWPathMonitor(requiredInterfaceType: interfaceType)
+                monitor.pathUpdateHandler = { path in
+                    continuation.yield(path)
+                }
+                monitor.start(queue: .networkMonitorQueue)
+            }
+        }
+
+        /// An [`AsyncSequence`](https://developer.apple.com/documentation/swift/asyncsequence) of network path updates
+        ///
+        /// Use [Swift Concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html) to iterate over network path updates in an asynchronous context.
+        ///
+        /// ```swift
+        /// func observe() async throws {
+        ///     for await path in NetworkMonitor.networkPathUpdates {
+        ///         // Do something with `reachability`
+        ///     }
+        /// }
+        /// ```
+        @available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
+        static func networkPathUpdates(prohibitingInterfaceTypes interfaceTypes: [NWInterface.InterfaceType]) -> AsyncStream<NWPath> {
+            .init(bufferingPolicy: .bufferingNewest(1)) { continuation in
+                let monitor = NWPathMonitor(prohibitedInterfaceTypes: interfaceTypes)
+                monitor.pathUpdateHandler = { path in
+                    continuation.yield(path)
+                }
+                monitor.start(queue: .networkMonitorQueue)
+            }
+        }
+
+    }
+
+#endif

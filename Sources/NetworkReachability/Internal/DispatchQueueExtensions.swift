@@ -1,5 +1,5 @@
 // NetworkReachabiliy
-// Publishers+NetworkReachability.swift
+// DispatchQueueExtensions.swift
 //
 // MIT License
 //
@@ -23,17 +23,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if canImport(Combine)
-    import Combine
-    import Foundation
+import Dispatch
+import Foundation
 
-    @available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *)
-    public extension Publishers {
+extension DispatchQueue {
 
-        /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of reachability updates
-        typealias ReachabilityPublisher = NetworkMonitor.Publisher
+    static var networkMonitorQueue: DispatchQueue {
+        let label: String
+        if let bundleIdentifier = Bundle.main.bundleIdentifier {
+            label = [bundleIdentifier, "NetworkMonitor"].joined(separator: ".")
+        } else {
+            label = "com.varunsanthanam.NetworkMonitor"
+        }
 
-        /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of network path updates
-        typealias NetworkPathPublisher = NetworkMonitor.NetworkPathPublisher
+        let queue = DispatchQueue(label: label)
+        return queue
     }
-#endif
+
+}
