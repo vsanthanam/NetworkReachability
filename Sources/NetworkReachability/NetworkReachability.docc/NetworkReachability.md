@@ -71,7 +71,46 @@ final class MyObject {
         }
     }
 }
+```
 
+```swift
+import Foundation
+import NetworkMonitor
+
+final class MyObject {
+
+    func updateNetworkPath() async {
+        let path = await NetworkMonitor.networkPath
+        // do something with path
+    }
+}
+```
+
+```swift
+import Foundation
+import NetworkMonitor
+
+final class MyObject {
+
+    func startObserving() {
+        reachabilityTask = observeReachability()
+    }
+    
+    func stopObserving() {
+        reachabilityTask?.cancel()
+        reachabilityTask = nil
+    }
+
+    var reachabilityTask: Task<Void, Never>?
+
+    func observeReachability() -> Task<Void, Never> {
+        Task {
+            for await path in NetworkMonitor.networkPathUpdates {
+                // do something
+            }
+        }
+    }
+}
 ```
 
 ### Closures
@@ -150,6 +189,28 @@ final class MyObject {
                         // do something
                     }
                 }
+    }
+    
+    func stopObserving() {
+        cancellable?.cancel()
+        cancellable = nil
+    }
+}
+```
+
+```swift
+import Combine
+import NetworkReachability
+
+final class MyObject {
+
+    var cancellable: AnyCancellable?
+    
+    func startObserving() throws {
+        cancellable = NetworkMonitor.networkPathPublisher
+            .sink { path in
+                // handle path
+            }
     }
     
     func stopObserving() {
