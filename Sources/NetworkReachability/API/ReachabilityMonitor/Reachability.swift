@@ -26,15 +26,14 @@
 import Foundation
 import SystemConfiguration
 
+/// A value type representing network reachability
 @available(iOS 11.0, macOS 10.13, watchOS 4.0, tvOS 11.0, *)
 public struct Reachability: Equatable, Hashable, Sendable, CustomStringConvertible {
 
+    /// A reachability that cannot be determined
     public static let unknown: Reachability = .init(flags: nil)
 
-    public var status: Status {
-        flags?.status ?? .unavailable
-    }
-
+    /// An enumeration representing the various connection status options of a ``Reachability``
     public enum Status: Equatable, Hashable, Sendable, CustomStringConvertible {
 
         // MARK: - Cases
@@ -50,6 +49,18 @@ public struct Reachability: Equatable, Hashable, Sendable, CustomStringConvertib
 
         /// The network is available via a local wlan connection
         case wlan
+
+        // MARK: - API
+
+        /// Whether or not the status is reachable
+        public var isReachable: Bool {
+            switch self {
+            case .wlan, .wwan:
+                return true
+            case .unavailable, .unknown:
+                return false
+            }
+        }
 
         // MARK: - CustomStringConvertible
 
@@ -67,18 +78,30 @@ public struct Reachability: Equatable, Hashable, Sendable, CustomStringConvertib
         }
     }
 
+    /// The `SCNetworkReachabilityFlag` that this reachability is based on
     public let flags: SCNetworkReachabilityFlags?
 
-    init(flags: SCNetworkReachabilityFlags?) {
-        self.flags = flags
+    /// The connection status of the reachability
+    public var status: Status {
+        flags?.status ?? .unavailable
     }
+
+    // MARK: - Hashable
 
     public func hash(into hasher: inout Hasher) {
         hasher.combine(flags?.copyDescription ?? "")
     }
 
+    // MARK: - CustomStringConvertible
+
     public var description: String {
         (flags?.copyDescription ?? "No Flags") + " | " + status.description
+    }
+
+    // MARK: - Private
+
+    init(flags: SCNetworkReachabilityFlags?) {
+        self.flags = flags
     }
 
 }
