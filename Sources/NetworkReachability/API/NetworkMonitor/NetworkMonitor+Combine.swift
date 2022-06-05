@@ -51,10 +51,10 @@
 
         /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of network path updates for a specific interface
         ///
-        /// Use this property to observe network path updates using [Combine](https://developer.apple.com/documentation/combine)
+        /// Use this function to observe network path updates using [Combine](https://developer.apple.com/documentation/combine)
         ///
         /// ```swift
-        /// let cancellable = NetworkMonitor.networkPathPublisher
+        /// let cancellable = NetworkMonitor.networkPathPublisher(requiringInterfaceType: [.wifi])
         ///     .map { path in
         ///         path.status == .satisfied
         ///     }
@@ -69,10 +69,10 @@
 
         /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of network path updates for interface types that are not explicitly prohibited.
         ///
-        /// Use this property to observe network path updates using [Combine](https://developer.apple.com/documentation/combine)
+        /// Use this function to observe network path updates using [Combine](https://developer.apple.com/documentation/combine)
         ///
         /// ```swift
-        /// let cancellable = NetworkMonitor.networkPathPublisher
+        /// let cancellable = NetworkMonitor.networkPathPublisher(prohibitingInterfaceTypes: [.wifi, .wiredEthernet])
         ///     .map { path in
         ///         path.status == .satisfied
         ///     }
