@@ -86,6 +86,12 @@ public struct Reachability: Equatable, Hashable, Sendable, CustomStringConvertib
         flags?.status ?? .unknown
     }
 
+    // MARK: - Equatable
+
+    public static func == (lhs: Reachability, rhs: Reachability) -> Bool {
+        lhs.flags == rhs.flags
+    }
+
     // MARK: - Hashable
 
     public func hash(into hasher: inout Hasher) {
@@ -104,10 +110,4 @@ public struct Reachability: Equatable, Hashable, Sendable, CustomStringConvertib
         self.flags = flags
     }
 
-}
-
-// MARK: - Equatable
-
-public func == (lhs: Reachability, rhs: Reachability) -> Bool {
-    lhs.flags == rhs.flags
 }
