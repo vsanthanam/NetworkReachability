@@ -36,7 +36,7 @@
         ///
         /// ```swift
         /// let cancellable = NetworkMonitor.reachabilityPublisher
-        ///     .map(\.isReachable)
+        ///     .map(\.status.isReachable)
         ///     .removeDuplicates()
         ///     .replaceError(with: false)
         ///     .sink { isReachable in

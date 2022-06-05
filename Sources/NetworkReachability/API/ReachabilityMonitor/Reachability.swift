@@ -83,7 +83,7 @@ public struct Reachability: Equatable, Hashable, Sendable, CustomStringConvertib
 
     /// The connection status of the reachability
     public var status: Status {
-        flags?.status ?? .unavailable
+        flags?.status ?? .unknown
     }
 
     // MARK: - Hashable
@@ -104,4 +104,10 @@ public struct Reachability: Equatable, Hashable, Sendable, CustomStringConvertib
         self.flags = flags
     }
 
+}
+
+// MARK: - Equatable
+
+public func == (lhs: Reachability, rhs: Reachability) -> Bool {
+    lhs.flags == rhs.flags
 }

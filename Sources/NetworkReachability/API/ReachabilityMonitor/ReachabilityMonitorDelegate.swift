@@ -31,13 +31,13 @@ public protocol ReachabilityMonitorDelegate: AnyObject {
 
     /// Sent to the delegate when the reachability changes
     /// - Parameters:
-    ///   - monitor: The network monitor who's eachability changed
+    ///   - monitor: The reachability monitor who's eachability changed
     ///   - reachability: The new reachability
     func reachabilityMonitor(_ monitor: ReachabilityMonitor, didUpdateReachability reachability: Reachability)
 
     /// Sent to the delegate when the network monitor failed with an error
     /// - Parameters:
-    ///   - monitor: The network monitor that failed
+    ///   - monitor: The reachability monitor that failed
     ///   - error: The error that caused the monitor to fail
     func reachabilityMonitor(_ monitor: ReachabilityMonitor, didFailWithError error: Error)
 }
