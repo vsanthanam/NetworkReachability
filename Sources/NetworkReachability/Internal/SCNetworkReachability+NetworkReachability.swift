@@ -1,5 +1,5 @@
 // NetworkReachabiliy
-// DispatchQueue+NetworkReachability.swift
+// SCNetworkReachability+NetworkReachability.swift
 //
 // MIT License
 //
@@ -24,31 +24,19 @@
 // SOFTWARE.
 
 import Foundation
+import SystemConfiguration
 
-extension DispatchQueue {
+extension SCNetworkReachability {
 
-    static var networkMonitorQueue: DispatchQueue {
-        let label: String
-        if let bundleIdentifier = Bundle.main.bundleIdentifier {
-            label = [bundleIdentifier, "NetworkMonitor"].joined(separator: ".")
-        } else {
-            label = "com.varunsanthanam.NetworkMonitor"
+    static var general: SCNetworkReachability {
+        get throws {
+            var zeroAddress = sockaddr()
+            zeroAddress.sa_len = UInt8(MemoryLayout<sockaddr>.size)
+            zeroAddress.sa_family = sa_family_t(AF_INET)
+            guard let reachability = SCNetworkReachabilityCreateWithAddress(nil, &zeroAddress) else {
+                throw ReachabilityMonitor.Error.failedToCreate(SCError())
+            }
+            return reachability
         }
-
-        let queue = DispatchQueue(label: label)
-        return queue
     }
-
-    static var reachabilityMonitorQueue: DispatchQueue {
-        let label: String
-        if let bundleIdentifier = Bundle.main.bundleIdentifier {
-            label = [bundleIdentifier, "ReachabilityMonitor"].joined(separator: ".")
-        } else {
-            label = "com.varunsanthanam.ReachabilityMonitor"
-        }
-
-        let queue = DispatchQueue(label: label)
-        return queue
-    }
-
 }

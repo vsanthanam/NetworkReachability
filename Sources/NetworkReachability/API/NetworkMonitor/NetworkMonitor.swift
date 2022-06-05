@@ -168,6 +168,8 @@ public final class NetworkMonitor {
     /// The closure used to observe reachability updates
     ///
     /// - Tip: The update handler only recieves status changes that occured after it was assigned. To enture that the delegate recieves every network path changes, pass in the delegate on initalization of the monitor.
+    ///
+    /// - Note: Instances of ``NetworkMonitor`` will always invoke this closure the main thread.
     public private(set) var updateHandler: UpdateHandler?
 
     /// The currently available network path observed by the network monitor.

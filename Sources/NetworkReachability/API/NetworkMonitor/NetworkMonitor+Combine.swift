@@ -86,7 +86,7 @@
             .init(pathMonitor: .init(prohibitedInterfaceTypes: interfaceTypes))
         }
 
-        /// A [Combine](https://developer.apple.com/documentation/combine) [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of [`NWPath`](https://developer.apple.com/documentation/network/nwpath) updates
+        /// A  [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of [`NWPath`](https://developer.apple.com/documentation/network/nwpath) updates for use with [Combine](https://developer.apple.com/documentation/combine)
         struct Publisher: Combine.Publisher {
 
             // MARK: - Initializers

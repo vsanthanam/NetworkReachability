@@ -1,5 +1,5 @@
 // NetworkReachabiliy
-// DispatchQueue+NetworkReachability.swift
+// WeakReference.swift
 //
 // MIT License
 //
@@ -25,30 +25,15 @@
 
 import Foundation
 
-extension DispatchQueue {
+final class WeakReference<T: AnyObject> {
 
-    static var networkMonitorQueue: DispatchQueue {
-        let label: String
-        if let bundleIdentifier = Bundle.main.bundleIdentifier {
-            label = [bundleIdentifier, "NetworkMonitor"].joined(separator: ".")
-        } else {
-            label = "com.varunsanthanam.NetworkMonitor"
-        }
-
-        let queue = DispatchQueue(label: label)
-        return queue
+    init(_ obj: T) {
+        self.obj = obj
     }
 
-    static var reachabilityMonitorQueue: DispatchQueue {
-        let label: String
-        if let bundleIdentifier = Bundle.main.bundleIdentifier {
-            label = [bundleIdentifier, "ReachabilityMonitor"].joined(separator: ".")
-        } else {
-            label = "com.varunsanthanam.ReachabilityMonitor"
-        }
+    weak var obj: T?
+}
 
-        let queue = DispatchQueue(label: label)
-        return queue
-    }
-
+func weak<T: AnyObject>(_ obj: T) -> WeakReference<T> {
+    .init(obj)
 }

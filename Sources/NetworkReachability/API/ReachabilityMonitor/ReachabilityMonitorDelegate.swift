@@ -1,5 +1,5 @@
 // NetworkReachabiliy
-// Publishers+NetworkReachability.swift
+// ReachabilityMonitorDelegate.swift
 //
 // MIT License
 //
@@ -23,15 +23,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if canImport(Combine)
-    import Combine
-    import Foundation
+import Foundation
 
-    @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
-    public extension Publishers {
+@available(iOS 11.0, macOS 10.13, watchOS 4.0, tvOS 11.0, *)
+public protocol ReachabilityMonitorDelegate: AnyObject {
 
-        /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of reachability updates
-        typealias NetworkPathPublisher = NetworkMonitor.Publisher
+    /// Sent to the delegate when the reachability changes
+    /// - Parameters:
+    ///   - monitor: The network monitor who's eachability changed
+    ///   - reachability: The new reachability
+    func reachabilityMonitor(_ monitor: ReachabilityMonitor, didUpdateReachability reachability: Reachability)
 
-    }
-#endif
+    /// Sent to the delegate when the network monitor failed with an error
+    /// - Parameters:
+    ///   - monitor: The network monitor that failed
+    ///   - error: The error that caused the monitor to fail
+    func reachabilityMonitor(_ monitor: ReachabilityMonitor, didFailWithError error: Error)
+}
