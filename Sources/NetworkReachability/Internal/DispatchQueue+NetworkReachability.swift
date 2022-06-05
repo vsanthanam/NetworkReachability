@@ -1,5 +1,5 @@
 // NetworkReachabiliy
-// Reachability.swift
+// DispatchQueue+NetworkReachability.swift
 //
 // MIT License
 //
@@ -25,48 +25,18 @@
 
 import Foundation
 
-/// The available network reachability status
-@available(macOS 10.13, iOS 11, watchOS 4, tvOS 11, *)
-public enum Reachability: Equatable, Hashable, Sendable, CustomStringConvertible {
+extension DispatchQueue {
 
-    // MARK: - Cases
-
-    /// The reachability is unknown
-    case unknown
-
-    /// The network is unavailable
-    case unavailable
-
-    /// The network is available via a cellular wwan connection
-    case wwan
-
-    /// The network is available via a local wlan connection
-    case wlan
-
-    // MARK: - API
-
-    /// Whether or not the status is connected to the internet.
-    public var isReachable: Bool {
-        switch self {
-        case .unknown, .unavailable:
-            return false
-        case .wwan, .wlan:
-            return true
+    static var networkMonitorQueue: DispatchQueue {
+        let label: String
+        if let bundleIdentifier = Bundle.main.bundleIdentifier {
+            label = [bundleIdentifier, "NetworkMonitor"].joined(separator: ".")
+        } else {
+            label = "com.varunsanthanam.NetworkMonitor"
         }
+
+        let queue = DispatchQueue(label: label)
+        return queue
     }
 
-    // MARK: - CustomStringConvertible
-
-    public var description: String {
-        switch self {
-        case .unknown:
-            return "Unknown Reachability Status"
-        case .unavailable:
-            return "Network Offline"
-        case .wwan:
-            return "Cellular Network Online"
-        case .wlan:
-            return "Local Network Online"
-        }
-    }
 }

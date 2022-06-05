@@ -27,13 +27,11 @@
     import Combine
     import Foundation
 
-    @available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *)
+    @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
     public extension Publishers {
 
         /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of reachability updates
-        typealias ReachabilityPublisher = NetworkMonitor.Publisher
+        typealias NetworkPathPublisher = NetworkMonitor.Publisher
 
-        /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of network path updates
-        typealias NetworkPathPublisher = NetworkMonitor.NetworkPathPublisher
     }
 #endif
