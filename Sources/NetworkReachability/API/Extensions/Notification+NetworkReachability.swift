@@ -1,5 +1,5 @@
 // NetworkReachabiliy
-// DispatchQueue+NetworkReachability.swift
+// Notification+NetworkReachability.swift
 //
 // MIT License
 //
@@ -25,30 +25,13 @@
 
 import Foundation
 
-extension DispatchQueue {
+@available(iOS 11.0, macOS 10.13, watchOS 4.0, tvOS 11.0, *)
+public extension Notification.Name {
 
-    static var networkMonitorQueue: DispatchQueue {
-        let label: String
-        if let bundleIdentifier = Bundle.main.bundleIdentifier {
-            label = [bundleIdentifier, "NetworkMonitor"].joined(separator: ".")
-        } else {
-            label = "com.varunsanthanam.NetworkMonitor"
-        }
+    /// A notification posted by a ``NetworkMonitor`` when its network path changes.
+    @available(iOS 12.0, macOS 10.14, watchOS 5.0, tvOS 12.0, *)
+    static let networkPathChanged: Notification.Name = NetworkMonitor.networkPathChangedNotificationName
 
-        let queue = DispatchQueue(label: label)
-        return queue
-    }
-
-    static var reachabilityMonitorQueue: DispatchQueue {
-        let label: String
-        if let bundleIdentifier = Bundle.main.bundleIdentifier {
-            label = [bundleIdentifier, "ReachabilityMonitor"].joined(separator: ".")
-        } else {
-            label = "com.varunsanthanam.ReachabilityMonitor"
-        }
-
-        let queue = DispatchQueue(label: label)
-        return queue
-    }
-
+    /// A notification posted by a ``ReachabilityMonitor`` when its reachability gchanges.
+    static let reachabilityChanged: Notification.Name = ReachabilityMonitor.reachabilityChangedNotificationName
 }

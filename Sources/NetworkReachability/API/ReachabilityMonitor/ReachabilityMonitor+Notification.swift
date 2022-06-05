@@ -1,5 +1,5 @@
 // NetworkReachabiliy
-// Notification+NetworkReachability.swift
+// ReachabilityMonitor+Notification.swift
 //
 // MIT License
 //
@@ -25,9 +25,10 @@
 
 import Foundation
 
-@available(iOS 12.0, macOS 10.14, watchOS 5.0, tvOS 12.0, *)
-public extension Notification.Name {
+@available(iOS 11.0, macOS 10.13, watchOS 4.0, tvOS 11.0, *)
+public extension ReachabilityMonitor {
 
-    /// A notification posted by a ``NetworkMonitor`` when its network path changes.
-    static let networkPathChanged: Notification.Name = NetworkMonitor.networkPathChangedNotificationName
+    /// A notification posted by a ``ReachabilityMonitor`` when its reachability changes.
+    static let reachabilityChangedNotificationName = Notification.Name("reachabilityChanged")
+
 }

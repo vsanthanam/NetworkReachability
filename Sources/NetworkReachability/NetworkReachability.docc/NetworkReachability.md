@@ -6,10 +6,10 @@ NetworkReachability is a replacement for Apple's [SystemConfiguration](https://d
 
 NetworkReachability supports with the following Apple platform releases:
 
-* iOS 12.0 - 15.x
-* macOS 10.14 - 12.x
-* tvOS 12.0 - 15.x
-* watchOS 5.0 - 8.x
+* iOS 11.0 - 15.x
+* macOS 10.13 - 12.x
+* tvOS 11.0 - 15.x
+* watchOS 4.0 - 8.x
 
 ## Usage
 
