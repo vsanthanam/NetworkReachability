@@ -12,4 +12,4 @@ NetworkReachability supports with the following Apple platform releases:
 
 ## Usage
 
-To determine the current reachability status. Initialize an instance of ``ReachabilityMonitor`` or `` NetworkMonitor`` and retain it in memory.. You can also pass in an optional delegate or update handler to recieve reachability status updates on the main thread. Both classes also fire notifications through `NotificationCenter.default`.
+To determine the current reachability status. Initialize an instance of ``ReachabilityMonitor`` or ``NetworkMonitor`` and retain it in memory. You can also pass in an optional delegate or update handler to recieve reachability status updates on the main thread. Both classes also fire notifications through `NotificationCenter.default`.
