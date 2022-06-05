@@ -25,334 +25,218 @@
 
 import Dispatch
 import Foundation
-import SystemConfiguration
+import Network
 
-/// A class used to observe network reachability.
-///
-/// Create an instance of this object and retain it in memory.
-///
-/// You can observe reachability changes in several ways:
-/// - Synchronously, using the ``reachability-swift.property`` instance variable
-/// - Using delegation via ``NetworkMonitorDelegate``.
-/// - Using [structured concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html) via the ``reachability-swift.type.property`` static variable.
-/// - Using [Combine](https://developer.apple.com/documentation/combine), via the ``reachabilityPublisher`` static variable.
-/// - Using a provided closure via the ``updateHandler-swift.property`` instance variable.
-/// - Using notification observers on [`NotificationCenter.default`](https://developer.apple.com/documentation/foundation/notificationcenter).
-@available(macOS 10.13, iOS 11, watchOS 4, tvOS 11, *)
+@available(iOS 12.0, macOS 10.14, watchOS 5.0, tvOS 12.0, *)
 public final class NetworkMonitor {
 
     // MARK: - Initializers
 
     /// Create a network monitor
     ///
-    /// - Note: A `NetworkMonitor` begins observing and publishing reachability updates immediately after initialization.
-    ///
-    /// - Throws: An error of type ``Error``
-    public convenience init() throws {
-        self.init(ref: try .general,
+    /// - Note: The monitor begins observing and publishing updates immediately
+    public convenience init() {
+        self.init(pathMonitor: .init(),
                   updateHandler: nil,
-                  delegate: nil)
+                  delegate: nil,
+                  continuation: nil)
     }
 
-    /// Create a network monitor for a specific host
+    /// Create a network monitor to observe a specific interface type
     ///
-    /// Use this initializer to monitor reachability updates for a specific host
+    /// - Parameter requiredInterfaceType: The required interface type
     ///
-    /// - Parameter host: The host who's reachability you wish to monitor
-    ///
-    /// - Note: A `NetworkMonitor` begins observing and publishing reachability updates immediately after initialization.
-    ///
-    /// - Throws: An error of type ``Error``
-    public convenience init(host: String) throws {
-        self.init(ref: try .forHost(host),
+    /// - Note: The monitor begins observing and publishing updates immediately
+    public convenience init(requiredInterfaceType: NWInterface.InterfaceType) {
+        self.init(pathMonitor: .init(requiredInterfaceType: requiredInterfaceType),
                   updateHandler: nil,
-                  delegate: nil)
+                  delegate: nil,
+                  continuation: nil)
     }
 
-    /// Create a network monitor with a closure used to respond to reachability changes
+    /// Create a network monitor to observe interface types that are not explicitly prohibited
     ///
-    /// Use this initializer to respond to reachability updates with a closure
+    /// - Parameter prohibitedInterfaceTypes: The explicitly prohibited interface types
     ///
-    /// - Parameter updateHandler: The closure used to observe reachability updates
-    ///
-    /// - Note: A `NetworkMonitor` begins observing and publishing reachability updates immediately after initialization.
-    ///
-    /// - Throws: An error of type ``Error``
-    public convenience init(updateHandler: @escaping UpdateHandler) throws {
-        self.init(ref: try .general,
-                  updateHandler: updateHandler,
-                  delegate: nil)
+    /// - Note: The monitor begins observing and publishing updates immediately
+    @available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
+    public convenience init(prohibitedInterfaceTypes: [NWInterface.InterfaceType]) {
+        self.init(pathMonitor: .init(prohibitedInterfaceTypes: prohibitedInterfaceTypes),
+                  updateHandler: nil,
+                  delegate: nil,
+                  continuation: nil)
     }
 
-    /// Create a network monitor for a specific host, with a closure used to respond to reachability changes
+    /// Create a network monitor that publishes updates to a delegate object
     ///
-    /// Use this initializer to respond to reachability updates for a specific host with a closure
+    /// - Parameter delegate: The delegate object used to recieve updates
+    ///
+    /// - Note: The monitor begins observing and publishing updates immediately
+    public convenience init(delegate: NetworkMonitorDelegate) {
+        self.init(pathMonitor: .init(),
+                  updateHandler: nil,
+                  delegate: delegate,
+                  continuation: nil)
+    }
+
+    /// Create a network monitor to observe a specific interface type that publishes updates to a delegate object
     ///
     /// - Parameters:
-    ///   - host: The host who's reachability you wish to monitor
-    ///   - updateHandler: The closure used to observe reachability updates
+    ///   - requiredInterfaceType: The explicitly prohibited interface types
+    ///   - delegate: The delegate object used to recieve updates
     ///
-    /// - Note: A `NetworkMonitor` begins observing and publishing reachability updates immediately after initialization.
-    ///
-    /// - Throws: An error of type ``Error``
-    public convenience init(host: String,
-                            updateHandler: @escaping UpdateHandler) throws {
-        self.init(ref: try .forHost(host),
-                  updateHandler: updateHandler,
-                  delegate: nil)
-    }
-
-    /// Create a network monitor with a delegate object used to respond to reachability changes
-    ///
-    /// Use this initializer to respond to reachability updates with an instance of an object that conforms to ``NetworkMonitorDelegate``
-    ///
-    /// - Parameter delegate: The delegate object used to observe reachability updates
-    ///
-    /// - Note: A `NetworkMonitor` begins observing and publishing reachability updates immediately after initialization.
-    ///
-    /// - Throws: An error of type ``Error``
-    public convenience init(delegate: NetworkMonitorDelegate) throws {
-        self.init(ref: try .general,
+    /// - Note: The monitor begins observing and publishing updates immediately
+    public convenience init(requiredInterfaceType: NWInterface.InterfaceType,
+                            delegate: NetworkMonitorDelegate) {
+        self.init(pathMonitor: .init(requiredInterfaceType: requiredInterfaceType),
                   updateHandler: nil,
-                  delegate: delegate)
+                  delegate: delegate,
+                  continuation: nil)
     }
 
-    /// Create a network monitor for a specific host, with a delegate object used to respond to reachability changes
-    ///
-    /// Use this initializer to respond to reachability updates with an instance of an object that conforms to ``NetworkMonitorDelegate``
+    /// Create a network monitor to observe interface types that are not explicitly prohibited that publishes updates to a delegate object
     ///
     /// - Parameters:
-    ///   - host: The host who's reachability you wish to monitor
-    ///   - delegate: The delegate object used to observe reachability updates
+    ///   - prohibitedInterfaceTypes: The explicitly prohibited interface types
+    ///   - delegate: The delegate object used to recieve updates
     ///
-    /// - Note: A `NetworkMonitor` begins observing and publishing reachability updates immediately after initialization.
-    ///
-    /// - Throws: An error of type ``Error``
-    public convenience init(host: String,
-                            delegate: NetworkMonitorDelegate) throws {
-        self.init(ref: try .forHost(host),
+    /// - Note: The monitor begins observing and publishing updates immediately
+    @available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
+    public convenience init(prohibitedInterfaceTypes: [NWInterface.InterfaceType],
+                            delegate: NetworkMonitorDelegate) {
+        self.init(pathMonitor: .init(prohibitedInterfaceTypes: prohibitedInterfaceTypes),
                   updateHandler: nil,
-                  delegate: delegate)
+                  delegate: delegate,
+                  continuation: nil)
+    }
+
+    /// Create a network monitor that publishes updates to a provided closure
+    ///
+    /// - Parameter updateHandler: Closure used to handle network path updates
+    ///
+    /// - Note: The monitor begins observing and publishing updates immediately
+    public convenience init(updateHandler: @escaping UpdateHandler) {
+        self.init(pathMonitor: .init(),
+                  updateHandler: updateHandler,
+                  delegate: nil,
+                  continuation: nil)
+    }
+
+    /// Create a network monitor to observe a specific interface type that publishes to a provided closure
+    ///
+    /// - Parameters:
+    ///   - requiredInterfaceType: The explicitly prohibited interface types
+    ///   - updateHandler: Closure used to handle network path updates
+    ///
+    /// - Note: The monitor begins observing and publishing updates immediately
+    public convenience init(requiredInterfaceType: NWInterface.InterfaceType,
+                            updateHandler: @escaping UpdateHandler) {
+        self.init(pathMonitor: .init(requiredInterfaceType: requiredInterfaceType),
+                  updateHandler: updateHandler,
+                  delegate: nil,
+                  continuation: nil)
+    }
+
+    /// Create a network monitor to observe interface types that are not explicitly prohibited that publishes updates to a provided closure
+    ///
+    /// - Parameters:
+    ///   - prohibitedInterfaceTypes: The explicitly prohibited interface types
+    ///   - updateHandler: Closure used to handle network path updates
+    ///
+    /// - Note: The monitor begins observing and publishing updates immediately
+    @available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
+    public convenience init(prohibitedInterfaceTypes: [NWInterface.InterfaceType],
+                            updateHandler: @escaping UpdateHandler) {
+        self.init(pathMonitor: .init(prohibitedInterfaceTypes: prohibitedInterfaceTypes),
+                  updateHandler: updateHandler,
+                  delegate: nil,
+                  continuation: nil)
     }
 
     // MARK: - API
 
-    /// Specialized [`Result`](https://developer.apple.com/documentation/swift/result) delivered by a ``NetworkMonitor`` to it's ``updateHandler-swift.property``
-    public typealias Result = Swift.Result<Reachability, Error>
-
-    /// The closure type used to observe reachability updates
-    public typealias UpdateHandler = (NetworkMonitor, NetworkMonitor.Result) -> Void
-
-    /// The closure used to observe reachability updates
-    ///
-    /// The handler is fed `Result` types and should be used to handle reachability changes as well as errors
-    ///
-    /// ```swift
-    /// func setUpdateHandler(on monitor: NetworkMonitor) {
-    ///     let updateHandler: NetworkMonitor.UpdateHandler = { (monitor: NetworkMonitor, result: NetworkMonitor.Result) in
-    ///         do {
-    ///             let reachability = try result.get()
-    ///             // Do something with `reachability`
-    ///         } catch {
-    ///             // Handle error
-    ///         }
-    ///     }
-    ///     monitor.updateHandler = updateHandler
-    /// }
-    /// ```
-    ///
-    /// - Tip: The closure only recieves status changes that occured after it was assigned. To recieve every status update, including the reachability status at the time the monitor was initialized, pass in the closure on initialization of the monitor.
-    ///
-    /// - Note: Instances of ``NetworkMonitor`` will always invoke this closure the main thread.
-    public var updateHandler: UpdateHandler?
+    /// A closure used to recieve network path updates from a network monitor
+    public typealias UpdateHandler = (NetworkMonitor, NWPath) -> Void
 
     /// The delegate object used to observe reachability updates
     ///
-    /// See ``NetworkMonitorDelegate`` for more information.
+    /// See ``NetworkMonitorDelegate`` for more information
     ///
-    /// - Tip: The delegate only recieves status changes that occured after it was assigned. To recieve every status update, including the reachability status at the time the monitor was initialized, pass in the delegate on initialization of the monitor.
+    /// - Tip: The delegate only recieves status changes that occured after it was assigned. To ensure that the delegate recieves every network path change, pass in the delegate on initialization of the monitor.
     public weak var delegate: NetworkMonitorDelegate?
 
-    /// The current reachability status
+    /// The closure used to observe reachability updates
     ///
-    /// Use this property to retrieve the current reachability reachability in a synchronous context:
-    ///
-    /// ```swift
-    /// do {
-    ///     let reachability = try monitor.reachability
-    ///     // Do something with `reachability`
-    /// } catch {
-    ///     // Handle error
-    /// }
-    /// ```
-    ///
-    /// - Throws: An error of type ``Error``
-    public var reachability: Reachability {
-        get throws {
-            refreshFlags()
-            return try flags.get()?.reachability ?? .unavailable
-        }
+    /// - Tip: The update handler only recieves status changes that occured after it was assigned. To enture that the delegate recieves every network path changes, pass in the delegate on initalization of the monitor.
+    public private(set) var updateHandler: UpdateHandler?
+
+    /// The currently available network path observed by the network monitor.
+    public var currentPath: NWPath {
+        pathMonitor.currentPath
     }
 
     // MARK: - Private
 
-    private init(ref: SCNetworkReachability,
+    convenience init(pathMonitor: NWPathMonitor,
+                     continuation: @escaping ((NWPath) -> Void)) {
+        self.init(pathMonitor: pathMonitor,
+                  updateHandler: nil,
+                  delegate: nil,
+                  continuation: continuation)
+    }
+
+    private init(pathMonitor: NWPathMonitor,
                  updateHandler: UpdateHandler?,
                  delegate: NetworkMonitorDelegate?,
-                 continuation: ((Result) -> Void)? = nil) {
-        self.ref = ref
+                 continuation: ((NWPath) -> Void)?) {
+        self.pathMonitor = pathMonitor
         self.updateHandler = updateHandler
         self.delegate = delegate
         self.continuation = continuation
         setUp()
     }
 
-    convenience init(continuation: @escaping (Result) -> Void) throws {
-        self.init(ref: try .general,
-                  updateHandler: nil,
-                  delegate: nil,
-                  continuation: continuation)
-    }
-
-    convenience init(host: String, continuation: @escaping (Result) -> Void) throws {
-        self.init(ref: try .forHost(host),
-                  updateHandler: nil,
-                  delegate: nil,
-                  continuation: continuation)
-    }
-
-    private var ref: SCNetworkReachability
-    private var continuation: ((Result) -> Void)?
-
-    private var flags: Swift.Result<SCNetworkReachabilityFlags?, Error> = .success(nil) {
-        didSet {
-            if flags.map(\.?.reachability) != oldValue.map(\.?.reachability) {
-                do {
-                    let flags = try flags.get()
-                    succeed(with: flags)
-                } catch {
-                    fail(with: error as! Error)
-                }
-            }
-        }
-    }
+    private let pathMonitor: NWPathMonitor
+    private let continuation: ((NWPath) -> Void)?
 
     private func setUp() {
-        let callback: SCNetworkReachabilityCallBack = { (reachability, flags, info) in
-            guard let info = info else { return }
-            let weakMonitor = Unmanaged<WeakReference<NetworkMonitor>>.fromOpaque(info).takeUnretainedValue()
-            weakMonitor.obj?.flags = .success(flags)
+        pathMonitor.pathUpdateHandler = { [weak self] path in
+            self?.forward(path: path)
         }
-
-        let weakMonitor = weak(self)
-        let opaqueMonitor = Unmanaged<WeakReference<NetworkMonitor>>.passUnretained(weakMonitor).toOpaque()
-
-        var context = SCNetworkReachabilityContext(
-            version: 0,
-            info: UnsafeMutableRawPointer(opaqueMonitor),
-            retain: { info in
-                let unmanaged = Unmanaged<WeakReference<NetworkMonitor>>.fromOpaque(info)
-                _ = unmanaged.retain()
-                return UnsafeRawPointer(unmanaged.toOpaque())
-            },
-            release: { info in
-                let unmanaged = Unmanaged<WeakReference<NetworkMonitor>>.fromOpaque(info)
-                unmanaged.release()
-            },
-            copyDescription: { (info: UnsafeRawPointer) -> Unmanaged<CFString> in
-                let unmanagedMonitor = Unmanaged<WeakReference<NetworkMonitor>>.fromOpaque(info)
-                let weakMonitor = unmanagedMonitor.takeUnretainedValue()
-                let copyDescription = try? weakMonitor.obj?.flags.get()?.copyDescription ?? "none"
-                return Unmanaged.passRetained(copyDescription! as CFString)
-            }
-        )
-
-        if !SCNetworkReachabilitySetCallback(ref, callback, &context) {
-            flags = .failure(.failedToStartCallback(SCError()))
-        } else if !SCNetworkReachabilityScheduleWithRunLoop(ref, CFRunLoopGetCurrent(), CFRunLoopMode.defaultMode.rawValue) {
-            flags = .failure(.failedToSetRunLoop(SCError()))
-        } else {
-            refreshFlags()
-        }
+        pathMonitor.start(queue: .networkMonitorQueue)
     }
 
-    private func refreshFlags() {
-        var flags = SCNetworkReachabilityFlags()
-        if SCNetworkReachabilityGetFlags(ref, &flags) {
-            self.flags = .success(flags)
-        } else {
-            self.flags = .failure(.failedToGetFlags(SCError()))
-        }
-    }
-
-    private func succeed(with flags: SCNetworkReachabilityFlags?) {
-        let reachability = flags.map(\.reachability) ?? .unknown
-        continuation?(.success(reachability))
+    private func forward(path: NWPath) {
+        continuation?(path)
         if #available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *) {
             Task {
-                await postNotification()
-                await updateDelegate(reachability: reachability)
-                await MainActor.run { updateHandler?(self, .success(reachability)) }
+                await MainActor.run {
+                    postNotification()
+                    updateDelegate(path: path)
+                    updateHandler?(self, path)
+                }
             }
         } else {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
-                self.unsafePostNotification()
-                self.unsafeUpdateDelegate(reachability: reachability)
-                self.updateHandler?(self, .success(reachability))
+                self.postNotification()
+                self.updateDelegate(path: path)
+                self.updateHandler?(self, path)
             }
         }
     }
 
-    private func fail(with error: Error) {
-        continuation?(.failure(error))
-        if #available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *) {
-            Task {
-                await postNotification()
-                await failDelegate(error)
-                await MainActor.run { updateHandler?(self, .failure(error)) }
-            }
-        } else {
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                self.unsafePostNotification()
-                self.unsafeFailDelegate(error)
-                self.updateHandler?(self, .failure(error))
-            }
-        }
-    }
-
-    @MainActor
     private func postNotification() {
-        unsafePostNotification()
+        NotificationCenter.default.post(name: .networkPathChanged, object: self)
     }
 
-    private func unsafePostNotification() {
-        NotificationCenter.default.post(name: .reachabilityChanged, object: self)
+    private func updateDelegate(path: NWPath) {
+        delegate?.networkMonitor(self, didUpdateNetworkPath: path)
     }
-
-    @MainActor
-    private func updateDelegate(reachability: Reachability) {
-        unsafeUpdateDelegate(reachability: reachability)
-    }
-
-    private func unsafeUpdateDelegate(reachability: Reachability) {
-        delegate?.networkMonitor(self, didUpdateReachability: reachability)
-    }
-
-    @MainActor
-    private func failDelegate(_ error: Error) {
-        unsafeFailDelegate(error)
-    }
-
-    private func unsafeFailDelegate(_ error: Error) {
-        delegate?.networkMonitor(self, didFailWithError: error)
-    }
-
-    // MARK: - Deinit
 
     deinit {
-        SCNetworkReachabilitySetCallback(ref, nil, nil)
-        SCNetworkReachabilityUnscheduleFromRunLoop(ref, CFRunLoopGetCurrent(), CFRunLoopMode.defaultMode.rawValue)
+        pathMonitor.cancel()
+        pathMonitor.pathUpdateHandler = nil
     }
+
 }

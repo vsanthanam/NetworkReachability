@@ -26,250 +26,128 @@
 #if canImport(Combine)
     import Combine
     import Foundation
+    import Network
 
-    #if canImport(Network)
-        import Network
-    #endif
-
-    @available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *)
+    @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
     public extension NetworkMonitor {
 
-        /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of reachability updates
+        /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of network path updates
         ///
-        /// Use this property to observe reachability updates with [Combine](https://developer.apple.com/documentation/combine).
-        ///
-        /// ```swift
-        /// let cancellable = NetworkMonitor.reachabilityPublisher
-        ///     .map(\.isReachable)
-        ///     .removeDuplicates()
-        ///     .replaceError(with: false)
-        ///     .sink { isReachable in
-        ///         // Do something with `isReachable`
-        ///     }
-        /// ```
-        static var reachabilityPublisher: Publishers.ReachabilityPublisher {
-            .init()
-        }
-
-        /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of reachability updates for a specific host
-        ///
-        /// Use this property to observe reachability updates with [Combine](https://developer.apple.com/documentation/combine).
+        /// Use this property to observe network path updates using [Combine](https://developer.apple.com/documentation/combine)
         ///
         /// ```swift
-        /// let cancellable = NetworkMonitor.reachabilityPublisher(forHost: "apple.com")
-        ///     .map(\.isReachable)
+        /// let cancellable = NetworkMonitor.networkPathPublisher
+        ///     .map { path in
+        ///         path.status == .satisfied
+        ///     }
         ///     .removeDuplicates()
-        ///     .replaceError(with: false)
-        ///     .sink { isReachable in
-        ///         // Do something with `isReachable`
+        ///     .sink { isSatisfied in
+        ///         // Do something with `isSatisfied`
         ///     }
         /// ```
-        static func reachabilityPublisher(forHost host: String) -> Publishers.ReachabilityPublisher {
-            .init(host: host)
+        static var networkPathPublisher: Publishers.NetworkPathPublisher {
+            .init(pathMonitor: .init())
         }
 
-        /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) used to observe reachability updates for use with [Combine](https://developer.apple.com/documentation/combine).
+        /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of network path updates for a specific interface
         ///
-        /// See ``reachabilityPublisher`` for usage.
+        /// Use this property to observe network path updates using [Combine](https://developer.apple.com/documentation/combine)
+        ///
+        /// ```swift
+        /// let cancellable = NetworkMonitor.networkPathPublisher
+        ///     .map { path in
+        ///         path.status == .satisfied
+        ///     }
+        ///     .removeDuplicates()
+        ///     .sink { isSatisfied in
+        ///         // Do something with `isSatisfied`
+        ///     }
+        /// ```
+        static func networkPathPublisher(requiringInterfaceType interfaceType: NWInterface.InterfaceType) -> Publishers.NetworkPathPublisher {
+            .init(pathMonitor: .init(requiredInterfaceType: interfaceType))
+        }
+
+        /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of network path updates for interface types that are not explicitly prohibited.
+        ///
+        /// Use this property to observe network path updates using [Combine](https://developer.apple.com/documentation/combine)
+        ///
+        /// ```swift
+        /// let cancellable = NetworkMonitor.networkPathPublisher
+        ///     .map { path in
+        ///         path.status == .satisfied
+        ///     }
+        ///     .removeDuplicates()
+        ///     .sink { isSatisfied in
+        ///         // Do something with `isSatisfied`
+        ///     }
+        /// ```
+        @available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
+        static func networkPathPublisher(prohibitingInterfaceTypes interfaceTypes: [NWInterface.InterfaceType]) -> Publishers.NetworkPathPublisher {
+            .init(pathMonitor: .init(prohibitedInterfaceTypes: interfaceTypes))
+        }
+
+        /// A [Combine](https://developer.apple.com/documentation/combine) [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of [`NWPath`](https://developer.apple.com/documentation/network/nwpath) updates
         struct Publisher: Combine.Publisher {
+
+            // MARK: - Initializers
+
+            init(pathMonitor: NWPathMonitor) {
+                self.pathMonitor = pathMonitor
+            }
 
             // MARK: - Publisher
 
             /// The kind of values published by this publisher.
-            public typealias Output = Reachability
+            public typealias Output = NWPath
 
             /// The kind of errors this publisher might publish.
-            public typealias Failure = Swift.Error
+            public typealias Failure = Never
 
             public func receive<S>(subscriber: S) where S: Subscriber, S.Failure == Failure, S.Input == Output {
-                let subscription = ReachabilitySubscription(subscriber: subscriber, host: host)
+                let subscription = Subscription(subscriber: subscriber, pathMonitor: pathMonitor)
                 subscriber.receive(subscription: subscription)
             }
 
             // MARK: - Private
 
-            init(host: String? = nil) {
-                self.host = host
-            }
-
-            private var host: String?
-
+            private let pathMonitor: NWPathMonitor
         }
 
-        private final class ReachabilitySubscription<S: Subscriber>: Subscription where S.Input == Reachability, S.Failure == Swift.Error {
+        private final class Subscription<S: Subscriber>: Combine.Subscription where S.Input == NWPath, S.Failure == Never {
 
             // MARK: - Initializers
 
-            init(subscriber: S?, host: String?) {
+            init(subscriber: S?, pathMonitor: NWPathMonitor) {
                 self.subscriber = subscriber
-                self.host = host
+                self.pathMonitor = pathMonitor
             }
 
             // MARK: - Subscription
 
             func request(_ demand: Subscribers.Demand) {
                 requested += 1
-                do {
-                    let continuation: (NetworkMonitor.Result) -> Void = { [weak self] result in
-                        guard let self = self,
-                              let subscriber = self.subscriber,
-                              self.requested > .none else { return }
-                        self.requested -= .max(1)
-                        do {
-                            let reachability = try result.get()
-                            let newDemand = subscriber.receive(reachability)
-                            self.requested += newDemand
-                        } catch {
-                            subscriber.receive(completion: .failure(error))
-                        }
-                    }
-                    if let host = host {
-                        networkMonitor = try NetworkMonitor(host: host, continuation: continuation)
-                    } else {
-                        networkMonitor = try NetworkMonitor(continuation: continuation)
-                    }
-                } catch {
-                    subscriber?.receive(completion: .failure(error))
+                monitor = .init(pathMonitor: pathMonitor) { [weak self] path in
+                    guard let self = self,
+                          let subscriber = self.subscriber,
+                          self.requested > .none else { return }
+                    self.requested -= .max(1)
+                    let newDemand = subscriber.receive(path)
+                    self.requested += newDemand
                 }
             }
 
             func cancel() {
-                networkMonitor = nil
+                monitor = nil
             }
 
             // MARK: - Private
 
+            private let pathMonitor: NWPathMonitor
+            private var monitor: NetworkMonitor?
             private var subscriber: S?
-            private var networkMonitor: NetworkMonitor?
             private var requested: Subscribers.Demand = .none
-            private var host: String?
 
         }
-
-        #if canImport(Network)
-
-            /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of available network paths
-            ///
-            /// Use this property to observe available network path updates with [Combine](https://developer.apple.com/documentation/combine)
-            ///
-            /// ```swift
-            /// let cancellable = NetworkMonitor.networkPathPublisher
-            ///     .map { path in
-            ///         path.status == .satisfied
-            ///     }
-            ///     .removeDuplicates()
-            ///     .sink { isSatisfied in
-            ///         // Do something with `isSatisfied`
-            ///     }
-            /// ```
-            static var networkPathPublisher: Publishers.NetworkPathPublisher {
-                .init(pathMonitor: .init())
-            }
-
-            /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of available network paths
-            ///
-            /// Use this property to observe a network path updates for a specific interface with [Combine](https://developer.apple.com/documentation/combine)
-            ///
-            /// ```swift
-            /// let cancellable = NetworkMonitor.networkPathPublisher(requiringInterfaceType: .wifi)
-            ///     .map { path in
-            ///         path.status == .satisfied
-            ///     }
-            ///     .removeDuplicates()
-            ///     .sink { isSatisfied in
-            ///         // Do something with `isSatisfied`
-            ///     }
-            /// ```
-            static func networkPathPublisher(requiringInterfaceType interfaceType: NWInterface.InterfaceType) -> Publishers.NetworkPathPublisher {
-                .init(pathMonitor: .init(requiredInterfaceType: interfaceType))
-            }
-
-            /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of available network paths
-            ///
-            /// Use this property to observe a network path updates for specific interfaces that are not explicitly prohibited with [Combine](https://developer.apple.com/documentation/combine)
-            ///
-            /// ```swift
-            /// let cancellable = NetworkMonitor.networkPathPublisher(
-            ///         prohibitingInterfaceTypes: [
-            ///             .wifi,
-            ///             .wiredEthernet
-            ///         ]
-            ///     )
-            ///     .map { path in
-            ///         path.status == .satisfied
-            ///     }
-            ///     .removeDuplicates()
-            ///     .sink { isSatisfied in
-            ///         // Do something with `isSatisfied`
-            ///     }
-            /// ```
-            @available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
-            static func networkPathPublisher(prohibitingInterfaceTypes interfaceTypes: [NWInterface.InterfaceType]) -> Publishers.NetworkPathPublisher {
-                .init(pathMonitor: .init(prohibitedInterfaceTypes: interfaceTypes))
-            }
-
-            struct NetworkPathPublisher: Combine.Publisher {
-
-                // MARK: - Publisher
-
-                /// The kind of values published by this publisher.
-                public typealias Output = NWPath
-
-                /// The kind of errors this publisher might publish.
-                public typealias Failure = Never
-
-                public func receive<S>(subscriber: S) where S: Subscriber, S.Failure == Failure, S.Input == Output {
-                    let subscription = NetworkPathSubscription(subscriber: subscriber, pathMonitor: pathMonitor)
-                    subscriber.receive(subscription: subscription)
-                }
-
-                init(pathMonitor: NWPathMonitor) {
-                    self.pathMonitor = pathMonitor
-                }
-
-                private let pathMonitor: NWPathMonitor
-            }
-
-            private final class NetworkPathSubscription<S: Subscriber>: Subscription where S.Input == NWPath, S.Failure == Never {
-
-                // MARK: - Initializers
-
-                init(subscriber: S?,
-                     pathMonitor: NWPathMonitor) {
-                    self.subscriber = subscriber
-                    self.pathMonitor = pathMonitor
-                }
-
-                // MARK: - Subscription
-
-                func request(_ demand: Subscribers.Demand) {
-                    requested += 1
-
-                    pathMonitor.pathUpdateHandler = { [weak self] path in
-                        guard let self = self,
-                              let subscriber = self.subscriber,
-                              self.requested > .none else { return }
-                        self.requested -= .max(1)
-                        let newDemand = subscriber.receive(path)
-                        self.requested += newDemand
-                    }
-
-                    pathMonitor.start(queue: .networkMonitorQueue)
-                }
-
-                func cancel() {
-                    pathMonitor.cancel()
-                }
-
-                // MARK: - Private
-
-                private let pathMonitor: NWPathMonitor
-                private var subscriber: S?
-                private var requested: Subscribers.Demand = .none
-
-            }
-
-        #endif
 
     }
 #endif

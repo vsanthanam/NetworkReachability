@@ -24,20 +24,15 @@
 // SOFTWARE.
 
 import Foundation
+import Network
 
-/// A protocol used to observe reachability changes from a ``NetworkMonitor``
-@available(macOS 10.13, iOS 11, watchOS 4, tvOS 11, *)
+/// A protocol used to observe network path changes from a ``NetworkMonitor``
+@available(iOS 12.0, macOS 10.14, watchOS 5.0, tvOS 12.0, *)
 public protocol NetworkMonitorDelegate: AnyObject {
 
-    /// Sent to the delegate when the reachability changes
+    /// Sent to the delegate with the network path changes
     /// - Parameters:
-    ///   - monitor: The network monitor who's eachability changed
-    ///   - reachability: The new reachability
-    func networkMonitor(_ monitor: NetworkMonitor, didUpdateReachability reachability: Reachability)
-
-    /// Sent to the delegate when the network monitor failed with an error
-    /// - Parameters:
-    ///   - monitor: The network monitor that failed
-    ///   - error: The error that caused the monitor to fail
-    func networkMonitor(_ monitor: NetworkMonitor, didFailWithError error: Error)
+    ///   - monitor: The monitor who's network path changed
+    ///   - networkPath: The new network path
+    func networkMonitor(_ monitor: NetworkMonitor, didUpdateNetworkPath networkPath: NWPath)
 }

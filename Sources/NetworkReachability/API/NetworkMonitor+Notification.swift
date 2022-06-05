@@ -25,10 +25,10 @@
 
 import Foundation
 
-@available(macOS 10.13, iOS 11, watchOS 4, tvOS 11, *)
+@available(iOS 12.0, macOS 10.14, watchOS 5.0, tvOS 12.0, *)
 public extension NetworkMonitor {
 
-    /// A notification posted by a ``NetworkMonitor`` when its reachability changes or fails.
-    static let reachabilityChangedNotificationName = Notification.Name("reachabilityChanged")
+    /// A notification posted by a ``NetworkMonitor`` when its network path changes.
+    static let networkPathChangedNotificationName = Notification.Name("networkPathChanged")
 
 }
