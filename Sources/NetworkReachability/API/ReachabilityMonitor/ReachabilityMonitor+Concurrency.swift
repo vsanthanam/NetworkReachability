@@ -28,33 +28,6 @@ import Foundation
 @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
 public extension ReachabilityMonitor {
 
-    /// Retrieve the latest known reachability path using [Swift Concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html)
-    ///
-    /// ```swift
-    /// func updateReachability() async throws {
-    ///     let reachability = try await ReachabilityMonitor.reachability
-    ///     // Do something with `reachability`
-    /// }
-    /// ```
-    static var reachability: Reachability {
-        get async throws {
-            try await withUnsafeThrowingContinuation { continuation in
-                do {
-                    _ = try ReachabilityMonitor() { result in
-                        do {
-                            let reachability = try result.get()
-                            continuation.resume(returning: reachability)
-                        } catch {
-                            continuation.resume(throwing: error)
-                        }
-                    }
-                } catch {
-                    continuation.resume(throwing: error)
-                }
-            }
-        }
-    }
-
     /// An [`AsyncSequence`](https://developer.apple.com/documentation/swift/asyncsequence) of reachability updates
     ///
     /// Use [Swift Concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html) to iterate over reachability updates in an asynchronous context.

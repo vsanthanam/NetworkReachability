@@ -39,7 +39,7 @@ To add NetworkReachability as a dependency to an existing Swift package, add the
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/vsanthanam/NetworkReachability.git", .upToNextMajor(from: "2.0.0"))
+    .package(url: "https://github.com/vsanthanam/NetworkReachability.git", .upToNextMajor(from: "1.0.0"))
 ]
 ```
 

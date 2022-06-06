@@ -142,6 +142,21 @@ public final class ReachabilityMonitor {
         }
     }
 
+    /// Retrieve the latest known reachability.
+    ///
+    /// ```swift
+    /// func updateReachability() throws {
+    ///     let reachability = try ReachabilityMonitor.reachability
+    ///     // Do something with `reachability`
+    /// }
+    /// ```
+    public static var reachability: Reachability {
+        get throws {
+            let monitor = try ReachabilityMonitor()
+            return try monitor.currentReachability
+        }
+    }
+
     // MARK: - Private
 
     private init(ref: SCNetworkReachability,
