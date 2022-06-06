@@ -26,14 +26,14 @@
 import Foundation
 import SystemConfiguration
 
-/// A class used to observe network reachability.
+/// A class used to observe network reachability changes
 ///
 /// Create an instance of this object and retain it in memory.
 ///
 /// You can observe reachability changes in several ways:
-/// - Synchronously, using the ``currentReachability`` property.
+/// - Synchronously, using the ``currentReachability`` instance property or the ``reachability`` static property.
 /// - Using delegation via ``ReachabilityMonitorDelegate``.
-/// - Using [structured concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html) via the ``reachability`` and ``reachabilityUpdates`` properties
+/// - Using [structured concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html) via the ``reachabilityUpdates`` properties
 /// - Using [Combine](https://developer.apple.com/documentation/combine), via the ``reachabilityPublisher`` property.
 /// - Using a provided closure via the ``updateHandler-swift.property`` property.
 /// - Using notification observers on [`NotificationCenter.default`](https://developer.apple.com/documentation/foundation/notificationcenter).

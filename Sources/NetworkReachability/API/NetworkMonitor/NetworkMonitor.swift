@@ -27,7 +27,7 @@ import Dispatch
 import Foundation
 import Network
 
-/// A class used to observe network path changes.
+/// A class used to observe network path changes
 ///
 /// Create an instance of this object and retain it in memory.
 ///

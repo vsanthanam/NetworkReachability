@@ -25,7 +25,7 @@
 
 import Foundation
 
-/// A protocol used to observe network path changes from a ``ReachabilityMonitor``
+/// A protocol used to observe network reachability changes from a ``ReachabilityMonitor``
 @available(iOS 11.0, macOS 10.13, watchOS 4.0, tvOS 11.0, *)
 public protocol ReachabilityMonitorDelegate: AnyObject {
 
