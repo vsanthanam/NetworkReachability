@@ -83,7 +83,7 @@ public final class NetworkMonitor {
     /// - Parameter delegate: The delegate object used to recieve updates
     ///
     /// - Note: The monitor begins observing and publishing updates immediately
-    public convenience init(delegate: NetworkMonitorDelegate) {
+    public convenience init(delegate: any NetworkMonitorDelegate) {
         self.init(pathMonitor: .init(),
                   updateHandler: nil,
                   delegate: delegate,
@@ -98,7 +98,7 @@ public final class NetworkMonitor {
     ///
     /// - Note: The monitor begins observing and publishing updates immediately
     public convenience init(requiredInterfaceType: NWInterface.InterfaceType,
-                            delegate: NetworkMonitorDelegate) {
+                            delegate: any NetworkMonitorDelegate) {
         self.init(pathMonitor: .init(requiredInterfaceType: requiredInterfaceType),
                   updateHandler: nil,
                   delegate: delegate,
@@ -114,7 +114,7 @@ public final class NetworkMonitor {
     /// - Note: The monitor begins observing and publishing updates immediately
     @available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
     public convenience init(prohibitedInterfaceTypes: [NWInterface.InterfaceType],
-                            delegate: NetworkMonitorDelegate) {
+                            delegate: any NetworkMonitorDelegate) {
         self.init(pathMonitor: .init(prohibitedInterfaceTypes: prohibitedInterfaceTypes),
                   updateHandler: nil,
                   delegate: delegate,
@@ -174,7 +174,7 @@ public final class NetworkMonitor {
     /// See ``NetworkMonitorDelegate`` for more information
     ///
     /// - Tip: The delegate only recieves status changes that occured after it was assigned. To ensure that the delegate recieves every network path change, pass in the delegate on initialization of the monitor.
-    public weak var delegate: NetworkMonitorDelegate?
+    public weak var delegate: (any NetworkMonitorDelegate)?
 
     /// The closure used to observe reachability updates
     ///
@@ -200,7 +200,7 @@ public final class NetworkMonitor {
 
     private init(pathMonitor: NWPathMonitor,
                  updateHandler: UpdateHandler?,
-                 delegate: NetworkMonitorDelegate?,
+                 delegate: (any NetworkMonitorDelegate)?,
                  continuation: ((NWPath) -> Void)?) {
         self.pathMonitor = pathMonitor
         self.updateHandler = updateHandler

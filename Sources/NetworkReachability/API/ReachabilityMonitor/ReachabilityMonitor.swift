@@ -77,7 +77,7 @@ public final class ReachabilityMonitor {
     /// - Note: A reachability monitor begins observing and publishing reachability updates immediately after initialization.
     ///
     /// - Throws: An error of type ``Error``
-    public convenience init(delegate: ReachabilityMonitorDelegate) throws {
+    public convenience init(delegate: any ReachabilityMonitorDelegate) throws {
         self.init(ref: try .general,
                   updateHandler: nil,
                   delegate: delegate)
@@ -119,7 +119,7 @@ public final class ReachabilityMonitor {
     /// See ``ReachabilityMonitorDelegate`` for more information.
     ///
     /// - Tip: The delegate only recieves status changes that occured after it was assigned. To recieve every status update, including the reachability status at the time the monitor was initialized, pass in the delegate on initialization of the monitor.
-    public weak var delegate: ReachabilityMonitorDelegate?
+    public weak var delegate: (any ReachabilityMonitorDelegate)?
 
     /// The current reachability status
     ///
@@ -161,7 +161,7 @@ public final class ReachabilityMonitor {
 
     private init(ref: SCNetworkReachability,
                  updateHandler: UpdateHandler?,
-                 delegate: ReachabilityMonitorDelegate?,
+                 delegate: (any ReachabilityMonitorDelegate)?,
                  continuation: ((Result) -> Void)? = nil) {
         self.ref = ref
         self.updateHandler = updateHandler
