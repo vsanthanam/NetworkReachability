@@ -33,9 +33,9 @@ final class ReachabilityMonitorTests: XCTestCase {
 
     var cancellable: AnyCancellable?
 
-    func test_get_concurrency() async {
+    func test_get_concurrency() {
         do {
-            let reachability = try await ReachabilityMonitor.reachability
+            let reachability = try ReachabilityMonitor.reachability
             XCTAssertTrue(reachability.status.isReachable)
         } catch {
             XCTFail()
