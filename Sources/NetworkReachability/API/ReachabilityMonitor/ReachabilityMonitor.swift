@@ -225,7 +225,7 @@ public final class ReachabilityMonitor {
 
         if !SCNetworkReachabilitySetCallback(ref, callback, &context) {
             flags = .failure(.failedToStartCallback(SCError()))
-        } else if !SCNetworkReachabilityScheduleWithRunLoop(ref, CFRunLoopGetCurrent(), CFRunLoopMode.defaultMode.rawValue) {
+        } else if !SCNetworkReachabilitySetDispatchQueue(ref, .reachabilityMonitorQueue) {
             flags = .failure(.failedToSetRunLoop(SCError()))
         } else {
             refreshFlags()
