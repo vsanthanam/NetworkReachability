@@ -298,6 +298,6 @@ public final class ReachabilityMonitor {
 
     deinit {
         SCNetworkReachabilitySetCallback(ref, nil, nil)
-        SCNetworkReachabilityUnscheduleFromRunLoop(ref, CFRunLoopGetCurrent(), CFRunLoopMode.defaultMode.rawValue)
+        SCNetworkReachabilitySetDispatchQueue(ref, nil)
     }
 }
