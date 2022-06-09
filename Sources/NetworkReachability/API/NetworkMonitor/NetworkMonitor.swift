@@ -33,7 +33,7 @@ import Network
 ///
 /// You can observe reachability changes in several ways:
 /// - Synchronously, using the ``currentPath`` property
-/// - Using delegation via ``NetworkMonitorMonitorDelegate``.
+/// - Using delegation via ``NetworkMonitorDelegate``.
 /// - Using [structured concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html) via the ``networkPath`` and ``networkPathUpdates`` properties
 /// - Using [Combine](https://developer.apple.com/documentation/combine), via the ``networkPathPublisher`` property.
 /// - Using a provided closure via the ``updateHandler-swift.property`` property.
