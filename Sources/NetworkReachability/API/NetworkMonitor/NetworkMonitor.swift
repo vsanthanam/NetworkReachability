@@ -246,7 +246,7 @@ public final class NetworkMonitor {
     private func updateDelegate(path: NWPath) {
         delegate?.networkMonitor(self, didUpdateNetworkPath: path)
     }
-    
+
     // MARK: - Deinit
 
     deinit {

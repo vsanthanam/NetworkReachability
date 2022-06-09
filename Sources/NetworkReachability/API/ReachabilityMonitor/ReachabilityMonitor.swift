@@ -187,7 +187,11 @@ public final class ReachabilityMonitor {
                     let flags = try flags.get()
                     succeed(with: flags)
                 } catch {
-                    fail(with: error as! Error)
+                    if let error = error as? Error {
+                        fail(with: error)
+                    } else {
+                        fail(with: .unknown)
+                    }
                 }
             }
         }
@@ -226,7 +230,7 @@ public final class ReachabilityMonitor {
         if !SCNetworkReachabilitySetCallback(ref, callback, &context) {
             flags = .failure(.failedToStartCallback(SCError()))
         } else if !SCNetworkReachabilitySetDispatchQueue(ref, .reachabilityMonitorQueue) {
-            flags = .failure(.failedToSetRunLoop(SCError()))
+            flags = .failure(.failedToSetDispatchQueue(SCError()))
         } else {
             refreshFlags()
         }

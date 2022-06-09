@@ -40,10 +40,13 @@ public extension ReachabilityMonitor {
         case failedToStartCallback(Int32)
 
         /// An error indicating the rachability observation could not be scheduled
-        case failedToSetRunLoop(Int32)
+        case failedToSetDispatchQueue(Int32)
 
         /// An error indicating the reachability couldn't be obtained from the system
         case failedToGetFlags(Int32)
+
+        /// An unknown error
+        case unknown
 
         // MARK: - LocalizedError
 
@@ -53,10 +56,12 @@ public extension ReachabilityMonitor {
                 return "Couldn't create system reachability reference"
             case .failedToStartCallback:
                 return "Couldn't start system observability callback"
-            case .failedToSetRunLoop:
+            case .failedToSetDispatchQueue:
                 return "Couldn't schedule system observability callback"
             case .failedToGetFlags:
                 return "Couldn't get system reachability flags"
+            case .unknown:
+                return "Unknown ReachabilityMonitor Failure"
             }
         }
 
@@ -66,10 +71,12 @@ public extension ReachabilityMonitor {
                 return "SCError Code \(code)"
             case let .failedToStartCallback(code):
                 return "SCError Code \(code)"
-            case let .failedToSetRunLoop(code):
+            case let .failedToSetDispatchQueue(code):
                 return "SCError Code \(code)"
             case let .failedToGetFlags(code):
                 return "SCError Code \(code)"
+            case .unknown:
+                return "SCError Code Unknown"
             }
         }
 
