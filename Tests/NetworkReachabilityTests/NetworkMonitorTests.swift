@@ -28,6 +28,7 @@ import Network
 @testable import NetworkReachability
 import XCTest
 
+@available(iOS 12.0, macOS 10.14, watchOS 5.0, tvOS 12.0, *)
 final class NetworkMonitorTests: XCTestCase {
 
     var cancellable: AnyCancellable?

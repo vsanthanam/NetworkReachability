@@ -29,6 +29,7 @@ import Combine
 @testable import NetworkReachability
 import XCTest
 
+@available(iOS 11.0, macOS 10.13, watchOS 4.0, tvOS 11.0, *)
 final class ReachabilityMonitorTests: XCTestCase {
 
     var cancellable: AnyCancellable?

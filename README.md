@@ -17,7 +17,7 @@
         <img src="https://img.shields.io/badge/swift-5.6-critical" />
     </a>
     <a href="https://developer.apple.com">
-        <img src="https://img.shields.io/badge/platform-iOS%2011%20%7C%20macOS%2012.13%20%7C%20tvOS%2011%20%7C%20watchOS%204-lightgrey" />
+        <img src="https://img.shields.io/badge/platform-iOS%2011%20%7C%20macOS%2010.13%20%7C%20tvOS%2011%20%7C%20watchOS%204-lightgrey" />
     </a>
 </p>
 
