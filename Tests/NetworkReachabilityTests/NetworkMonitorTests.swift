@@ -23,8 +23,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import Combine
-import Network
+#if canImport(Combine)
+    import Combine
+    import Network
+#endif
+
 @testable import NetworkReachability
 import XCTest
 

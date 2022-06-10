@@ -24,8 +24,9 @@
 // SOFTWARE.
 
 import Foundation
-
-import Combine
+#if canImport(Combine)
+    import Combine
+#endif
 @testable import NetworkReachability
 import XCTest
 
