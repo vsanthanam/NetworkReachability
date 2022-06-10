@@ -1,0 +1,12 @@
+version: 1
+builder:
+  configs:
+  - platform: ios
+    scheme: NetworkReachability
+  - platform: macos-xcodebuild
+    scheme: NetworkReachability
+  - platform: tvos
+    scheme: NetworkReachability
+  - platform: watchos
+    scheme: NetworkReachability
+  - documentation_targets: [NetworkReachability]
