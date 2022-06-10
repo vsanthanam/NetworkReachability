@@ -33,9 +33,9 @@ import XCTest
 @available(macOS 10.13, iOS 11.0, watchOS 4.0, tvOS 11.0, *)
 final class ReachabilityMonitorTests: XCTestCase {
 
+    @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
     var cancellable: AnyCancellable?
 
-    @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
     func test_get_sync() {
         do {
             let reachability = try ReachabilityMonitor.reachability
@@ -172,6 +172,12 @@ final class ReachabilityMonitorTests: XCTestCase {
             } catch {
                 XCTFail()
             }
+        }
+    }
+
+    deinit {
+        if #available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *) {
+            cancellable?.cancel()
         }
     }
 }
