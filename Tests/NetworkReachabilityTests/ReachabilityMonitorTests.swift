@@ -46,26 +46,6 @@ final class ReachabilityMonitorTests: XCTestCase {
         }
     }
 
-    @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
-    func test_observe_concurrency() {
-        let expectation = expectation(description: "pass")
-
-        Task {
-            do {
-                for try await isReachable in ReachabilityMonitor.reachabilityUpdates.map(\.status.isReachable) {
-                    if isReachable {
-                        expectation.fulfill()
-                    } else {
-                        XCTFail()
-                    }
-                }
-            } catch {
-                XCTFail()
-            }
-        }
-        waitForExpectations(timeout: 5, handler: nil)
-    }
-
     func test_observe_closure() {
         let expectation = expectation(description: "pass")
         do {
@@ -85,21 +65,6 @@ final class ReachabilityMonitorTests: XCTestCase {
         } catch {
             XCTFail()
         }
-    }
-
-    @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
-    func test_observe_combine() {
-        let expectation = expectation(description: "pass")
-        cancellable = ReachabilityMonitor
-            .reachabilityPublisher
-            .map(\.status.isReachable)
-            .replaceError(with: false)
-            .removeDuplicates()
-            .sink { isReachable in
-                XCTAssertTrue(isReachable)
-                expectation.fulfill()
-            }
-        waitForExpectations(timeout: 5)
     }
 
     func test_observe_delegate() {

@@ -23,8 +23,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if canImport(Combine)
-    import Combine
+#if canImport(Network)
     import Network
 #endif
 
@@ -33,30 +32,6 @@ import XCTest
 
 @available(macOS 10.14, iOS 12.0, watchOS 5.0, tvOS 12.0, *)
 final class NetworkMonitorTests: XCTestCase {
-
-    #if canImport(Combine)
-        var cancellable: AnyCancellable?
-    #endif
-
-    @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
-    func test_get_concurrency() async {
-        let path = await NetworkMonitor.networkPath
-        XCTAssertEqual(path.status, .satisfied)
-    }
-
-    @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
-    func test_observe_concurrency() {
-        let expectation = expectation(description: "pass")
-
-        Task {
-            for await status in NetworkMonitor.networkPathUpdates.map(\.status) {
-                if status == .satisfied {
-                    expectation.fulfill()
-                }
-            }
-        }
-        waitForExpectations(timeout: 5, handler: nil)
-    }
 
     func test_observe_closure() {
         let expectation = expectation(description: "pass")
@@ -67,20 +42,6 @@ final class NetworkMonitorTests: XCTestCase {
         })) {
             waitForExpectations(timeout: 5, handler: nil)
         }
-    }
-
-    @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
-    func test_observe_combine() {
-        let expectation = expectation(description: "pass")
-        cancellable = NetworkMonitor
-            .networkPathPublisher
-            .map { $0.status == .satisfied }
-            .removeDuplicates()
-            .sink { isReachable in
-                XCTAssertTrue(isReachable)
-                expectation.fulfill()
-            }
-        waitForExpectations(timeout: 5)
     }
 
     func test_observe_delegate() {
@@ -144,12 +105,6 @@ final class NetworkMonitorTests: XCTestCase {
             withExtendedLifetime(NetworkMonitor()) {
                 waitForExpectations(timeout: 5)
             }
-        }
-    }
-
-    deinit {
-        if #available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *) {
-            cancellable?.cancel()
         }
     }
 }
