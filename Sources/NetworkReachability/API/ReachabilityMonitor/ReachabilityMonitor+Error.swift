@@ -25,7 +25,7 @@
 
 import Foundation
 
-@available(iOS 11.0, macOS 10.13, watchOS 4.0, tvOS 11.0, *)
+@available(macOS 10.13, iOS 11.0, watchOS 4.0, tvOS 11.0, *)
 public extension ReachabilityMonitor {
 
     /// Errors that could cause a ``ReachabilityMonitor`` to fail

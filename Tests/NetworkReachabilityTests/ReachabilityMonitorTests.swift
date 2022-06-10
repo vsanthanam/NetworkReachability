@@ -29,12 +29,13 @@ import Combine
 @testable import NetworkReachability
 import XCTest
 
-@available(iOS 11.0, macOS 10.13, watchOS 4.0, tvOS 11.0, *)
+@available(macOS 10.13, iOS 11.0, watchOS 4.0, tvOS 11.0, *)
 final class ReachabilityMonitorTests: XCTestCase {
 
     var cancellable: AnyCancellable?
 
-    func test_get_concurrency() {
+    @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
+    func test_get_sync() {
         do {
             let reachability = try ReachabilityMonitor.reachability
             XCTAssertTrue(reachability.status.isReachable)
@@ -43,6 +44,7 @@ final class ReachabilityMonitorTests: XCTestCase {
         }
     }
 
+    @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
     func test_observe_concurrency() {
         let expectation = expectation(description: "pass")
 
@@ -83,6 +85,7 @@ final class ReachabilityMonitorTests: XCTestCase {
         }
     }
 
+    @available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
     func test_observe_combine() {
         let expectation = expectation(description: "pass")
         cancellable = ReachabilityMonitor

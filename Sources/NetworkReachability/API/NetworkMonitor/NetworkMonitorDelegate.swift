@@ -27,7 +27,7 @@ import Foundation
 import Network
 
 /// A protocol used to observe network path changes from a ``NetworkMonitor``
-@available(iOS 12.0, macOS 10.14, watchOS 5.0, tvOS 12.0, *)
+@available(macOS 10.14, iOS 12.0, watchOS 5.0, tvOS 12.0, *)
 public protocol NetworkMonitorDelegate: AnyObject {
 
     /// Sent to the delegate with the network path changes

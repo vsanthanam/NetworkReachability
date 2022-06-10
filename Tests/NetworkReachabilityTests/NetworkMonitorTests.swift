@@ -28,16 +28,18 @@ import Network
 @testable import NetworkReachability
 import XCTest
 
-@available(iOS 12.0, macOS 10.14, watchOS 5.0, tvOS 12.0, *)
+@available(macOS 10.14, iOS 12.0, watchOS 5.0, tvOS 12.0, *)
 final class NetworkMonitorTests: XCTestCase {
 
     var cancellable: AnyCancellable?
 
+    @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
     func test_get_concurrency() async {
         let path = await NetworkMonitor.networkPath
         XCTAssertEqual(path.status, .satisfied)
     }
 
+    @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
     func test_observe_concurrency() {
         let expectation = expectation(description: "pass")
 
@@ -62,6 +64,7 @@ final class NetworkMonitorTests: XCTestCase {
         }
     }
 
+    @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
     func test_observe_combine() {
         let expectation = expectation(description: "pass")
         cancellable = NetworkMonitor

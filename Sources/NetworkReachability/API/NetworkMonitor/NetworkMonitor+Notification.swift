@@ -25,7 +25,7 @@
 
 import Foundation
 
-@available(iOS 12.0, macOS 10.14, watchOS 5.0, tvOS 12.0, *)
+@available(macOS 10.14, iOS 12.0, watchOS 5.0, tvOS 12.0, *)
 public extension NetworkMonitor {
 
     /// A notification posted by a ``NetworkMonitor`` when its network path changes.

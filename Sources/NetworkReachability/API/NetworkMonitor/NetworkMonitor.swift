@@ -38,7 +38,7 @@ import Network
 /// - Using [Combine](https://developer.apple.com/documentation/combine), via the ``networkPathPublisher`` property.
 /// - Using a provided closure via the ``updateHandler-swift.property`` property.
 /// - Using notification observers on [`NotificationCenter.default`](https://developer.apple.com/documentation/foundation/notificationcenter).
-@available(iOS 12.0, macOS 10.14, watchOS 5.0, tvOS 12.0, *)
+@available(macOS 10.14, iOS 12.0, watchOS 5.0, tvOS 12.0, *)
 public final class NetworkMonitor {
 
     // MARK: - Initializers
