@@ -86,7 +86,7 @@ final class ReachabilityMonitorTests: XCTestCase {
         }
     }
 
-    @available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
+    @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
     func test_observe_combine() {
         let expectation = expectation(description: "pass")
         cancellable = ReachabilityMonitor
