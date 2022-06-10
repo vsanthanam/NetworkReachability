@@ -55,3 +55,7 @@ Other distribution mechanisms like CocoaPods or Carthage may be added in the fut
 NetworkReachability's documentation is built with [DocC](https://developer.apple.com/documentation/docc) and included in the repository as a DocC archive. The latest version is hosted on [GitHub Pages](https://pages.github.com) and is available [here](https://reachability.tools/docs/documentation/networkreachability).
 
 [![Documentation](Images/Documentation.svg)](https://reachability.tools/docs/documentation/networkreachability)
+
+## License
+
+**NetworkReachability** is available under the MIT license. See the LICENSE file for more information.
