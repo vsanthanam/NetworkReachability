@@ -34,8 +34,9 @@ import XCTest
 @available(macOS 10.14, iOS 12.0, watchOS 5.0, tvOS 12.0, *)
 final class NetworkMonitorTests: XCTestCase {
 
-    @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
-    var cancellable: AnyCancellable?
+    #if canImport(Combine)
+        var cancellable: AnyCancellable?
+    #endif
 
     @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
     func test_get_concurrency() async {
