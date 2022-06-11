@@ -27,28 +27,28 @@ import Foundation
 
 extension DispatchQueue {
 
-    static var networkMonitorQueue: DispatchQueue {
+    private static func frameworkQueue(_ name: String, fallback: String) -> DispatchQueue {
         let label: String
         if let bundleIdentifier = Bundle.main.bundleIdentifier {
-            label = [bundleIdentifier, "NetworkMonitor"].joined(separator: ".")
+            label = [bundleIdentifier, name].joined(separator: ".")
         } else {
-            label = "com.varunsanthanam.NetworkMonitor"
+            label = [fallback, name].joined(separator: ".")
         }
 
         let queue = DispatchQueue(label: label)
         return queue
     }
 
-    static var reachabilityMonitorQueue: DispatchQueue {
-        let label: String
-        if let bundleIdentifier = Bundle.main.bundleIdentifier {
-            label = [bundleIdentifier, "ReachabilityMonitor"].joined(separator: ".")
-        } else {
-            label = "com.varunsanthanam.ReachabilityMonitor"
-        }
+    private static func networkReachabilityQueue(name: String) -> DispatchQueue {
+        frameworkQueue(name, fallback: "com.varunsanthanam.NetworkReachability")
+    }
 
-        let queue = DispatchQueue(label: label)
-        return queue
+    static var networkMonitorQueue: DispatchQueue {
+        networkReachabilityQueue(name: "NetworkMonitor")
+    }
+
+    static var reachabilityMonitorQueue: DispatchQueue {
+        networkReachabilityQueue(name: "ReachabilityMonitor")
     }
 
 }
