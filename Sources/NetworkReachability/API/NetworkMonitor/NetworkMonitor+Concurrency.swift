@@ -90,7 +90,7 @@ public extension NetworkMonitor {
     /// Use this function to observe network path updates using [Swift Concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html)
     ///
     /// ```swift
-    /// for await path in NetworkMontitor.networkPathUpdates(requiringInterfaceType: .wifi) {
+    /// for await path in NetworkMontitor.networkPathUpdates(prohibitingInterfaceTypes: [.wifi, .wiredEthernet]) {
     ///     // Do something with `path`
     /// }
     /// ```
