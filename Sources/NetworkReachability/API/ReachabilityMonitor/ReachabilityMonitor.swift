@@ -24,6 +24,7 @@
 // SOFTWARE.
 
 import Foundation
+import NetworkReachabilityShared
 import SystemConfiguration
 
 /// A class used to observe network reachability changes

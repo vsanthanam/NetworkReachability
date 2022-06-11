@@ -25,7 +25,7 @@
 
 import Foundation
 
-extension DispatchQueue {
+public extension DispatchQueue {
 
     static var networkMonitorQueue: DispatchQueue {
         let label: String

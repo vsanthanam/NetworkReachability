@@ -16,18 +16,40 @@ let package = Package(
             name: "NetworkReachability",
             targets: ["NetworkReachability"]
         ),
+        .library(
+            name: "NetworkReachabilityRxSwift",
+            targets: ["NetworkReachabilityRxSwift"]
+        ),
+        .library(
+            name: "NetworkReachabilityShared",
+            targets: ["NetworkReachabilityShared"]
+        ),
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0")
+        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0"),
+        .package(url: "https://github.com/ReactiveX/RxSwift.git", from: "6.0.0")
     ],
     targets: [
         .target(
             name: "NetworkReachability",
-            dependencies: []
+            dependencies: ["NetworkReachabilityShared"]
         ),
         .testTarget(
             name: "NetworkReachabilityTests",
             dependencies: ["NetworkReachability"]
         ),
+        .target(
+            name: "NetworkReachabilityRxSwift",
+            dependencies: ["NetworkReachability", "NetworkReachabilityShared", "RxSwift"]
+        ),
+        .testTarget(
+            name: "NetworkReachabilityRxSwiftTests",
+            dependencies: ["NetworkReachability", "NetworkReachabilityRxSwift", "RxSwift"]
+        ),
+        .target(
+            name: "NetworkReachabilityShared",
+            dependencies: []
+        ),
+
     ]
 )

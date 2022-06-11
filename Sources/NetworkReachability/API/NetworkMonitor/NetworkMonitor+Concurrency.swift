@@ -25,6 +25,7 @@
 
 import Foundation
 import Network
+import NetworkReachabilityShared
 
 @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
 public extension NetworkMonitor {
@@ -40,12 +41,9 @@ public extension NetworkMonitor {
     static var networkPath: NWPath {
         get async {
             await withUnsafeContinuation { continuation in
-                let monitor = NWPathMonitor()
-                monitor.pathUpdateHandler = { [weak monitor] path in
-                    monitor?.cancel()
+                NetworkMonitor.networkPath { path in
                     continuation.resume(returning: path)
                 }
-                monitor.start(queue: .networkMonitorQueue)
             }
         }
     }

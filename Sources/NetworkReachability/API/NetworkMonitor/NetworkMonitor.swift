@@ -26,6 +26,7 @@
 import Dispatch
 import Foundation
 import Network
+import NetworkReachabilityShared
 
 /// A class used to observe network path changes
 ///
@@ -168,6 +169,24 @@ public final class NetworkMonitor {
 
     /// A closure used to recieve network path updates from a network monitor
     public typealias UpdateHandler = (NetworkMonitor, NWPath) -> Void
+
+    /// Retrieve the latest known network path using a completionHandler
+    ///
+    /// ```swift
+    /// func updateReachability(){
+    ///     NetworkMonitor.networkPath { (path: NWPath) in
+    ///         // Do something with `path`
+    ///     }
+    /// }
+    /// ```
+    public static func networkPath(pathHandler: @escaping (NWPath) -> Void) {
+        let monitor = NWPathMonitor()
+        monitor.pathUpdateHandler = { [weak monitor] path in
+            monitor?.cancel()
+            pathHandler(path)
+        }
+        monitor.start(queue: .networkMonitorQueue)
+    }
 
     /// The delegate object used to observe reachability updates
     ///
