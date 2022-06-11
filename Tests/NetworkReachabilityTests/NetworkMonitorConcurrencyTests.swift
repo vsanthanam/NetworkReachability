@@ -1,4 +1,4 @@
-// NetworkReachabiliy
+// NetworkReachability
 // NetworkMonitorConcurrencyTests.swift
 //
 // MIT License
