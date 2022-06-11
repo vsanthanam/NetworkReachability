@@ -56,6 +56,11 @@ NetworkReachability's documentation is built with [DocC](https://developer.apple
 
 [![Documentation](Images/Documentation.svg)](https://reachability.tools/docs/documentation/networkreachability)
 
+Additional installation instructions are available on the [Swift Package Index](https://swiftpackageindex.com/vsanthanam/NetworkReachability)
+
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fvsanthanam%2FNetworkReachability%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/vsanthanam/NetworkReachability)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fvsanthanam%2FNetworkReachability%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/vsanthanam/NetworkReachability)
+
 ## License
 
 **NetworkReachability** is available under the MIT license. See the LICENSE file for more information.
