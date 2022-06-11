@@ -31,6 +31,8 @@ NetworkReachability supports synchronous reachability queries, as well as consta
 * [Swift Structured Concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html)
 * [Combine](https://developer.apple.com/documentation/combine)
 
+NetworkReachability also has bindings for [RxSwift](https://github.com/ReactiveX/RxSwift) with an optional additional package: [NetworkReachabilityRxSwift](https://github.com/vsanthanam/NetworkReachabilityRxSwift). This optional package exists so that you can safely depend on NetworkReachability without also depending on RxSwift if you don't need to. NetworkReachability itself has no non-apple dependencies.
+
 ## Installation
 
 NetworkReachability is currently distributed exclusively through the [Swift Package Manager](https://www.swift.org/package-manager/). 
@@ -39,7 +41,7 @@ To add NetworkReachability as a dependency to an existing Swift package, add the
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/vsanthanam/NetworkReachability.git", .upToNextMajor(from: "1.0.0"))
+    .package(url: "https://github.com/vsanthanam/NetworkReachability.git", from: "1.0.0")
 ]
 ```
 
