@@ -1,4 +1,4 @@
-// NetworkReachabiliy
+// NetworkReachability
 // NetworkMonitorTests.swift
 //
 // MIT License
@@ -32,6 +32,15 @@ import XCTest
 
 @available(macOS 10.14, iOS 12.0, watchOS 5.0, tvOS 12.0, *)
 final class NetworkMonitorTests: XCTestCase {
+
+    func test_get_closure() {
+        let expectation = expectation(description: "pass")
+        NetworkMonitor.networkPath { path in
+            XCTAssertEqual(path.status, .satisfied)
+            expectation.fulfill()
+        }
+        waitForExpectations(timeout: 5)
+    }
 
     func test_observe_closure() {
         let expectation = expectation(description: "pass")

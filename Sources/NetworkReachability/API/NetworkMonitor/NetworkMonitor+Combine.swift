@@ -1,4 +1,4 @@
-// NetworkReachabiliy
+// NetworkReachability
 // NetworkMonitor+Combine.swift
 //
 // MIT License
@@ -126,7 +126,7 @@
 
             func request(_ demand: Subscribers.Demand) {
                 requested += 1
-                monitor = .init(pathMonitor: pathMonitor) { [weak self] path in
+                monitor = .withContinuation(pathMonitor: pathMonitor) { [weak self] path in
                     guard let self = self,
                           let subscriber = self.subscriber,
                           self.requested > .none else { return }

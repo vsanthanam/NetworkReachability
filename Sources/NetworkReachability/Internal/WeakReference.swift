@@ -1,4 +1,4 @@
-// NetworkReachabiliy
+// NetworkReachability
 // WeakReference.swift
 //
 // MIT License

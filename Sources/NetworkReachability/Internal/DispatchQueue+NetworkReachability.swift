@@ -1,4 +1,4 @@
-// NetworkReachabiliy
+// NetworkReachability
 // DispatchQueue+NetworkReachability.swift
 //
 // MIT License

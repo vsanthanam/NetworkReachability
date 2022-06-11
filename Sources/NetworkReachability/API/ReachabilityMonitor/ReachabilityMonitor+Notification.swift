@@ -1,4 +1,4 @@
-// NetworkReachabiliy
+// NetworkReachability
 // ReachabilityMonitor+Notification.swift
 //
 // MIT License

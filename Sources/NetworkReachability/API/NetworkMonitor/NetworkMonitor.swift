@@ -1,4 +1,4 @@
-// NetworkReachabiliy
+// NetworkReachability
 // NetworkMonitor.swift
 //
 // MIT License
@@ -169,6 +169,24 @@ public final class NetworkMonitor {
     /// A closure used to recieve network path updates from a network monitor
     public typealias UpdateHandler = (NetworkMonitor, NWPath) -> Void
 
+    /// Retrieve the latest known network path using a closure
+    ///
+    /// ```swift
+    /// func updateReachability() {
+    ///     NetworkMonitor.networkPath { (path: NWPath) in
+    ///         // Do something with `path`
+    ///     }
+    /// }
+    /// ```
+    public static func networkPath(_ pathHandler: @escaping (NWPath) -> Void) {
+        let monitor = NWPathMonitor()
+        monitor.pathUpdateHandler = { path in
+            monitor.cancel()
+            pathHandler(path)
+        }
+        monitor.start(queue: .networkMonitorQueue)
+    }
+
     /// The delegate object used to observe reachability updates
     ///
     /// See ``NetworkMonitorDelegate`` for more information
@@ -190,12 +208,12 @@ public final class NetworkMonitor {
 
     // MARK: - Private
 
-    convenience init(pathMonitor: NWPathMonitor,
-                     continuation: @escaping ((NWPath) -> Void)) {
-        self.init(pathMonitor: pathMonitor,
-                  updateHandler: nil,
-                  delegate: nil,
-                  continuation: continuation)
+    @discardableResult
+    static func withContinuation(pathMonitor: NWPathMonitor = .init(), continuation: @escaping (NWPath) -> Void) -> NetworkMonitor {
+        NetworkMonitor(pathMonitor: pathMonitor,
+                       updateHandler: nil,
+                       delegate: nil,
+                       continuation: continuation)
     }
 
     private init(pathMonitor: NWPathMonitor,

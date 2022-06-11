@@ -1,4 +1,4 @@
-// NetworkReachabiliy
+// NetworkReachability
 // Publishers+NetworkReachability.swift
 //
 // MIT License
