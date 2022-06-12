@@ -73,15 +73,15 @@ import Network
 /// - ``networkPathUpdates(requiringInterfaceType:)``
 /// - ``networkPathUpdates(prohibitingInterfaceTypes:)``
 ///
-/// ### NotificationCenter
+/// ### Notifications
 ///
 /// - ``networkPathChangedNotificationName``
 ///
 /// ### Combine
 ///
 /// - ``networkPathPublisher``
-/// - ``networkPathUpdates(requiringInterfaceType:)``
-/// - ``networkPathUpdates(prohibitingInterfaceTypes:)``
+/// - ``networkPathPublisher(requiringInterfaceType:)``
+/// - ``networkPathPublisher(prohibitingInterfaceTypes:)
 /// - ``Publisher``
 @available(macOS 10.14, iOS 12.0, watchOS 5.0, tvOS 12.0, *)
 public final class NetworkMonitor {
@@ -237,13 +237,15 @@ public final class NetworkMonitor {
     /// See ``NetworkMonitorDelegate`` for more information
     ///
     /// - Tip: The delegate only recieves status changes that occured after it was assigned. To ensure that the delegate recieves every network path change, pass in the delegate on initialization of the monitor.
+    ///
+    /// - Important: Instances of ``NetworkMonitor`` will perform delegate callbacks on the main thread.
     public weak var delegate: (any NetworkMonitorDelegate)?
 
     /// The closure used to observe reachability updates
     ///
     /// - Tip: The update handler only recieves status changes that occured after it was assigned. To enture that the delegate recieves every network path changes, pass in the delegate on initalization of the monitor.
     ///
-    /// - Note: Instances of ``NetworkMonitor`` will always invoke this closure the main thread.
+    /// - Important: Instances of ``NetworkMonitor`` will always invoke this closure the main thread.
     public private(set) var updateHandler: UpdateHandler?
 
     /// The currently available network path observed by the network monitor.

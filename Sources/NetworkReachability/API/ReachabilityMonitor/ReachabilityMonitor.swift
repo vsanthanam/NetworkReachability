@@ -57,13 +57,15 @@ import SystemConfiguration
 ///
 /// - ``updateHandler-swift.property``
 /// - ``UpdateHandler-swift.typealias``
+/// - ``Result``
+/// - ``Error``
 ///
 /// ### Swift Concurrency
 ///
 /// - ``reachability``
 /// - ``reachabilityUpdates``
 ///
-/// ### NotificationCenter
+/// ### Notifications
 ///
 /// - ``reachabilityChangedNotificationName``
 ///
