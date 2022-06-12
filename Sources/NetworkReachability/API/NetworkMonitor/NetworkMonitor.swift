@@ -38,6 +38,51 @@ import Network
 /// - Using [Combine](https://developer.apple.com/documentation/combine), via the ``networkPathPublisher`` property.
 /// - Using a provided closure via the ``updateHandler-swift.property`` property.
 /// - Using notification observers on [`NotificationCenter.default`](https://developer.apple.com/documentation/foundation/notificationcenter).
+///
+/// See the <doc:NetworkMonitorGuide> for more information.
+///
+/// ## Topics
+///
+/// ### Initializers
+///
+/// - ``init()``
+/// - ``init(requiredInterfaceType:)``
+/// - ``init(prohibitedInterfaceTypes:)``
+/// - ``init(updateHandler:)``
+/// - ``init(requiredInterfaceType:updateHandler:)``
+/// - ``init(prohibitedInterfaceTypes:updateHandler:)``
+/// - ``init(delegate:)``
+/// - ``init(requiredInterfaceType:delegate:)``
+/// - ``init(prohibitedInterfaceTypes:delegate:)``
+///
+/// ### Delegation
+///
+/// - ``NetworkMonitorDelegate``
+/// - ``delegate``
+///
+/// ### Closures
+///
+/// - ``updateHandler-swift.property``
+/// - ``UpdateHandler-swift.typealias``
+/// - ``networkPath(completionHandler:)``
+///
+/// ### Swift Concurrency
+///
+/// - ``networkPath``
+/// - ``networkPathUpdates``
+/// - ``networkPathUpdates(requiringInterfaceType:)``
+/// - ``networkPathUpdates(prohibitingInterfaceTypes:)``
+///
+/// ### NotificationCenter
+///
+/// - ``networkPathChangedNotificationName``
+///
+/// ### Combine
+///
+/// - ``networkPathPublisher``
+/// - ``networkPathUpdates(requiringInterfaceType:)``
+/// - ``networkPathUpdates(prohibitingInterfaceTypes:)``
+/// - ``Publisher``
 @available(macOS 10.14, iOS 12.0, watchOS 5.0, tvOS 12.0, *)
 public final class NetworkMonitor {
 
@@ -178,11 +223,11 @@ public final class NetworkMonitor {
     ///     }
     /// }
     /// ```
-    public static func networkPath(_ pathHandler: @escaping (NWPath) -> Void) {
+    public static func networkPath(completionHandler: @escaping (NWPath) -> Void) {
         let monitor = NWPathMonitor()
         monitor.pathUpdateHandler = { path in
             monitor.cancel()
-            pathHandler(path)
+            completionHandler(path)
         }
         monitor.start(queue: .networkMonitorQueue)
     }

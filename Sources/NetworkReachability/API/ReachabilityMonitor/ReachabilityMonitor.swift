@@ -37,6 +37,40 @@ import SystemConfiguration
 /// - Using [Combine](https://developer.apple.com/documentation/combine), via the ``reachabilityPublisher`` property.
 /// - Using a provided closure via the ``updateHandler-swift.property`` property.
 /// - Using notification observers on [`NotificationCenter.default`](https://developer.apple.com/documentation/foundation/notificationcenter).
+///
+/// See the <doc:ReachabilityMonitorGuide> for more information.
+///
+/// ## Topics
+///
+/// ### Initializers
+///
+/// - ``init()``
+/// - ``init(updateHandler:)``
+/// - ``init(delegate:)``
+///
+/// ### Delegation
+///
+/// - ``ReachabilityMonitorDelegate``
+/// - ``delegate``
+///
+/// ### Closures
+///
+/// - ``updateHandler-swift.property``
+/// - ``UpdateHandler-swift.typealias``
+///
+/// ### Swift Concurrency
+///
+/// - ``reachability``
+/// - ``reachabilityUpdates``
+///
+/// ### NotificationCenter
+///
+/// - ``reachabilityChangedNotificationName``
+///
+/// ### Combine
+///
+/// - ``reachabilityPublisher``
+/// - ``Publisher``
 @available(macOS 10.13, iOS 11, watchOS 4, tvOS 11, *)
 public final class ReachabilityMonitor {
 
