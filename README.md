@@ -21,17 +21,17 @@
     </a>
 </p>
 
-NetworkReachability is a replacement for Apple's [SystemConfiguration](https://developer.apple.com/documentation/systemconfiguration) [Network Reachability APIs](https://developer.apple.com/documentation/systemconfiguration/scnetworkreachability?language=swift). Because these APIs were originally written in C, they are old and cumbersome to use from Swift. In 2018, Apple added the [Network](https://developer.apple.com/documentation/network) framework which introduced the [`NWPathMonitor`](https://developer.apple.com/documentation/network/nwpathmonitor) class. This API addressed some of the problems with [`SCNetworkReachability`](https://developer.apple.com/documentation/systemconfiguration/scnetworkreachability?language=swift), but was still cumbersome to integrate into many commonly used app patterns. NetworkReachability wraps both these APIs in an easy to use Swift wrapper with similar interfaces and features sthat will be familiar to most iOS developers.
+NetworkReachability is a replacement for Apple's [SystemConfiguration](https://developer.apple.com/documentation/systemconfiguration) [Network Reachability APIs](https://developer.apple.com/documentation/systemconfiguration/scnetworkreachability?language=swift). Because these APIs were originally written in C, they are quite old and cumbersome to use from Swift. In 2018, Apple added the [Network](https://developer.apple.com/documentation/network) framework which introduced the [`NWPathMonitor`](https://developer.apple.com/documentation/network/nwpathmonitor) class. This API addressed some of the problems with [`SCNetworkReachability`](https://developer.apple.com/documentation/systemconfiguration/scnetworkreachability?language=swift), but was still cumbersome to integrate into many commonly used app patterns. NetworkReachability wraps both these APIs in easy to use Swift wrappers with similar interfaces and features that will be familiar to most iOS developers. Using NetworkReachablity, you can easily integrate reachability observation into your app's pipeline using just a few lines of code.
 
 NetworkReachability supports synchronous reachability queries, as well as constant asynchronous reachability observation via the following mechanisms:
 
 * [Delegation](https://developer.apple.com/library/archive/documentation/General/Conceptual/DevPedia-CocoaCore/Delegation.html)
 * [Closures](https://docs.swift.org/swift-book/LanguageGuide/Closures.html)
 * [NotificationCenter](https://developer.apple.com/documentation/foundation/notificationcenter)
-* [Swift Structured Concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html)
+* [Swift Concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html)
 * [Combine](https://developer.apple.com/documentation/combine)
 
-NetworkReachability also has bindings for [RxSwift](https://github.com/ReactiveX/RxSwift) with an optional additional package: [NetworkReachabilityRxSwift](https://github.com/vsanthanam/NetworkReachabilityRxSwift). This optional package exists so that you can safely depend on NetworkReachability without also depending on RxSwift if you don't need to. NetworkReachability itself has no non-apple dependencies.
+NetworkReachability supports [RxSwift](https://github.com/ReactiveX/RxSwift) bindings with an optional additional package: [NetworkReachabilityRxSwift](https://github.com/vsanthanam/NetworkReachabilityRxSwift). This optional package exists so that you can safely depend on NetworkReachability without also depending on RxSwift if you don't need to. **NetworkReachability itself has no non-apple dependencies.**
 
 ## Installation
 

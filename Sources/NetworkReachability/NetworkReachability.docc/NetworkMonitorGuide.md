@@ -1,7 +1,6 @@
-# NetworkMonitor Guide
+# Network Monitor Programming Guide
 
-Learn how to observe reachability changes with Swift Concurrency
-
+Learn how to use Network Monitor APIs
 
 ## Overview
 
@@ -9,22 +8,29 @@ The easiest way to use a ``NetworkMonitor`` is to initialize an instance and ret
 From there you can access the `currentPath` property whenever you need to know the last known network path.
 
 ```swift
+import Network
 import NetworkReachability
 
 let monitor = NetworkMonitor()
 let path = monitor.currentPath
 ```
 
+This synchronous API is easy to use, but `currentPath` isn't always up-to-date and is best used when a monitor instance has been retained in memory for some time. As such, it will be insufficient for many use cases and is not recommended.
 
-This API is simply enough for many uses cases, but ``NetworkMonitor`` offers a few other APIs to observe up-to-date network path changes as they happen.
+Instead, ``NetworkMonitor`` offers a variety of asynchronous APIs for both single value retrieval as well as constant value observation that are gauranteed to offer up-to-date values.
 
 ### Retrieving the current network path
 
-``NetworkMonitor`` allows you to retrieve the last known network path using two asyncronous APIs. Unlike the synchronous API described above which may or may not be up to date, the asynchronous APIs gaurantee you access to an up-to-date value.
+``NetworkMonitor`` allows you to retrieve the last known network path using two asyncronous APIs. Unlike the synchronous API described above which provides values that may or may not be up to date, the asynchronous APIs gaurantee you access to an up-to-date value.
 
 ##### Closures
 
+To asynchronously retrieve the last known network path, you can use the `networkPath(completionHandler:)` static method. The provided closure will be executed exactly once.
+
 ```swift
+import Network
+import NetworkReachability
+
 func updateReachability() {
     NetworkMonitor.networkPath(completionHandler: { (path: NWPath) in 
         // Do something with `path`
@@ -34,7 +40,12 @@ func updateReachability() {
 
 ##### Swift Concurrency
 
+You can also retrieve the last known network path using Swift Concurrency via the `networkPath` static property.
+
 ```swift
+import Network
+import NetworkReachability
+
 func updateReachability() {
     Task {
         let path = await NetworkMonitor.networkPath
@@ -43,11 +54,15 @@ func updateReachability() {
 }
 ```
 
+- Note: This API requires iOS 13, macOS 10.15, tvOS 13, or watchOS 6
+
 ### Observing network path updates
 
 If you need to observe all network path changes, ``NetworkMonitor`` provides several asynchronous APIs that will allow you to integrate network path data into any existing pipeline
 
 ##### Closures
+
+You can use a closure to observe network path updates over time. You can pass in the closure on initialization, or add one later using the `updateHandler` property.
 
 ```swift
 import Network
@@ -71,7 +86,11 @@ final class MyClass {
 }
 ```
 
+- Important: ``NetworkMonitor`` always calls its update handler on the main thread.
+
 ##### Swift Concurrency
+
+You can use an `AsyncSequence` to observe network path updates over time using Swift Concurrency
 
 ```swift
 import Network
@@ -97,7 +116,11 @@ final class MyClass {
 }
 ```
 
+- Note: This API requires iOS 13, macOS 10.15, tvOS 13, or watchOS 6
+
 ##### Delegation
+
+You can use ``NetworkMonitorDelegate`` to recieve callbacks when the network path changes. You can pass in a delegate object when the monitor is initialized, or you can assign one later.
 
 ```swift
 import Network
@@ -116,6 +139,8 @@ final class MyClass: NetworkMonitorDelegate {
         monitor = nil
     }
 
+    // MARK: - NetworkMonitorDelegate
+
     func networkMonitor(_ monitor: NetworkMonitor, didUpdateNetworkPath networkPath: NWPath) {
         // Do something with `networkPath`
     }
@@ -123,14 +148,19 @@ final class MyClass: NetworkMonitorDelegate {
 }
 ```
 
+- Important: ``NetworkMonitor`` always executes delegate calbacks on the main thread.
+
 ##### NotificationCenter
+
+If you have retained an instance of ``NetworkMonitor`` in memory, but do not have access to it in the part of your code that needs network path updates, you can 
+observe network path changes by observing notifications with the name `Notification.Name.networkPathChanged` on the default notification center. The notification's `.object` property will contain the ``NetworkMonitor``. From there, you can use `currentPath` property of the monitor, which you now know will be up-to-date thanks to the notification.
 
 ```swift
 import Foundation
 import Network
 import NetworkReachability
 
-final class MyClass: NetworkMonitorDelegate {
+final class MyClass {
 
     var monitor: NetworkMonitor?
 
@@ -161,7 +191,11 @@ final class MyClass: NetworkMonitorDelegate {
 }
 ```
 
+- Important: ``NetworkMonitor`` posts notifications on the main thread.
+
 ##### Combine
+
+You can observe network path changes using a [Combine](https://developer.apple.com/documentation/combine) with the `networkPathPublisher` static property.
 
 ```swift
 import Combine
@@ -191,3 +225,5 @@ final class MyClass {
     }
 }
 ```
+
+- Note: This API requires iOS 13, macOS 10.15, tvOS 13, or watchOS 6
