@@ -54,7 +54,7 @@
         /// Use this function to observe network path updates using [Combine](https://developer.apple.com/documentation/combine)
         ///
         /// ```swift
-        /// let cancellable = NetworkMonitor.networkPathPublisher(requiringInterfaceType: [.wifi])
+        /// let cancellable = NetworkMonitor.networkPathPublisher(requiringInterfaceType: .wifi)
         ///     .map { path in
         ///         path.status == .satisfied
         ///     }

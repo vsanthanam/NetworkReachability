@@ -12,10 +12,10 @@ NetworkReachability consists of two main classes, ``NetworkMonitor`` and ``Reach
 
 These APIs are very similar, and can generally be used interchangeably. Like Apple's APIs, ``ReachabilityMonitor`` offers a synchronous & asynchronous APIs, and is capable of throwing errors. ``NetworkMonitor`` monitor is simpler and more powerful, but does not offer a reliable synchronous API.
 
-| API                | Single Value | Observing Values  | Throws Errors | Minimum OS                              |
-| ------------------ | ------------ | ----------------- | ------------- | --------------------------------------- |
-| ``NetworkMonitor`` | Async        | Async             | No            | iOS 12, macOS 10.14, watchOS 5, tvOS 12 |
-| ``Reachability``   | Sync         | Async             | Yes           | iOS 11, macOS 10.13, watchOS 4, tvOS 11 |
+| API                       | Single Value | Observing Values  | Throws Errors | Minimum OS                              |
+| ------------------------- | ------------ | ----------------- | ------------- | --------------------------------------- |
+| ``NetworkMonitor``        | Async        | Async             | No            | iOS 12, macOS 10.14, watchOS 5, tvOS 12 |
+| ``ReachabilityMonitor``   | Sync         | Async             | Yes           | iOS 11, macOS 10.13, watchOS 4, tvOS 11 |
 
 I recommend that you use ``NetworkMonitor`` as it both simpler and more robust, unless you need to target iOS 11 or you absolutely need a synchronous API.
 
