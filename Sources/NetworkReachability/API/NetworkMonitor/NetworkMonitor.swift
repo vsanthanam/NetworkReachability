@@ -39,8 +39,6 @@ import Network
 /// - Using a provided closure via the ``updateHandler-swift.property`` property.
 /// - Using notification observers on [`NotificationCenter.default`](https://developer.apple.com/documentation/foundation/notificationcenter).
 ///
-/// See the <doc:NetworkMonitorGuide> for more information.
-///
 /// ## Topics
 ///
 /// ### Initializers

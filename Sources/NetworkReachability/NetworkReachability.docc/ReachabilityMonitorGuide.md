@@ -19,7 +19,7 @@ do {
 
 Unlike ``NetworkMonitor``, ``ReachabilityMonitor``'s synchronous API is gauranteed to provide up-date-values. 
 
-### Observing reachability updates.
+### Observing reachability updates
 
 If you need to observe all reachability changes, ``ReachabilityMonitor`` provides several asynchronous APIs that will allow you to integrate reachability data into any existing pipeline.
 

@@ -38,8 +38,6 @@ import SystemConfiguration
 /// - Using a provided closure via the ``updateHandler-swift.property`` property.
 /// - Using notification observers on [`NotificationCenter.default`](https://developer.apple.com/documentation/foundation/notificationcenter).
 ///
-/// See the <doc:ReachabilityMonitorGuide> for more information.
-///
 /// ## Topics
 ///
 /// ### Initializers
