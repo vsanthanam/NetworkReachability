@@ -57,13 +57,7 @@ public extension NetworkMonitor {
     /// }
     /// ```
     static var networkPathUpdates: AsyncStream<NWPath> {
-        .init(bufferingPolicy: .bufferingNewest(1)) { continuation in
-            let monitor = NWPathMonitor()
-            monitor.pathUpdateHandler = { path in
-                continuation.yield(path)
-            }
-            monitor.start(queue: .networkMonitorQueue)
-        }
+        stream(.init())
     }
 
     /// An [`AsyncSequence`](https://developer.apple.com/documentation/swift/asyncsequence) of network path updates for a specific interface.
@@ -76,13 +70,7 @@ public extension NetworkMonitor {
     /// }
     /// ```
     static func networkPathUpdates(requiringInterfaceType interfaceType: NWInterface.InterfaceType) -> AsyncStream<NWPath> {
-        .init(bufferingPolicy: .bufferingNewest(1)) { continuation in
-            let monitor = NWPathMonitor(requiredInterfaceType: interfaceType)
-            monitor.pathUpdateHandler = { path in
-                continuation.yield(path)
-            }
-            monitor.start(queue: .networkMonitorQueue)
-        }
+        stream(.init(requiredInterfaceType: interfaceType))
     }
 
     /// An [`AsyncSequence`](https://developer.apple.com/documentation/swift/asyncsequence) of network path updates for interface types that are not explicitly prohibited.
@@ -96,12 +84,16 @@ public extension NetworkMonitor {
     /// ```
     @available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
     static func networkPathUpdates(prohibitingInterfaceTypes interfaceTypes: [NWInterface.InterfaceType]) -> AsyncStream<NWPath> {
-        .init(bufferingPolicy: .bufferingNewest(1)) { continuation in
-            let monitor = NWPathMonitor(prohibitedInterfaceTypes: interfaceTypes)
-            monitor.pathUpdateHandler = { path in
-                continuation.yield(path)
-            }
-            monitor.start(queue: .networkMonitorQueue)
+        stream(.init(prohibitedInterfaceTypes: interfaceTypes))
+    }
+}
+
+@available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
+private func stream(_ monitor: NWPathMonitor) -> AsyncStream<NWPath> {
+    .init(bufferingPolicy: .bufferingNewest(1)) { continuation in
+        monitor.pathUpdateHandler = { path in
+            continuation.yield(path)
         }
+        monitor.start(queue: .networkMonitorQueue)
     }
 }

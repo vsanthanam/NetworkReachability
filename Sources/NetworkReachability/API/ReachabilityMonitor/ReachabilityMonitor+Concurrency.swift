@@ -23,7 +23,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+import Darwin
 import Foundation
+import SystemConfiguration
 
 @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
 public extension ReachabilityMonitor {
@@ -44,19 +46,69 @@ public extension ReachabilityMonitor {
     /// }
     /// ```
     static var reachabilityUpdates: AsyncThrowingStream<Reachability, Swift.Error> {
-        .init(bufferingPolicy: .bufferingNewest(1)) { continuation in
-            do {
-                _ = try ReachabilityMonitor() { result in
-                    do {
-                        let reachability = try result.get()
-                        continuation.yield(reachability)
-                    } catch {
-                        continuation.finish(throwing: error)
-                    }
+        stream { try .general }
+    }
+
+    /// An [`AsyncSequence`](https://developer.apple.com/documentation/swift/asyncsequence) of reachability updates for a specific host
+    ///
+    /// Use [Swift Concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html) to iterate over reachability updates in an asynchronous context.
+    ///
+    /// ```swift
+    /// func observe() async throws {
+    ///     do {
+    ///         for try await reachability in NetworkMonitor.reachabilityUpdates(forHost: www.apple.com) {
+    ///             // Do something with `reachability`
+    ///         }
+    ///     } catch {
+    ///         // Handle error
+    ///     }
+    /// }
+    /// ```
+    ///
+    /// - Parameter host: The host you want to monitor
+    /// - Returns: An `AsyncSequence` of reachability updates for a given host
+    static func reachabilityUpdates(forHost host: String) -> AsyncThrowingStream<Reachability, Swift.Error> {
+        stream { try .forHost(host) }
+    }
+
+    /// An [`AsyncSequence`](https://developer.apple.com/documentation/swift/asyncsequence) of reachability updates for a specific socket address
+    ///
+    /// Use [Swift Concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html) to iterate over reachability updates in an asynchronous context.
+    ///
+    /// ```swift
+    /// func observe() async throws {
+    ///     do {
+    ///         for try await reachability in NetworkMonitor.reachabilityUpdates(forAddress: myAddress) {
+    ///             // Do something with `reachability`
+    ///         }
+    ///     } catch {
+    ///         // Handle error
+    ///     }
+    /// }
+    /// ```
+    ///
+    /// - Parameter address: The socket address you want to monitor
+    /// - Returns: An `AsyncSequence` of reachability updates for a given host
+    static func reachabilityUpdates(forAddress address: sockaddr) -> AsyncThrowingStream<Reachability, Swift.Error> {
+        stream { try .forAddress(address) }
+    }
+
+}
+
+@available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
+private func stream(_ refBuilder: () throws -> SCNetworkReachability) -> AsyncThrowingStream<Reachability, Swift.Error> {
+    .init(bufferingPolicy: .bufferingNewest(1)) { continuation in
+        do {
+            _ = ReachabilityMonitor(try refBuilder()) { result in
+                do {
+                    let reachability = try result.get()
+                    continuation.yield(reachability)
+                } catch {
+                    continuation.finish(throwing: error)
                 }
-            } catch {
-                continuation.finish(throwing: error)
             }
+        } catch {
+            continuation.finish(throwing: error)
         }
     }
 }
