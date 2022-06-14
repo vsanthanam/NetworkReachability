@@ -30,6 +30,12 @@ import SystemConfiguration
 @available(macOS 10.13, iOS 11.0, watchOS 4.0, tvOS 11.0, *)
 public struct Reachability: Equatable, Hashable, Sendable, CustomStringConvertible {
 
+    /// Createa reachability wrapper from system configuration reachability flags
+    /// - Parameter flags: The flags to wrap
+    public init(flags: SCNetworkReachabilityFlags?) {
+        self.flags = flags
+    }
+
     /// A reachability that cannot be determined
     public static let unknown: Reachability = .init(flags: nil)
 
@@ -64,6 +70,7 @@ public struct Reachability: Equatable, Hashable, Sendable, CustomStringConvertib
 
         // MARK: - CustomStringConvertible
 
+        /// The string value of this reachability status
         public var description: String {
             switch self {
             case .unknown:
@@ -88,26 +95,32 @@ public struct Reachability: Equatable, Hashable, Sendable, CustomStringConvertib
 
     // MARK: - Equatable
 
+    /// Returns a Boolean value indicating whether Reachability values are equal.
+    ///
+    /// Equality is the inverse of inequality. For any values a and b, a == b implies that a != b is false.
+    ///
+    /// - Parameters:
+    ///   - lhs: A value to compare
+    ///   - rhs: Another value to compare
+    ///
+    /// - Returns: `true` if the values are equal, otherwise `false`
     public static func == (lhs: Reachability, rhs: Reachability) -> Bool {
         lhs.flags == rhs.flags
     }
 
     // MARK: - Hashable
 
+    /// Hashes the essential components of this value by feeding them into the given hasher.
+    /// - Parameter hasher: The hasher to use when combining the components of this instance.
     public func hash(into hasher: inout Hasher) {
         hasher.combine(flags?.copyDescription ?? "")
     }
 
     // MARK: - CustomStringConvertible
 
+    /// The string value of this reachability, including its flags and its status
     public var description: String {
         (flags?.copyDescription ?? "No Flags") + " | " + status.description
-    }
-
-    // MARK: - Private
-
-    init(flags: SCNetworkReachabilityFlags?) {
-        self.flags = flags
     }
 
 }

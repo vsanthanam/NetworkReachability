@@ -44,7 +44,7 @@ import SystemConfiguration
 /// ### Initializers
 ///
 /// - ``init()``
-/// - ``init(host:)
+/// - ``init(host:)``
 /// - ``init(address:)``
 /// - ``init(updateHandler:)``
 /// - ``init(host:updateHandler:)``
