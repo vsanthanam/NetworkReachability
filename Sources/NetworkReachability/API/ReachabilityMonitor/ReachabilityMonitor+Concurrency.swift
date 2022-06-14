@@ -23,6 +23,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+import Darwin
 import Foundation
 import SystemConfiguration
 
@@ -68,6 +69,28 @@ public extension ReachabilityMonitor {
     /// - Returns: An `AsyncSequence` of reachability updates for a given host
     static func reachabilityUpdates(forHost host: String) -> AsyncThrowingStream<Reachability, Swift.Error> {
         stream { try .forHost(host) }
+    }
+
+    /// An [`AsyncSequence`](https://developer.apple.com/documentation/swift/asyncsequence) of reachability updates for a specific socket address
+    ///
+    /// Use [Swift Concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html) to iterate over reachability updates in an asynchronous context.
+    ///
+    /// ```swift
+    /// func observe() async throws {
+    ///     do {
+    ///         for try await reachability in NetworkMonitor.reachabilityUpdates(forAddress: myAddress) {
+    ///             // Do something with `reachability`
+    ///         }
+    ///     } catch {
+    ///         // Handle error
+    ///     }
+    /// }
+    /// ```
+    ///
+    /// - Parameter address: The socket address you want to monitor
+    /// - Returns: An `AsyncSequence` of reachability updates for a given host
+    static func reachabilityUpdates(forAddress address: sockaddr) -> AsyncThrowingStream<Reachability, Swift.Error> {
+        stream { try .forAddress(address) }
     }
 
 }

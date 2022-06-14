@@ -25,6 +25,7 @@
 
 #if canImport(Combine)
     import Combine
+    import Darwin
     import Foundation
     import SystemConfiguration
 
@@ -67,6 +68,27 @@
         /// - Returns: A publisher of reachability updates for the given host
         static func reachabilityPublisher(forHost host: String) -> Publishers.ReachabilityPublisher {
             .init { try .forHost(host) }
+        }
+
+        /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of reachability updates for a specific socket address
+        ///
+        /// Use this property to observe reachability updates with [Combine](https://developer.apple.com/documentation/combine).
+        ///
+        /// ```swift
+        /// let cancellable = NetworkMonitor.reachabilityPublisher(forHost: "www.apple.com")
+        ///     .map(\.status.isReachable)
+        ///     .removeDuplicates()
+        ///     .replaceError(with: false)
+        ///     .sink { isReachable in
+        ///         // Do something with `isReachable`
+        ///     }
+        /// ```
+        ///
+        ///
+        /// - Parameter address: The socket address you want to monitor
+        /// - Returns: A publisher of reachability updates for the given host
+        static func reachabilityPublisher(forAddress address: sockaddr) -> Publishers.ReachabilityPublisher {
+            .init { try .forAddress(address) }
         }
 
         /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) used to observe reachability updates for use with [Combine](https://developer.apple.com/documentation/combine).
