@@ -26,6 +26,7 @@
 #if canImport(Combine)
     import Combine
     import Foundation
+    import SystemConfiguration
 
     @available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *)
     public extension ReachabilityMonitor {
@@ -44,13 +45,40 @@
         ///     }
         /// ```
         static var reachabilityPublisher: Publishers.ReachabilityPublisher {
-            .init()
+            .init { try .general }
+        }
+
+        /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of reachability updates for a specific host
+        ///
+        /// Use this property to observe reachability updates with [Combine](https://developer.apple.com/documentation/combine).
+        ///
+        /// ```swift
+        /// let cancellable = NetworkMonitor.reachabilityPublisher(forHost: "www.apple.com")
+        ///     .map(\.status.isReachable)
+        ///     .removeDuplicates()
+        ///     .replaceError(with: false)
+        ///     .sink { isReachable in
+        ///         // Do something with `isReachable`
+        ///     }
+        /// ```
+        ///
+        ///
+        /// - Parameter host: The host you want to monitor
+        /// - Returns: A publisher of reachability updates for the given host
+        static func reachabilityPublisher(forHost host: String) -> Publishers.ReachabilityPublisher {
+            .init { try .forHost(host) }
         }
 
         /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) used to observe reachability updates for use with [Combine](https://developer.apple.com/documentation/combine).
         ///
         /// See ``reachabilityPublisher`` for usage.
         struct Publisher: Combine.Publisher {
+
+            // MARK: - Initializers
+
+            init(_ refBuilder: @escaping () throws -> SCNetworkReachability) {
+                self.refBuilder = refBuilder
+            }
 
             // MARK: - Publisher
 
@@ -61,9 +89,13 @@
             public typealias Failure = Swift.Error
 
             public func receive<S>(subscriber: S) where S: Subscriber, S.Failure == Failure, S.Input == Output {
-                let subscription = ReachabilitySubscription(subscriber: subscriber)
+                let subscription = ReachabilitySubscription(subscriber: subscriber, refBuilder: refBuilder)
                 subscriber.receive(subscription: subscription)
             }
+
+            // MARK: - Private
+
+            private let refBuilder: () throws -> SCNetworkReachability
 
         }
 
@@ -71,8 +103,10 @@
 
             // MARK: - Initializers
 
-            init(subscriber: S?) {
+            init(subscriber: S?,
+                 refBuilder: @escaping () throws -> SCNetworkReachability) {
                 self.subscriber = subscriber
+                self.refBuilder = refBuilder
             }
 
             // MARK: - Subscription
@@ -80,7 +114,7 @@
             func request(_ demand: Subscribers.Demand) {
                 requested += 1
                 do {
-                    networkMonitor = try ReachabilityMonitor { [weak self] result in
+                    networkMonitor = ReachabilityMonitor(try refBuilder()) { [weak self] result in
                         guard let self = self,
                               let subscriber = self.subscriber,
                               self.requested > .none else { return }
@@ -107,6 +141,7 @@
             private var subscriber: S?
             private var networkMonitor: ReachabilityMonitor?
             private var requested: Subscribers.Demand = .none
+            private var refBuilder: () throws -> SCNetworkReachability
 
         }
 

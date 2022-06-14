@@ -33,10 +33,22 @@ extension SCNetworkReachability {
             var zeroAddress = sockaddr()
             zeroAddress.sa_len = UInt8(MemoryLayout<sockaddr>.size)
             zeroAddress.sa_family = sa_family_t(AF_INET)
-            guard let reachability = SCNetworkReachabilityCreateWithAddress(nil, &zeroAddress) else {
-                throw ReachabilityMonitor.Error.failedToCreate(SCError())
-            }
-            return reachability
+            return try .forAddress(zeroAddress)
         }
+    }
+
+    static func forAddress(_ address: sockaddr) throws -> SCNetworkReachability {
+        var address = address
+        guard let reachability = SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, &address) else {
+            throw ReachabilityMonitor.Error.failedToCreate(SCError())
+        }
+        return reachability
+    }
+
+    static func forHost(_ host: String) throws -> SCNetworkReachability {
+        guard let reachability = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault, host) else {
+            throw ReachabilityMonitor.Error.failedToCreate(SCError())
+        }
+        return reachability
     }
 }
