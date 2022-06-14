@@ -23,6 +23,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+import Darwin
 import Foundation
 import SystemConfiguration
 
@@ -43,8 +44,14 @@ import SystemConfiguration
 /// ### Initializers
 ///
 /// - ``init()``
+/// - ``init(host:)
+/// - ``init(address:)``
 /// - ``init(updateHandler:)``
+/// - ``init(host:updateHandler:)``
+/// - ``init(address:updateHandler:)``
 /// - ``init(delegate:)``
+/// - ``init(host:delegate:)``
+/// - ``init(address:delegate:)``
 ///
 /// ### Delegation
 ///
@@ -62,6 +69,8 @@ import SystemConfiguration
 ///
 /// - ``reachability``
 /// - ``reachabilityUpdates``
+/// - ``reachabilityUpdates(forHost:)``
+/// - ``reachabilityUpdates(forAddress:)``
 ///
 /// ### Notifications
 ///
@@ -70,6 +79,8 @@ import SystemConfiguration
 /// ### Combine
 ///
 /// - ``reachabilityPublisher``
+/// - ``reachabilityPublisher(forHost:)``
+/// - ``reachabilityPublisher(forAddress:)``
 /// - ``Publisher``
 @available(macOS 10.13, iOS 11, watchOS 4, tvOS 11, *)
 public final class ReachabilityMonitor {
@@ -83,6 +94,32 @@ public final class ReachabilityMonitor {
     /// - Throws: An error of type ``Error``
     public convenience init() throws {
         self.init(ref: try .general,
+                  updateHandler: nil,
+                  delegate: nil)
+    }
+
+    /// Create a reachablity monitor for a specific host
+    ///
+    /// - Parameter host: The host to monitor
+    ///
+    /// - Note: A reachability monitor begins observing and publishing reachability updates immediately after initialization.
+    ///
+    /// - Throws: An error of type ``Error``
+    public convenience init(host: String) throws {
+        self.init(ref: try .forHost(host),
+                  updateHandler: nil,
+                  delegate: nil)
+    }
+
+    /// Create a reachablity monitor for a socket address
+    ///
+    /// - Parameter address: The socket address to monitor
+    ///
+    /// - Note: A reachability monitor begins observing and publishing reachability updates immediately after initialization.
+    ///
+    /// - Throws: An error of type ``Error``
+    public convenience init(address: sockaddr) throws {
+        self.init(ref: try .forAddress(address),
                   updateHandler: nil,
                   delegate: nil)
     }
@@ -102,6 +139,38 @@ public final class ReachabilityMonitor {
                   delegate: nil)
     }
 
+    /// Create a reachability monitor for a specific host with a closure used to respond to reachability changes
+    ///
+    /// - Parameters:
+    ///   - host: The host to monitor
+    ///   - updateHandler: The closure used to observe reachability updates
+    ///
+    /// - Note: A reachability monitor begins observing and publishing reachability updates immediately after initialization.
+    ///
+    /// - Throws: An error of type ``Error``
+    public convenience init(host: String,
+                            updateHandler: @escaping UpdateHandler) throws {
+        self.init(ref: try .forHost(host),
+                  updateHandler: updateHandler,
+                  delegate: nil)
+    }
+
+    /// Create a reachability monitor for a specific socket address with a closure used to respond to reachability changes
+    ///
+    /// - Parameters:
+    ///   - address: The socket address to monitor
+    ///   - updateHandler: The closure used to observe reachability updates
+    ///
+    /// - Note: A reachability monitor begins observing and publishing reachability updates immediately after initialization.
+    ///
+    /// - Throws: An error of type ``Error``
+    public convenience init(address: sockaddr,
+                            updateHandler: @escaping UpdateHandler) throws {
+        self.init(ref: try .forAddress(address),
+                  updateHandler: updateHandler,
+                  delegate: nil)
+    }
+
     /// Create a reachability monitor with a delegate object used to respond to reachability changes
     ///
     /// Use this initializer to respond to reachability updates with an instance of an object that conforms to ``ReachabilityMonitorDelegate``
@@ -113,6 +182,38 @@ public final class ReachabilityMonitor {
     /// - Throws: An error of type ``Error``
     public convenience init(delegate: any ReachabilityMonitorDelegate) throws {
         self.init(ref: try .general,
+                  updateHandler: nil,
+                  delegate: delegate)
+    }
+
+    /// Create a reachability monitor for a specific host with a delegate object used to respond to reachability changes
+    ///
+    /// - Parameters:
+    ///   - host: The host to monitor
+    ///   - delegate: The delegate object used to observe reachability update
+    ///
+    /// - Note: A reachability monitor begins observing and publishing reachability updates immediately after initialization.
+    ///
+    /// - Throws: An error of type ``Error``
+    public convenience init(host: String,
+                            delegate: any ReachabilityMonitorDelegate) throws {
+        self.init(ref: try .forHost(host),
+                  updateHandler: nil,
+                  delegate: delegate)
+    }
+
+    /// Create a reachability monitor for a specific socket address with a delegate object used to respond to reachability changes
+    ///
+    /// - Parameters:
+    ///   - address: The socket address to monitor
+    ///   - delegate: The delegate object used to observe reachability update
+    ///
+    /// - Note: A reachability monitor begins observing and publishing reachability updates immediately after initialization.
+    ///
+    /// - Throws: An error of type ``Error``
+    public convenience init(address: sockaddr,
+                            delegate: any ReachabilityMonitorDelegate) throws {
+        self.init(ref: try .forAddress(address),
                   updateHandler: nil,
                   delegate: delegate)
     }
@@ -204,8 +305,9 @@ public final class ReachabilityMonitor {
         setUp()
     }
 
-    convenience init(continuation: @escaping (Result) -> Void) throws {
-        self.init(ref: try .general,
+    convenience init(_ ref: SCNetworkReachability,
+                     continuation: @escaping (Result) -> Void) {
+        self.init(ref: ref,
                   updateHandler: nil,
                   delegate: nil,
                   continuation: continuation)
@@ -253,7 +355,7 @@ public final class ReachabilityMonitor {
                 let unmanaged = Unmanaged<WeakReference<ReachabilityMonitor>>.fromOpaque(info)
                 unmanaged.release()
             },
-            copyDescription: { (info: UnsafeRawPointer) -> Unmanaged<CFString> in
+            copyDescription: { info in
                 let unmanagedMonitor = Unmanaged<WeakReference<ReachabilityMonitor>>.fromOpaque(info)
                 let weakMonitor = unmanagedMonitor.takeUnretainedValue()
                 let copyDescription = try? weakMonitor.obj?.flags.get()?.copyDescription ?? "none"
