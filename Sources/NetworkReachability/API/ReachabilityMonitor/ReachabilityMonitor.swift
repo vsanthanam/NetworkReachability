@@ -82,6 +82,13 @@ import SystemConfiguration
 /// - ``reachabilityPublisher(forHost:)``
 /// - ``reachabilityPublisher(forAddress:)``
 /// - ``Publisher``
+///
+/// ### Synchronous
+///
+/// - ``currentReachability``
+/// - ``reachability``
+/// - ``reachability(forHost:)``
+/// - ``reachability(forAddress:)``
 @available(macOS 10.13, iOS 11, watchOS 4, tvOS 11, *)
 public final class ReachabilityMonitor {
 
@@ -285,11 +292,51 @@ public final class ReachabilityMonitor {
     ///     // Do something with `reachability`
     /// }
     /// ```
+    ///
+    /// - Throws: An error of type ``Error``
     public static var reachability: Reachability {
         get throws {
             let monitor = try ReachabilityMonitor()
             return try monitor.currentReachability
         }
+    }
+
+    /// Retrieve the latest known reachability for a specific host
+    ///
+    /// ```
+    /// func updateReachability() throws {
+    ///     let reachability = try ReachabilityMonitor.reachability(forHost: "www.apple.com")
+    ///     // Do something with `reachability`
+    /// }
+    /// ```
+    ///
+    /// - Parameter host: The host you want to monitor
+    ///
+    /// - Returns: The latest known reachability for the provided host
+    ///
+    /// - Throws: An error of type ``Error``
+    public static func reachability(forHost host: String) throws -> Reachability {
+        let monitor = try ReachabilityMonitor(host: host)
+        return try monitor.currentReachability
+    }
+
+    /// Retrieve the latest known reachability for a specific socket address
+    ///
+    /// ```
+    /// func updateReachability() throws {
+    ///     let reachability = try ReachabilityMonitor.reachability(forAddress: myAddress)
+    ///     // Do something with `reachability`
+    /// }
+    /// ```
+    ///
+    /// - Parameter host: The socket address you want to monitor
+    ///
+    /// - Returns: The latest known reachability for the provided host
+    ///
+    /// - Throws: An error of type ``Error``
+    public static func reachability(forAddress address: sockaddr) throws -> Reachability {
+        let monitor = try ReachabilityMonitor(address: address)
+        return try monitor.currentReachability
     }
 
     // MARK: - Private
