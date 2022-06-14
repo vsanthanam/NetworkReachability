@@ -176,7 +176,7 @@ public final class NetworkMonitor {
                   continuation: nil)
     }
 
-    /// Create a network monitor to observe a specific interface type that publishes to a provided closure
+    /// Create a network monitor to observe a specific interface type that publishes updates to a provided closure
     ///
     /// - Parameters:
     ///   - requiredInterfaceType: The explicitly prohibited interface types

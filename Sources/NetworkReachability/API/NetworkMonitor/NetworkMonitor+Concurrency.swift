@@ -49,7 +49,7 @@ public extension NetworkMonitor {
 
     /// An [`AsyncSequence`](https://developer.apple.com/documentation/swift/asyncsequence) of network path updates.
     ///
-    /// Use this property bserve network path updates using [Swift Concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html)
+    /// Use this property observe network path updates using [Swift Concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html)
     ///
     /// ```swift
     /// for await path in NetworkMontitor.networkPathUpdates {
