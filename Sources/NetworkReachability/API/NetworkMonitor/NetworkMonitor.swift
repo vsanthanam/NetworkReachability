@@ -55,8 +55,8 @@ import Network
 ///
 /// ### Delegation
 ///
-/// - ``NetworkMonitorDelegate``
-/// - ``delegate``
+/// - ``Delegate-swift.typealias``
+/// - ``delegate-swift.property``
 ///
 /// ### Closures
 ///
@@ -126,7 +126,7 @@ public final class NetworkMonitor {
     /// - Parameter delegate: The delegate object used to recieve updates
     ///
     /// - Note: The monitor begins observing and publishing updates immediately
-    public convenience init(delegate: any NetworkMonitorDelegate) {
+    public convenience init(delegate: any Delegate) {
         self.init(pathMonitor: .init(),
                   updateHandler: nil,
                   delegate: delegate,
@@ -141,7 +141,7 @@ public final class NetworkMonitor {
     ///
     /// - Note: The monitor begins observing and publishing updates immediately
     public convenience init(requiredInterfaceType: NWInterface.InterfaceType,
-                            delegate: any NetworkMonitorDelegate) {
+                            delegate: any Delegate) {
         self.init(pathMonitor: .init(requiredInterfaceType: requiredInterfaceType),
                   updateHandler: nil,
                   delegate: delegate,
@@ -157,7 +157,7 @@ public final class NetworkMonitor {
     /// - Note: The monitor begins observing and publishing updates immediately
     @available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
     public convenience init(prohibitedInterfaceTypes: [NWInterface.InterfaceType],
-                            delegate: any NetworkMonitorDelegate) {
+                            delegate: any Delegate) {
         self.init(pathMonitor: .init(prohibitedInterfaceTypes: prohibitedInterfaceTypes),
                   updateHandler: nil,
                   delegate: delegate,
@@ -212,6 +212,9 @@ public final class NetworkMonitor {
     /// A closure used to recieve network path updates from a network monitor
     public typealias UpdateHandler = (NetworkMonitor, NWPath) -> Void
 
+    /// A protocol used to observe network path changes from a ``NetworkMonitor``
+    public typealias Delegate = NetworkMonitorDelegate
+
     /// Retrieve the latest known network path using a closure
     ///
     /// ```swift
@@ -232,12 +235,12 @@ public final class NetworkMonitor {
 
     /// The delegate object used to observe reachability updates
     ///
-    /// See ``NetworkMonitorDelegate`` for more information
+    /// See ``Delegate-swift.typealias``  for more information
     ///
     /// - Tip: The delegate only recieves status changes that occured after it was assigned. To ensure that the delegate recieves every network path change, pass in the delegate on initialization of the monitor.
     ///
     /// - Important: Instances of ``NetworkMonitor`` will perform delegate callbacks on the main thread.
-    public weak var delegate: (any NetworkMonitorDelegate)?
+    public weak var delegate: (any Delegate)?
 
     /// The closure used to observe reachability updates
     ///
@@ -263,7 +266,7 @@ public final class NetworkMonitor {
 
     private init(pathMonitor: NWPathMonitor,
                  updateHandler: UpdateHandler?,
-                 delegate: (any NetworkMonitorDelegate)?,
+                 delegate: (any Delegate)?,
                  continuation: ((NWPath) -> Void)?) {
         self.pathMonitor = pathMonitor
         self.updateHandler = updateHandler
