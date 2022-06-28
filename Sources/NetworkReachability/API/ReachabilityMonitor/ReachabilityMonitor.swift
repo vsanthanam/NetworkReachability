@@ -55,8 +55,8 @@ import SystemConfiguration
 ///
 /// ### Delegation
 ///
-/// - ``ReachabilityMonitorDelegate``
-/// - ``delegate``
+/// - ``Delegate-swift.typealias``
+/// - ``delegate-swift.property``
 ///
 /// ### Closures
 ///
@@ -187,7 +187,7 @@ public final class ReachabilityMonitor {
     /// - Note: A reachability monitor begins observing and publishing reachability updates immediately after initialization.
     ///
     /// - Throws: An error of type ``Error``
-    public convenience init(delegate: any ReachabilityMonitorDelegate) throws {
+    public convenience init(delegate: any Delegate) throws {
         self.init(ref: try .general,
                   updateHandler: nil,
                   delegate: delegate)
@@ -203,7 +203,7 @@ public final class ReachabilityMonitor {
     ///
     /// - Throws: An error of type ``Error``
     public convenience init(host: String,
-                            delegate: any ReachabilityMonitorDelegate) throws {
+                            delegate: any Delegate) throws {
         self.init(ref: try .forHost(host),
                   updateHandler: nil,
                   delegate: delegate)
@@ -219,7 +219,7 @@ public final class ReachabilityMonitor {
     ///
     /// - Throws: An error of type ``Error``
     public convenience init(address: sockaddr,
-                            delegate: any ReachabilityMonitorDelegate) throws {
+                            delegate: any Delegate) throws {
         self.init(ref: try .forAddress(address),
                   updateHandler: nil,
                   delegate: delegate)
@@ -232,6 +232,9 @@ public final class ReachabilityMonitor {
 
     /// The closure type used to observe reachability updates
     public typealias UpdateHandler = (ReachabilityMonitor, ReachabilityMonitor.Result) -> Void
+
+    /// A protocol used to observe network path changes from a ``ReachabilityMonitor``
+    public typealias Delegate = ReachabilityMonitorDelegate
 
     /// The closure used to observe reachability updates
     ///
@@ -258,10 +261,10 @@ public final class ReachabilityMonitor {
 
     /// The delegate object used to observe reachability updates
     ///
-    /// See ``ReachabilityMonitorDelegate`` for more information.
+    /// See ``Delegate-swift.typealias`` for more information.
     ///
     /// - Tip: The delegate only recieves status changes that occured after it was assigned. To recieve every status update, including the reachability status at the time the monitor was initialized, pass in the delegate on initialization of the monitor.
-    public weak var delegate: (any ReachabilityMonitorDelegate)?
+    public weak var delegate: (any Delegate)?
 
     /// The current reachability status
     ///
@@ -343,7 +346,7 @@ public final class ReachabilityMonitor {
 
     private init(ref: SCNetworkReachability,
                  updateHandler: UpdateHandler?,
-                 delegate: (any ReachabilityMonitorDelegate)?,
+                 delegate: (any Delegate)?,
                  continuation: ((Result) -> Void)? = nil) {
         self.ref = ref
         self.updateHandler = updateHandler
