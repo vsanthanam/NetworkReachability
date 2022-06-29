@@ -1,5 +1,5 @@
 // NetworkReachability
-// Notification+NetworkReachability.swift
+// PublishersExtensions.swift
 //
 // MIT License
 //
@@ -23,15 +23,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import Foundation
+#if canImport(Combine)
+    import Combine
+    import Foundation
 
-@available(macOS 10.13, iOS 11.0, watchOS 4.0, tvOS 11.0, *)
-public extension Notification.Name {
+    @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
+    public extension Publishers {
 
-    /// A notification posted by a ``NetworkMonitor`` when its network path changes.
-    @available(macOS 10.14, iOS 12.0, watchOS 5.0, tvOS 12.0, *)
-    static let networkPathChanged: Notification.Name = NetworkMonitor.networkPathChangedNotificationName
+        /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of network path updates
+        typealias NetworkPathPublisher = NetworkMonitor.Publisher
 
-    /// A notification posted by a ``ReachabilityMonitor`` when its reachability gchanges.
-    static let reachabilityChanged: Notification.Name = ReachabilityMonitor.reachabilityChangedNotificationName
-}
+        /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of reachability updates
+        typealias ReachabilityPublisher = ReachabilityMonitor.Publisher
+    }
+#endif
