@@ -21,7 +21,9 @@ To add NetworkReachabilityRxSwift as a dependency to an Xcode Project:
 
 Other distribution mechanisms like CocoaPods or Carthage may be added in the future.
 
-### NetworkMonitor + RxSwift
+In addition to this package, you must also add the main NetworkReachability package, as well as RxSwift. This package dependends on, but includes interfaces for neither.
+
+### Usage
 
 ```swift
 import Network
@@ -41,41 +43,6 @@ final class MyClass {
             .distinctUntilChanged()
             .subscribe(onNext: { status in
                 // Do something with `status`
-            })
-    }
-
-    func stopObserving() {
-        disposable?.dispose()
-        disposable = nil
-    }
-
-    deinit {
-        disposable?.dispose
-    }
-
-}
-```
-
-### ReachabilityMonitor + RxSwift
-
-```swift
-import NetworkReachability
-import NetworkReachabilityRxSwift
-import RxSwift
-
-final class MyClass {
-    
-    var disposable: Disposable?
-
-    func startObserving() {
-        stopObserving()
-        disposable = ReachabilityMonitor
-            .observableReachability
-            .map(\.status.isReachable)
-            .distinctUntilChanged()
-            .catchError { _ in Observable.empty() }
-            .subscribe(onNext: { isReachable in
-                // Do something with `isReachable`
             })
     }
 
