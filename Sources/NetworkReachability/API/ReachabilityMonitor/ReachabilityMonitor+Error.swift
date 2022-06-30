@@ -48,6 +48,24 @@ public extension ReachabilityMonitor {
         /// An unknown error
         case unknown
 
+        // MARK: - API
+
+        /// The SCError Code associated with the error
+        public var code: Int32 {
+            switch self {
+            case let .failedToCreate(code):
+                return code
+            case let .failedToStartCallback(code):
+                return code
+            case let .failedToSetDispatchQueue(code):
+                return code
+            case let .failedToGetFlags(code):
+                return code
+            case .unknown:
+                return -1
+            }
+        }
+
         // MARK: - LocalizedError
 
         /// A localized message describing what error occurred.
