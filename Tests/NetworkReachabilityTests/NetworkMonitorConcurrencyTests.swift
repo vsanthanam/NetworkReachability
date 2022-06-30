@@ -27,7 +27,6 @@
     import Network
 #endif
 
-import Foundation
 @testable import NetworkReachability
 import XCTest
 

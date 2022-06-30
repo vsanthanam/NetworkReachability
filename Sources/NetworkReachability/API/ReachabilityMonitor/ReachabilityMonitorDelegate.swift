@@ -23,8 +23,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import Foundation
-
 /// A protocol used to observe network reachability changes from a ``ReachabilityMonitor``
 @available(macOS 10.13, iOS 11.0, watchOS 4.0, tvOS 11.0, *)
 public protocol ReachabilityMonitorDelegate: AnyObject {
