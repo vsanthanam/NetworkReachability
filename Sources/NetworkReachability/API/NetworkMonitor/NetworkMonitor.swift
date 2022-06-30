@@ -47,22 +47,24 @@ import Network
 /// - ``init(requiredInterfaceType:)``
 /// - ``init(prohibitedInterfaceTypes:)``
 /// - ``init(updateHandler:)``
+/// - ``init(updateQueue:updateHandler:)``
 /// - ``init(requiredInterfaceType:updateHandler:)``
+/// - ``init(requiredInterfaceType:updateQueue:updateHandler:)``
 /// - ``init(prohibitedInterfaceTypes:updateHandler:)``
+/// - ``init(prohibitedInterfaceTypes:updateQueue:updateHandler:)``
 /// - ``init(delegate:)``
+/// - ``init(updateQueue:delegate:)``
 /// - ``init(requiredInterfaceType:delegate:)``
+/// - ``init(requiredInterfaceType:updateQueue:delegate:)``
 /// - ``init(prohibitedInterfaceTypes:delegate:)``
+/// - ``init(prohibitedInterfaceTypes:updateQueue:delegate:)``
 ///
-/// ### Delegation
-///
-/// - ``Delegate-swift.typealias``
-/// - ``delegate-swift.property``
-///
-/// ### Closures
+/// ### Closure Callbacks
 ///
 /// - ``updateHandler-swift.property``
 /// - ``UpdateHandler-swift.typealias``
 /// - ``networkPath(completionHandler:)``
+/// - ``updateQueue``
 ///
 /// ### Swift Concurrency
 ///
@@ -71,9 +73,16 @@ import Network
 /// - ``networkPathUpdates(requiringInterfaceType:)``
 /// - ``networkPathUpdates(prohibitingInterfaceTypes:)``
 ///
-/// ### Notifications
+/// ### Delegation
+///
+/// - ``Delegate-swift.typealias``
+/// - ``delegate-swift.property``
+/// - ``updateQueue``
+///
+/// ### NotificationCenter
 ///
 /// - ``networkPathChangedNotificationName``
+/// - ``updateQueue``
 ///
 /// ### Combine
 ///
@@ -93,7 +102,7 @@ public final class NetworkMonitor {
         self.init(pathMonitor: .init(),
                   updateHandler: nil,
                   delegate: nil,
-                  continuation: nil)
+                  updateQueue: nil)
     }
 
     /// Create a network monitor to observe a specific interface type
@@ -105,7 +114,7 @@ public final class NetworkMonitor {
         self.init(pathMonitor: .init(requiredInterfaceType: requiredInterfaceType),
                   updateHandler: nil,
                   delegate: nil,
-                  continuation: nil)
+                  updateQueue: nil)
     }
 
     /// Create a network monitor to observe interface types that are not explicitly prohibited
@@ -118,50 +127,7 @@ public final class NetworkMonitor {
         self.init(pathMonitor: .init(prohibitedInterfaceTypes: prohibitedInterfaceTypes),
                   updateHandler: nil,
                   delegate: nil,
-                  continuation: nil)
-    }
-
-    /// Create a network monitor that publishes updates to a delegate object
-    ///
-    /// - Parameter delegate: The delegate object used to recieve updates
-    ///
-    /// - Note: The monitor begins observing and publishing updates immediately
-    public convenience init(delegate: any Delegate) {
-        self.init(pathMonitor: .init(),
-                  updateHandler: nil,
-                  delegate: delegate,
-                  continuation: nil)
-    }
-
-    /// Create a network monitor to observe a specific interface type that publishes updates to a delegate object
-    ///
-    /// - Parameters:
-    ///   - requiredInterfaceType: The explicitly prohibited interface types
-    ///   - delegate: The delegate object used to recieve updates
-    ///
-    /// - Note: The monitor begins observing and publishing updates immediately
-    public convenience init(requiredInterfaceType: NWInterface.InterfaceType,
-                            delegate: any Delegate) {
-        self.init(pathMonitor: .init(requiredInterfaceType: requiredInterfaceType),
-                  updateHandler: nil,
-                  delegate: delegate,
-                  continuation: nil)
-    }
-
-    /// Create a network monitor to observe interface types that are not explicitly prohibited that publishes updates to a delegate object
-    ///
-    /// - Parameters:
-    ///   - prohibitedInterfaceTypes: The explicitly prohibited interface types
-    ///   - delegate: The delegate object used to recieve updates
-    ///
-    /// - Note: The monitor begins observing and publishing updates immediately
-    @available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
-    public convenience init(prohibitedInterfaceTypes: [NWInterface.InterfaceType],
-                            delegate: any Delegate) {
-        self.init(pathMonitor: .init(prohibitedInterfaceTypes: prohibitedInterfaceTypes),
-                  updateHandler: nil,
-                  delegate: delegate,
-                  continuation: nil)
+                  updateQueue: nil)
     }
 
     /// Create a network monitor that publishes updates to a provided closure
@@ -173,7 +139,21 @@ public final class NetworkMonitor {
         self.init(pathMonitor: .init(),
                   updateHandler: updateHandler,
                   delegate: nil,
-                  continuation: nil)
+                  updateQueue: nil)
+    }
+
+    /// Create a network monitor that publishes updates to a provided closure on a specific queue
+    /// - Parameters:
+    ///   - updateQueue: Dispatch queue used to invoke the update handler
+    ///   - updateHandler: Closure used to handle network path updates
+    ///
+    /// - Note: The monitor begins observing and publishing updates immediately
+    public convenience init(updateQueue: DispatchQueue,
+                            updateHandler: @escaping UpdateHandler) {
+        self.init(pathMonitor: .init(),
+                  updateHandler: updateHandler,
+                  delegate: nil,
+                  updateQueue: updateQueue)
     }
 
     /// Create a network monitor to observe a specific interface type that publishes updates to a provided closure
@@ -188,7 +168,24 @@ public final class NetworkMonitor {
         self.init(pathMonitor: .init(requiredInterfaceType: requiredInterfaceType),
                   updateHandler: updateHandler,
                   delegate: nil,
-                  continuation: nil)
+                  updateQueue: nil)
+    }
+
+    /// Create a network monitor to observe a specific interface type that publishes updates to a provided closure on a specific queue
+    ///
+    /// - Parameters:
+    ///   - requiredInterfaceType: The explicitly prohibited interface types
+    ///   - updateQueue: Dispatch queue used to invoke the update handler
+    ///   - updateHandler: Closure used to handle network path updates
+    ///
+    /// - Note: The monitor begins observing and publishing updates immediately
+    public convenience init(requiredInterfaceType: NWInterface.InterfaceType,
+                            updateQueue: DispatchQueue,
+                            updateHandler: @escaping UpdateHandler) {
+        self.init(pathMonitor: .init(requiredInterfaceType: requiredInterfaceType),
+                  updateHandler: updateHandler,
+                  delegate: nil,
+                  updateQueue: updateQueue)
     }
 
     /// Create a network monitor to observe interface types that are not explicitly prohibited that publishes updates to a provided closure
@@ -204,7 +201,118 @@ public final class NetworkMonitor {
         self.init(pathMonitor: .init(prohibitedInterfaceTypes: prohibitedInterfaceTypes),
                   updateHandler: updateHandler,
                   delegate: nil,
-                  continuation: nil)
+                  updateQueue: nil)
+    }
+
+    /// Create a network monitor to observe interface types that are not explicitly prohibited that publishes updates to a provided closure on a specific queue
+    ///
+    /// - Parameters:
+    ///   - prohibitedInterfaceTypes: The explicitly prohibited interface types
+    ///   - updateQueue: Dispatch queue used to invoke the update handler
+    ///   - updateHandler: Closure used to handle network path updates
+    ///
+    /// - Note: The monitor begins observing and publishing updates immediately
+    @available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
+    public convenience init(prohibitedInterfaceTypes: [NWInterface.InterfaceType],
+                            updateQueue: DispatchQueue,
+                            updateHandler: @escaping UpdateHandler) {
+        self.init(pathMonitor: .init(prohibitedInterfaceTypes: prohibitedInterfaceTypes),
+                  updateHandler: updateHandler,
+                  delegate: nil,
+                  updateQueue: updateQueue)
+    }
+
+    /// Create a network monitor that publishes updates to a delegate object
+    ///
+    /// - Parameter delegate: The delegate object used to recieve updates
+    ///
+    /// - Note: The monitor begins observing and publishing updates immediately
+    public convenience init(delegate: any Delegate) {
+        self.init(pathMonitor: .init(),
+                  updateHandler: nil,
+                  delegate: delegate,
+                  updateQueue: nil)
+    }
+
+    /// Create a network monitor that publishes updates to a delegate object on a specific queue
+    ///
+    /// - Parameters:
+    ///   - updateQueue: Dispatch queue used to invoke the delegate callbacks
+    ///   - delegate: The delegate object used to recieve updates
+    ///
+    /// - Note: The monitor begins observing and publishing updates immediately
+    public convenience init(updateQueue: DispatchQueue,
+                            delegate: any Delegate) {
+        self.init(pathMonitor: .init(),
+                  updateHandler: nil,
+                  delegate: delegate,
+                  updateQueue: updateQueue)
+    }
+
+    /// Create a network monitor to observe a specific interface type that publishes updates to a delegate object
+    ///
+    /// - Parameters:
+    ///   - requiredInterfaceType: The explicitly prohibited interface types
+    ///   - delegate: The delegate object used to recieve updates
+    ///
+    /// - Note: The monitor begins observing and publishing updates immediately
+    public convenience init(requiredInterfaceType: NWInterface.InterfaceType,
+                            delegate: any Delegate) {
+        self.init(pathMonitor: .init(requiredInterfaceType: requiredInterfaceType),
+                  updateHandler: nil,
+                  delegate: delegate,
+                  updateQueue: nil)
+    }
+
+    /// Create a network monitor to observe a specific interface type that publishes updates to a delegate object on a specific queue
+    ///
+    /// - Parameters:
+    ///   - requiredInterfaceType: The explicitly prohibited interface types
+    ///   - updateQueue: Dispatch queue used to invoke the delegate callbacks
+    ///   - delegate: The delegate object used to recieve updates
+    ///
+    /// - Note: The monitor begins observing and publishing updates immediately
+    public convenience init(requiredInterfaceType: NWInterface.InterfaceType,
+                            updateQueue: DispatchQueue,
+                            delegate: any Delegate) {
+        self.init(pathMonitor: .init(requiredInterfaceType: requiredInterfaceType),
+                  updateHandler: nil,
+                  delegate: delegate,
+                  updateQueue: updateQueue)
+    }
+
+    /// Create a network monitor to observe interface types that are not explicitly prohibited that publishes updates to a delegate object
+    ///
+    /// - Parameters:
+    ///   - prohibitedInterfaceTypes: The explicitly prohibited interface types
+    ///   - delegate: The delegate object used to recieve updates
+    ///
+    /// - Note: The monitor begins observing and publishing updates immediately
+    @available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
+    public convenience init(prohibitedInterfaceTypes: [NWInterface.InterfaceType],
+                            delegate: any Delegate) {
+        self.init(pathMonitor: .init(prohibitedInterfaceTypes: prohibitedInterfaceTypes),
+                  updateHandler: nil,
+                  delegate: delegate,
+                  updateQueue: nil)
+    }
+
+    /// Create a network monitor to observe interface types that are not explicitly prohibited that publishes updates to a delegate object on a specific queue
+    ///
+    /// - Parameters:
+    ///   - prohibitedInterfaceTypes: The explicitly prohibited interface types
+    ///   - updateQueue: Dispatch queue used to invoke the delegate callbacks
+    ///   - delegate: The delegate object used to recieve updates
+    ///
+    /// - Note: The monitor begins observing and publishing updates immediately
+    @available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
+    public convenience init(prohibitedInterfaceTypes: [NWInterface.InterfaceType],
+                            updateQueue: DispatchQueue,
+                            delegate: any Delegate) {
+        self.init(pathMonitor: .init(prohibitedInterfaceTypes: prohibitedInterfaceTypes),
+                  updateHandler: nil,
+                  delegate: delegate,
+                  updateQueue: updateQueue)
     }
 
     // MARK: - API
@@ -217,6 +325,8 @@ public final class NetworkMonitor {
 
     /// Retrieve the latest known network path using a closure
     ///
+    /// The provided closure will be executed exactly once, and will be executed on the main thread.
+    ///
     /// ```swift
     /// func updateReachability() {
     ///     NetworkMonitor.networkPath { (path: NWPath) in
@@ -228,7 +338,15 @@ public final class NetworkMonitor {
         let monitor = NWPathMonitor()
         monitor.pathUpdateHandler = { path in
             monitor.cancel()
-            completionHandler(path)
+            if #available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *) {
+                Task {
+                    completionHandler(path)
+                }
+            } else {
+                DispatchQueue.main.async {
+                    completionHandler(path)
+                }
+            }
         }
         monitor.start(queue: .networkMonitorQueue)
     }
@@ -239,15 +357,20 @@ public final class NetworkMonitor {
     ///
     /// - Tip: The delegate only recieves status changes that occured after it was assigned. To ensure that the delegate recieves every network path change, pass in the delegate on initialization of the monitor.
     ///
-    /// - Important: Instances of ``NetworkMonitor`` will perform delegate callbacks on the main thread.
+    /// - Important: Instances of ``NetworkMonitor`` will perform delegate callbacks on the ``updateQueue``
     public weak var delegate: (any Delegate)?
 
     /// The closure used to observe reachability updates
     ///
     /// - Tip: The update handler only recieves status changes that occured after it was assigned. To enture that the delegate recieves every network path changes, pass in the delegate on initalization of the monitor.
     ///
-    /// - Important: Instances of ``NetworkMonitor`` will always invoke this closure the main thread.
+    /// - Important: Instances of ``NetworkMonitor`` will always invoke this closure the ``updateQueue``
     public private(set) var updateHandler: UpdateHandler?
+
+    /// The dispatch queue used to send closure callbacks, delegate callbacks, and notifications.
+    ///
+    /// Set this value to `nil` to use the main thread.
+    public var updateQueue: DispatchQueue?
 
     /// The currently available network path observed by the network monitor.
     public var currentPath: NWPath {
@@ -256,21 +379,24 @@ public final class NetworkMonitor {
 
     // MARK: - Private
 
-    @discardableResult
-    static func withContinuation(pathMonitor: NWPathMonitor = .init(), continuation: @escaping (NWPath) -> Void) -> NetworkMonitor {
+    static func withContinuation(pathMonitor: NWPathMonitor = .init(),
+                                 continuation: @escaping (NWPath) -> Void) -> NetworkMonitor {
         NetworkMonitor(pathMonitor: pathMonitor,
                        updateHandler: nil,
                        delegate: nil,
+                       updateQueue: nil,
                        continuation: continuation)
     }
 
     private init(pathMonitor: NWPathMonitor,
                  updateHandler: UpdateHandler?,
                  delegate: (any Delegate)?,
-                 continuation: ((NWPath) -> Void)?) {
+                 updateQueue: DispatchQueue?,
+                 continuation: ((NWPath) -> Void)? = nil) {
         self.pathMonitor = pathMonitor
         self.updateHandler = updateHandler
         self.delegate = delegate
+        self.updateQueue = updateQueue
         self.continuation = continuation
         setUp()
     }
@@ -286,8 +412,16 @@ public final class NetworkMonitor {
     }
 
     private func forward(path: NWPath) {
-        continuation?(path)
-        if #available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *) {
+        if let continuation = continuation {
+            continuation(path)
+        } else if let updateQueue = updateQueue {
+            updateQueue.async { [weak self] in
+                guard let self = self else { return }
+                self.postNotification()
+                self.updateDelegate(path: path)
+                self.updateHandler?(self, path)
+            }
+        } else if #available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *) {
             Task {
                 await MainActor.run {
                     postNotification()
