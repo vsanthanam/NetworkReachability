@@ -103,6 +103,8 @@
             /// The kind of errors this publisher might publish.
             public typealias Failure = Never
 
+            /// Attaches the specified subscriber to this publisher.
+            /// - Parameter subscriber: The subscriber to attach to this [`Publisher`](https://developer.apple.com/documentation/combine/publisher), after which it can receive values.
             public func receive<S>(subscriber: S) where S: Subscriber, S.Failure == Failure, S.Input == Output {
                 let subscription = Subscription(subscriber: subscriber, pathMonitor: pathMonitor)
                 subscriber.receive(subscription: subscription)
