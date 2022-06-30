@@ -47,23 +47,25 @@ import SystemConfiguration
 /// - ``init(host:)``
 /// - ``init(address:)``
 /// - ``init(updateHandler:)``
+/// - ``init(updateQueue:updateHandler:)``
 /// - ``init(host:updateHandler:)``
+/// - ``init(host:updateQueue:updateHandler:)``
 /// - ``init(address:updateHandler:)``
+/// - ``init(address:updateQueue:updateHandler:)``
 /// - ``init(delegate:)``
+/// - ``init(updateQueue:delegate:)``
 /// - ``init(host:delegate:)``
+/// - ``init(host:updateQueue:delegate:)``
 /// - ``init(address:delegate:)``
+/// - ``init(address:updateQueue:delegate:)``
 ///
-/// ### Delegation
-///
-/// - ``Delegate-swift.typealias``
-/// - ``delegate-swift.property``
-///
-/// ### Closures
+/// ### Closure Callbacks
 ///
 /// - ``updateHandler-swift.property``
 /// - ``UpdateHandler-swift.typealias``
 /// - ``Result``
 /// - ``Error``
+/// - ``updateQueue``
 ///
 /// ### Swift Concurrency
 ///
@@ -72,9 +74,16 @@ import SystemConfiguration
 /// - ``reachabilityUpdates(forHost:)``
 /// - ``reachabilityUpdates(forAddress:)``
 ///
+/// ### Delegation
+///
+/// - ``Delegate-swift.typealias``
+/// - ``delegate-swift.property``
+/// - ``updateQueue``
+///
 /// ### Notifications
 ///
 /// - ``reachabilityChangedNotificationName``
+/// - ``updateQueue``
 ///
 /// ### Combine
 ///
@@ -102,7 +111,8 @@ public final class ReachabilityMonitor {
     public convenience init() throws {
         self.init(ref: try .general,
                   updateHandler: nil,
-                  delegate: nil)
+                  delegate: nil,
+                  updateQueue: nil)
     }
 
     /// Create a reachablity monitor for a specific host
@@ -115,7 +125,8 @@ public final class ReachabilityMonitor {
     public convenience init(host: String) throws {
         self.init(ref: try .forHost(host),
                   updateHandler: nil,
-                  delegate: nil)
+                  delegate: nil,
+                  updateQueue: nil)
     }
 
     /// Create a reachablity monitor for a socket address
@@ -128,12 +139,11 @@ public final class ReachabilityMonitor {
     public convenience init(address: sockaddr) throws {
         self.init(ref: try .forAddress(address),
                   updateHandler: nil,
-                  delegate: nil)
+                  delegate: nil,
+                  updateQueue: nil)
     }
 
     /// Create a reachability monitor with a closure used to respond to reachability changes
-    ///
-    /// Use this initializer to respond to reachability updates with a closure
     ///
     /// - Parameter updateHandler: The closure used to observe reachability updates
     ///
@@ -143,7 +153,25 @@ public final class ReachabilityMonitor {
     public convenience init(updateHandler: @escaping UpdateHandler) throws {
         self.init(ref: try .general,
                   updateHandler: updateHandler,
-                  delegate: nil)
+                  delegate: nil,
+                  updateQueue: nil)
+    }
+
+    /// Create a reachability monitor with a closure used to respond to reachability changes on a specific queue
+    ///
+    /// - Parameters:
+    ///   - updateQueue: Dispatch queue used to invoke the update handler
+    ///   - updateHandler: The closure used to observe reachability updates
+    ///
+    /// - Note: A reachability monitor begins observing and publishing reachability updates immediately after initialization.
+    ///
+    /// - Throws: An error of type ``Error
+    public convenience init(updateQueue: DispatchQueue,
+                            updateHandler: @escaping UpdateHandler) throws {
+        self.init(ref: try .general,
+                  updateHandler: updateHandler,
+                  delegate: nil,
+                  updateQueue: updateQueue)
     }
 
     /// Create a reachability monitor for a specific host with a closure used to respond to reachability changes
@@ -159,7 +187,27 @@ public final class ReachabilityMonitor {
                             updateHandler: @escaping UpdateHandler) throws {
         self.init(ref: try .forHost(host),
                   updateHandler: updateHandler,
-                  delegate: nil)
+                  delegate: nil,
+                  updateQueue: nil)
+    }
+
+    /// Create a reachability monitor for a specific host with a closure used to respond to reachability changes on a specific queue
+    ///
+    /// - Parameters:
+    ///   - host: The host to monitor
+    ///   - updateQueue: Dispatch queue used to invoke the update handler
+    ///   - updateHandler: The closure used to observe reachability updates
+    ///
+    /// - Note: A reachability monitor begins observing and publishing reachability updates immediately after initialization.
+    ///
+    /// - Throws: An error of type ``Error``
+    public convenience init(host: String,
+                            updateQueue: DispatchQueue,
+                            updateHandler: @escaping UpdateHandler) throws {
+        self.init(ref: try .forHost(host),
+                  updateHandler: updateHandler,
+                  delegate: nil,
+                  updateQueue: updateQueue)
     }
 
     /// Create a reachability monitor for a specific socket address with a closure used to respond to reachability changes
@@ -175,12 +223,30 @@ public final class ReachabilityMonitor {
                             updateHandler: @escaping UpdateHandler) throws {
         self.init(ref: try .forAddress(address),
                   updateHandler: updateHandler,
-                  delegate: nil)
+                  delegate: nil,
+                  updateQueue: nil)
+    }
+
+    /// Create a reachability monitor for a specific socket address with a closure used to respond to reachability changes on a specific queue
+    ///
+    /// - Parameters:
+    ///   - address: The socket address to monitor
+    ///   - updateQueue: Dispatch queue used to invoke the update handler
+    ///   - updateHandler: The closure used to observe reachability updates
+    ///
+    /// - Note: A reachability monitor begins observing and publishing reachability updates immediately after initialization.
+    ///
+    /// - Throws: An error of type ``Error``
+    public convenience init(address: sockaddr,
+                            updateQueue: DispatchQueue,
+                            updateHandler: @escaping UpdateHandler) throws {
+        self.init(ref: try .forAddress(address),
+                  updateHandler: updateHandler,
+                  delegate: nil,
+                  updateQueue: updateQueue)
     }
 
     /// Create a reachability monitor with a delegate object used to respond to reachability changes
-    ///
-    /// Use this initializer to respond to reachability updates with an instance of an object that conforms to ``ReachabilityMonitorDelegate``
     ///
     /// - Parameter delegate: The delegate object used to observe reachability updates
     ///
@@ -190,7 +256,25 @@ public final class ReachabilityMonitor {
     public convenience init(delegate: any Delegate) throws {
         self.init(ref: try .general,
                   updateHandler: nil,
-                  delegate: delegate)
+                  delegate: delegate,
+                  updateQueue: nil)
+    }
+
+    /// Create a reachability monitor with a delegate object used to respond to reachability changes
+    ///
+    /// - Parameters:
+    ///   - updateQueue: Dispatch queue used to invoke the delegate callbacks
+    ///   - delegate: The delegate object used to observe reachability updates
+    ///
+    /// - Note: A reachability monitor begins observing and publishing reachability updates immediately after initialization.
+    ///
+    /// - Throws: An error of type ``Error``
+    public convenience init(updateQueue: DispatchQueue,
+                            delegate: any Delegate) throws {
+        self.init(ref: try .general,
+                  updateHandler: nil,
+                  delegate: delegate,
+                  updateQueue: updateQueue)
     }
 
     /// Create a reachability monitor for a specific host with a delegate object used to respond to reachability changes
@@ -206,7 +290,27 @@ public final class ReachabilityMonitor {
                             delegate: any Delegate) throws {
         self.init(ref: try .forHost(host),
                   updateHandler: nil,
-                  delegate: delegate)
+                  delegate: delegate,
+                  updateQueue: nil)
+    }
+
+    /// Create a reachability monitor for a specific host with a delegate object used to respond to reachability changes
+    ///
+    /// - Parameters:
+    ///   - host: The host to monitor
+    ///   - updateQueue: Dispatch queue used to invoke the delegate callbacks
+    ///   - delegate: The delegate object used to observe reachability update
+    ///
+    /// - Note: A reachability monitor begins observing and publishing reachability updates immediately after initialization.
+    ///
+    /// - Throws: An error of type ``Error``
+    public convenience init(host: String,
+                            updateQueue: DispatchQueue,
+                            delegate: any Delegate) throws {
+        self.init(ref: try .forHost(host),
+                  updateHandler: nil,
+                  delegate: delegate,
+                  updateQueue: updateQueue)
     }
 
     /// Create a reachability monitor for a specific socket address with a delegate object used to respond to reachability changes
@@ -222,7 +326,27 @@ public final class ReachabilityMonitor {
                             delegate: any Delegate) throws {
         self.init(ref: try .forAddress(address),
                   updateHandler: nil,
-                  delegate: delegate)
+                  delegate: delegate,
+                  updateQueue: nil)
+    }
+
+    /// Create a reachability monitor for a specific socket address with a delegate object used to respond to reachability changes
+    ///
+    /// - Parameters:
+    ///   - address: The socket address to monitor
+    ///   - updateQueue: Dispatch queue used to invoke the delegate callbacks
+    ///   - delegate: The delegate object used to observe reachability update
+    ///
+    /// - Note: A reachability monitor begins observing and publishing reachability updates immediately after initialization.
+    ///
+    /// - Throws: An error of type ``Error``
+    public convenience init(address: sockaddr,
+                            updateQueue: DispatchQueue,
+                            delegate: any Delegate) throws {
+        self.init(ref: try .forAddress(address),
+                  updateHandler: nil,
+                  delegate: delegate,
+                  updateQueue: updateQueue)
     }
 
     // MARK: - API
@@ -256,7 +380,7 @@ public final class ReachabilityMonitor {
     ///
     /// - Tip: The closure only recieves status changes that occured after it was assigned. To recieve every status update, including the reachability status at the time the monitor was initialized, pass in the closure on initialization of the monitor.
     ///
-    /// - Note: Instances of ``ReachabilityMonitor`` will always invoke this closure the main thread.
+    /// - Note: Instances of ``ReachabilityMonitor`` will always invoke this closure on the ``updateQueue``
     public var updateHandler: UpdateHandler?
 
     /// The delegate object used to observe reachability updates
@@ -264,7 +388,14 @@ public final class ReachabilityMonitor {
     /// See ``Delegate-swift.typealias`` for more information.
     ///
     /// - Tip: The delegate only recieves status changes that occured after it was assigned. To recieve every status update, including the reachability status at the time the monitor was initialized, pass in the delegate on initialization of the monitor.
+    ///
+    /// - Important: Instances of ``ReachabilityMonitor`` will perform delegate callbacks on the ``updateQueue``
     public weak var delegate: (any Delegate)?
+
+    /// The dispatch queue used to send closure callbacks, delegate callbacks, and notifications.
+    ///
+    /// Set this value to `nil` to use the main thread.
+    public var updateQueue: DispatchQueue?
 
     /// The current reachability status
     ///
@@ -344,23 +475,26 @@ public final class ReachabilityMonitor {
 
     // MARK: - Private
 
+    static func withContinuation(_ ref: SCNetworkReachability,
+                                 continuation: @escaping (Result) -> Void) -> ReachabilityMonitor {
+        ReachabilityMonitor(ref: ref,
+                            updateHandler: nil,
+                            delegate: nil,
+                            continuation: continuation,
+                            updateQueue: nil)
+    }
+
     private init(ref: SCNetworkReachability,
                  updateHandler: UpdateHandler?,
                  delegate: (any Delegate)?,
-                 continuation: ((Result) -> Void)? = nil) {
+                 continuation: ((Result) -> Void)? = nil,
+                 updateQueue: DispatchQueue?) {
         self.ref = ref
         self.updateHandler = updateHandler
         self.delegate = delegate
         self.continuation = continuation
+        self.updateQueue = updateQueue
         setUp()
-    }
-
-    convenience init(_ ref: SCNetworkReachability,
-                     continuation: @escaping (Result) -> Void) {
-        self.init(ref: ref,
-                  updateHandler: nil,
-                  delegate: nil,
-                  continuation: continuation)
     }
 
     private var ref: SCNetworkReachability
@@ -433,8 +567,16 @@ public final class ReachabilityMonitor {
 
     private func succeed(with flags: SCNetworkReachabilityFlags?) {
         let reachability = Reachability(flags: flags)
-        continuation?(.success(reachability))
-        if #available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *) {
+        if let continuation = continuation {
+            continuation(.success(reachability))
+        } else if let updateQueue = updateQueue {
+            updateQueue.async { [weak self] in
+                guard let self = self else { return }
+                self.postNotification()
+                self.updateDelegate(reachability: reachability)
+                self.updateHandler?(self, .success(reachability))
+            }
+        } else if #available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *) {
             Task {
                 await MainActor.run {
                     postNotification()
@@ -453,8 +595,16 @@ public final class ReachabilityMonitor {
     }
 
     private func fail(with error: Error) {
-        continuation?(.failure(error))
-        if #available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *) {
+        if let continuation = continuation {
+            continuation(.failure(error))
+        } else if let updateQueue = updateQueue {
+            updateQueue.async { [weak self] in
+                guard let self = self else { return }
+                self.postNotification()
+                self.failDelegate(error)
+                self.updateHandler?(self, .failure(error))
+            }
+        } else if #available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *) {
             Task {
                 await MainActor.run {
                     postNotification()
