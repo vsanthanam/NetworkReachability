@@ -26,7 +26,6 @@
 #if canImport(Combine)
     import Combine
     import Darwin
-    import Foundation
     import SystemConfiguration
 
     @available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *)

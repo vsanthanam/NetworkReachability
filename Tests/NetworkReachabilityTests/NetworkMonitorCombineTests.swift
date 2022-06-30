@@ -30,7 +30,6 @@
 #if canImport(Combine)
 
     import Combine
-    import Foundation
     @testable import NetworkReachability
     import XCTest
 

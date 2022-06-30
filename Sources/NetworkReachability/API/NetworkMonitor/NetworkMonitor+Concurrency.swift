@@ -23,7 +23,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import Foundation
 import Network
 
 @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)

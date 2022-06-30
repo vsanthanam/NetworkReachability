@@ -25,7 +25,6 @@
 
 #if canImport(Combine)
     import Combine
-    import Foundation
     import Network
 
     @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
