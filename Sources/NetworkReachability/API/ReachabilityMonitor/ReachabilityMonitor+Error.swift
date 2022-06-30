@@ -50,6 +50,7 @@ public extension ReachabilityMonitor {
 
         // MARK: - LocalizedError
 
+        /// A localized message describing what error occurred.
         public var errorDescription: String? {
             switch self {
             case .failedToCreate:
@@ -65,6 +66,7 @@ public extension ReachabilityMonitor {
             }
         }
 
+        /// A localized message describing the reason for the failure.
         public var failureReason: String? {
             switch self {
             case let .failedToCreate(code):
@@ -80,16 +82,19 @@ public extension ReachabilityMonitor {
             }
         }
 
+        /// A localized message describing how one might recover from the failure.
         public var recoverySuggestion: String? {
             "There is not a lot you can do with this error at runtime, but it can help you with debugging"
         }
 
+        /// A localized message providing "help" text if the user requests help.
         public var helpAnchor: String? {
             "If you think error was caused by a bug in the library, create an issue on GitHub and include this information."
         }
 
         // MARK: - CustomStringConvertible
 
+        /// A textual representation of this instance.
         public var description: String {
             [errorDescription!, " ", failureReason!].joined()
         }

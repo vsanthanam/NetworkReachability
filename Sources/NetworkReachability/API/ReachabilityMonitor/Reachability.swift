@@ -30,7 +30,7 @@ import SystemConfiguration
 @available(macOS 10.13, iOS 11.0, watchOS 4.0, tvOS 11.0, *)
 public struct Reachability: Equatable, Hashable, Sendable, CustomStringConvertible {
 
-    /// Createa reachability wrapper from system configuration reachability flags
+    /// Create a reachability wrapper from system configuration reachability flags
     /// - Parameter flags: The flags to wrap
     public init(flags: SCNetworkReachabilityFlags?) {
         self.flags = flags
@@ -70,7 +70,7 @@ public struct Reachability: Equatable, Hashable, Sendable, CustomStringConvertib
 
         // MARK: - CustomStringConvertible
 
-        /// The string value of this reachability status
+        /// A textual representation of this instance.
         public var description: String {
             switch self {
             case .unknown:
@@ -118,7 +118,7 @@ public struct Reachability: Equatable, Hashable, Sendable, CustomStringConvertib
 
     // MARK: - CustomStringConvertible
 
-    /// The string value of this reachability, including its flags and its status
+    /// A textual representation of this instance.
     public var description: String {
         (flags?.copyDescription ?? "No Flags") + " | " + status.description
     }
