@@ -36,7 +36,7 @@
         /// Use this property to observe reachability updates with [Combine](https://developer.apple.com/documentation/combine).
         ///
         /// ```swift
-        /// let cancellable = NetworkMonitor.reachabilityPublisher
+        /// let cancellable = ReachabilityMonitor.reachabilityPublisher
         ///     .map(\.status.isReachable)
         ///     .removeDuplicates()
         ///     .replaceError(with: false)
@@ -53,7 +53,7 @@
         /// Use this property to observe reachability updates with [Combine](https://developer.apple.com/documentation/combine).
         ///
         /// ```swift
-        /// let cancellable = NetworkMonitor.reachabilityPublisher(forHost: "www.apple.com")
+        /// let cancellable = ReachabilityMonitor.reachabilityPublisher(forHost: "www.apple.com")
         ///     .map(\.status.isReachable)
         ///     .removeDuplicates()
         ///     .replaceError(with: false)
@@ -74,7 +74,7 @@
         /// Use this property to observe reachability updates with [Combine](https://developer.apple.com/documentation/combine).
         ///
         /// ```swift
-        /// let cancellable = NetworkMonitor.reachabilityPublisher(forHost: "www.apple.com")
+        /// let cancellable = ReachabilityMonitor.reachabilityPublisher(forHost: "www.apple.com")
         ///     .map(\.status.isReachable)
         ///     .removeDuplicates()
         ///     .replaceError(with: false)
