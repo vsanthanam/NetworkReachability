@@ -14,8 +14,8 @@ These APIs are very similar, and can generally be used interchangeably. Like App
 
 | API                       | Single Value | Observing Values  | Throws Errors | macOS  | iOS   | watchOS | tvOS  |
 | ------------------------- | ------------ | ----------------- | ------------- | ------ | ----- | ------- | ----- |
-| ``NetworkMonitor``        | Async        | Async             | No            | 10.14+ | 12.0+ | N/A     | 12.0+ |
-| ``ReachabilityMonitor``   | Sync         | Async             | Yes           | 10.13+ | 11.0+ | 4.0+    | 11.0+ |
+| ``NetworkMonitor``        | Async        | Async             | No            | 10.14+ | 12.0+ | 5.0+    | 12.0+ |
+| ``ReachabilityMonitor``   | Sync         | Async             | Yes           | 10.13+ | 11.0+ | N/A     | 11.0+ |
 
 I recommend that you use ``NetworkMonitor`` as it both simpler and more robust, unless you need to target iOS 11 or you absolutely need a synchronous API.
 
