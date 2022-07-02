@@ -23,8 +23,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-@available(macOS 10.13, iOS 11.0, watchOS 4.0, tvOS 11.0, *)
-public extension ReachabilityMonitorDelegate {
-    func reachabilityMonitor(_ monitor: ReachabilityMonitor, didUpdateReachability reachability: Reachability) {}
-    func reachabilityMonitor(_ monitor: ReachabilityMonitor, didFailWithError error: Error) {}
-}
+#if !os(watchOS)
+    @available(macOS 10.13, iOS 11.0, tvOS 11.0, *)
+    public extension ReachabilityMonitorDelegate {
+        func reachabilityMonitor(_ monitor: ReachabilityMonitor, didUpdateReachability reachability: Reachability) {}
+        func reachabilityMonitor(_ monitor: ReachabilityMonitor, didFailWithError error: Error) {}
+    }
+#endif

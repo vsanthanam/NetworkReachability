@@ -23,31 +23,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import SystemConfiguration
+#if !os(watchOS)
+    import SystemConfiguration
 
-extension SCNetworkReachability {
+    extension SCNetworkReachability {
 
-    static var general: SCNetworkReachability {
-        get throws {
-            var zeroAddress = sockaddr()
-            zeroAddress.sa_len = UInt8(MemoryLayout<sockaddr>.size)
-            zeroAddress.sa_family = sa_family_t(AF_INET)
-            return try .forAddress(zeroAddress)
+        static var general: SCNetworkReachability {
+            get throws {
+                var zeroAddress = sockaddr()
+                zeroAddress.sa_len = UInt8(MemoryLayout<sockaddr>.size)
+                zeroAddress.sa_family = sa_family_t(AF_INET)
+                return try .forAddress(zeroAddress)
+            }
+        }
+
+        static func forAddress(_ address: sockaddr) throws -> SCNetworkReachability {
+            var address = address
+            guard let reachability = SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, &address) else {
+                throw ReachabilityMonitor.Error.failedToCreate(SCError())
+            }
+            return reachability
+        }
+
+        static func forHost(_ host: String) throws -> SCNetworkReachability {
+            guard let reachability = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault, host) else {
+                throw ReachabilityMonitor.Error.failedToCreate(SCError())
+            }
+            return reachability
         }
     }
-
-    static func forAddress(_ address: sockaddr) throws -> SCNetworkReachability {
-        var address = address
-        guard let reachability = SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, &address) else {
-            throw ReachabilityMonitor.Error.failedToCreate(SCError())
-        }
-        return reachability
-    }
-
-    static func forHost(_ host: String) throws -> SCNetworkReachability {
-        guard let reachability = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault, host) else {
-            throw ReachabilityMonitor.Error.failedToCreate(SCError())
-        }
-        return reachability
-    }
-}
+#endif

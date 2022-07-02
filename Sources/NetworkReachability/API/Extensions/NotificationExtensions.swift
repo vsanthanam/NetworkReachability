@@ -32,6 +32,8 @@ public extension Notification.Name {
     @available(macOS 10.14, iOS 12.0, watchOS 5.0, tvOS 12.0, *)
     static let networkPathChanged: Notification.Name = NetworkMonitor.networkPathChangedNotificationName
 
-    /// A notification posted by a ``ReachabilityMonitor`` when its reachability gchanges.
-    static let reachabilityChanged: Notification.Name = ReachabilityMonitor.reachabilityChangedNotificationName
+    #if !os(watchOS)
+        /// A notification posted by a ``ReachabilityMonitor`` when its reachability gchanges.
+        static let reachabilityChanged: Notification.Name = ReachabilityMonitor.reachabilityChangedNotificationName
+    #endif
 }

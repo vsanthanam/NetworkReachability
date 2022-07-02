@@ -23,29 +23,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-@testable import NetworkReachability
-import XCTest
+#if !os(watchOS)
+    @testable import NetworkReachability
+    import XCTest
 
-@available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
-final class ReachabiltyMonitorConcurrencyTests: XCTestCase {
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, *)
+    final class ReachabiltyMonitorConcurrencyTests: XCTestCase {
 
-    func test_observe_concurrency() {
-        let expectation = expectation(description: "pass")
+        func test_observe_concurrency() {
+            let expectation = expectation(description: "pass")
 
-        Task {
-            do {
-                for try await isReachable in ReachabilityMonitor.reachabilityUpdates.map(\.status.isReachable) {
-                    if isReachable {
-                        expectation.fulfill()
-                    } else {
-                        XCTFail()
+            Task {
+                do {
+                    for try await isReachable in ReachabilityMonitor.reachabilityUpdates.map(\.status.isReachable) {
+                        if isReachable {
+                            expectation.fulfill()
+                        } else {
+                            XCTFail()
+                        }
                     }
+                } catch {
+                    XCTFail()
                 }
-            } catch {
-                XCTFail()
             }
+            waitForExpectations(timeout: 5, handler: nil)
         }
-        waitForExpectations(timeout: 5, handler: nil)
-    }
 
-}
+    }
+#endif

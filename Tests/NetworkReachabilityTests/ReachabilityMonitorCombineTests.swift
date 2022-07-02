@@ -23,13 +23,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if canImport(Combine)
+#if canImport(Combine) && !os(watchOS)
 
     import Combine
     @testable import NetworkReachability
     import XCTest
 
-    @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, *)
     final class ReachabilityMonitorConcurrencyTests: XCTestCase {
 
         var cancellable: AnyCancellable?
