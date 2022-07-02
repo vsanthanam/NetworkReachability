@@ -23,12 +23,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if canImport(Combine)
+#if canImport(Combine) && !os(watchOS)
     import Combine
     import Darwin
     import SystemConfiguration
 
-    @available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *)
+    @available(macOS 10.15, iOS 13, tvOS 13, *)
     public extension ReachabilityMonitor {
 
         /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of reachability updates

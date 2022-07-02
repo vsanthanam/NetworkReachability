@@ -23,90 +23,92 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import SystemConfiguration
+#if !os(watchOS)
+    import SystemConfiguration
 
-extension SCNetworkReachabilityFlags {
+    extension SCNetworkReachabilityFlags {
 
-    var status: Reachability.Status {
-        guard isReachableFlagSet else { return .unavailable }
-        var connection = Reachability.Status.unavailable
+        var status: Reachability.Status {
+            guard isReachableFlagSet else { return .unavailable }
+            var connection = Reachability.Status.unavailable
 
-        if !isConnectionRequiredFlagSet {
-            connection = .wlan
-        }
-
-        if isConnectionOnTrafficOrDemandFlagSet {
-            if !isInterventionRequiredFlagSet {
+            if !isConnectionRequiredFlagSet {
                 connection = .wlan
             }
+
+            if isConnectionOnTrafficOrDemandFlagSet {
+                if !isInterventionRequiredFlagSet {
+                    connection = .wlan
+                }
+            }
+
+            if isOnWWANFlagSet {
+                connection = .wwan
+            }
+
+            return connection
         }
 
-        if isOnWWANFlagSet {
-            connection = .wwan
+        var isOnWWANFlagSet: Bool {
+            #if os(iOS)
+                contains(.isWWAN)
+            #else
+                false
+            #endif
         }
 
-        return connection
-    }
+        var isReachableFlagSet: Bool {
+            contains(.reachable)
+        }
 
-    var isOnWWANFlagSet: Bool {
-        #if os(iOS)
-            contains(.isWWAN)
-        #else
-            false
-        #endif
-    }
+        var isConnectionRequiredFlagSet: Bool {
+            contains(.connectionRequired)
+        }
 
-    var isReachableFlagSet: Bool {
-        contains(.reachable)
-    }
+        var isInterventionRequiredFlagSet: Bool {
+            contains(.interventionRequired)
+        }
 
-    var isConnectionRequiredFlagSet: Bool {
-        contains(.connectionRequired)
-    }
+        var isConnectionOnTrafficFlagSet: Bool {
+            contains(.connectionOnTraffic)
+        }
 
-    var isInterventionRequiredFlagSet: Bool {
-        contains(.interventionRequired)
-    }
+        var isConnectionOnDemandFlagSet: Bool {
+            contains(.connectionOnDemand)
+        }
 
-    var isConnectionOnTrafficFlagSet: Bool {
-        contains(.connectionOnTraffic)
-    }
+        var isConnectionOnTrafficOrDemandFlagSet: Bool {
+            !intersection([.connectionOnTraffic, .connectionOnDemand]).isEmpty
+        }
 
-    var isConnectionOnDemandFlagSet: Bool {
-        contains(.connectionOnDemand)
-    }
+        var isTransientConnectionFlagSet: Bool {
+            contains(.transientConnection)
+        }
 
-    var isConnectionOnTrafficOrDemandFlagSet: Bool {
-        !intersection([.connectionOnTraffic, .connectionOnDemand]).isEmpty
-    }
+        var isLocalAddressFlagSet: Bool {
+            contains(.isLocalAddress)
+        }
 
-    var isTransientConnectionFlagSet: Bool {
-        contains(.transientConnection)
-    }
+        var isDirectFlagSet: Bool {
+            contains(.isDirect)
+        }
 
-    var isLocalAddressFlagSet: Bool {
-        contains(.isLocalAddress)
-    }
+        var isConnectionRequiredAndTransientFlagSet: Bool {
+            intersection([.connectionRequired, .transientConnection]) == [.connectionRequired, .transientConnection]
+        }
 
-    var isDirectFlagSet: Bool {
-        contains(.isDirect)
-    }
+        var copyDescription: String {
+            let W = isOnWWANFlagSet ? "W" : "-"
+            let R = isReachableFlagSet ? "R" : "-"
+            let c = isConnectionRequiredFlagSet ? "c" : "-"
+            let t = isTransientConnectionFlagSet ? "t" : "-"
+            let i = isInterventionRequiredFlagSet ? "i" : "-"
+            let C = isConnectionOnTrafficFlagSet ? "C" : "-"
+            let D = isConnectionOnDemandFlagSet ? "D" : "-"
+            let l = isLocalAddressFlagSet ? "l" : "-"
+            let d = isDirectFlagSet ? "d" : "-"
 
-    var isConnectionRequiredAndTransientFlagSet: Bool {
-        intersection([.connectionRequired, .transientConnection]) == [.connectionRequired, .transientConnection]
+            return "\(W)\(R) \(c)\(t)\(i)\(C)\(D)\(l)\(d)"
+        }
     }
-
-    var copyDescription: String {
-        let W = isOnWWANFlagSet ? "W" : "-"
-        let R = isReachableFlagSet ? "R" : "-"
-        let c = isConnectionRequiredFlagSet ? "c" : "-"
-        let t = isTransientConnectionFlagSet ? "t" : "-"
-        let i = isInterventionRequiredFlagSet ? "i" : "-"
-        let C = isConnectionOnTrafficFlagSet ? "C" : "-"
-        let D = isConnectionOnDemandFlagSet ? "D" : "-"
-        let l = isLocalAddressFlagSet ? "l" : "-"
-        let d = isDirectFlagSet ? "d" : "-"
-
-        return "\(W)\(R) \(c)\(t)\(i)\(C)\(D)\(l)\(d)"
-    }
-}
+#endif

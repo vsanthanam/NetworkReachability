@@ -24,18 +24,21 @@
 // SOFTWARE.
 
 /// A protocol used to observe network reachability changes from a ``ReachabilityMonitor``
-@available(macOS 10.13, iOS 11.0, watchOS 4.0, tvOS 11.0, *)
-public protocol ReachabilityMonitorDelegate: AnyObject {
 
-    /// Sent to the delegate when the reachability changes
-    /// - Parameters:
-    ///   - monitor: The reachability monitor who's eachability changed
-    ///   - reachability: The new reachability
-    func reachabilityMonitor(_ monitor: ReachabilityMonitor, didUpdateReachability reachability: Reachability)
+#if !os(watchOS)
+    @available(macOS 10.13, iOS 11.0, tvOS 11.0, *)
+    public protocol ReachabilityMonitorDelegate: AnyObject {
 
-    /// Sent to the delegate when the network monitor failed with an error
-    /// - Parameters:
-    ///   - monitor: The reachability monitor that failed
-    ///   - error: The error that caused the monitor to fail
-    func reachabilityMonitor(_ monitor: ReachabilityMonitor, didFailWithError error: Error)
-}
+        /// Sent to the delegate when the reachability changes
+        /// - Parameters:
+        ///   - monitor: The reachability monitor who's eachability changed
+        ///   - reachability: The new reachability
+        func reachabilityMonitor(_ monitor: ReachabilityMonitor, didUpdateReachability reachability: Reachability)
+
+        /// Sent to the delegate when the network monitor failed with an error
+        /// - Parameters:
+        ///   - monitor: The reachability monitor that failed
+        ///   - error: The error that caused the monitor to fail
+        func reachabilityMonitor(_ monitor: ReachabilityMonitor, didFailWithError error: Error)
+    }
+#endif

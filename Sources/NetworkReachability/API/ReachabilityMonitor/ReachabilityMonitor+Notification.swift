@@ -23,12 +23,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import Foundation
+#if !os(watchOS)
+    import Foundation
 
-@available(macOS 10.13, iOS 11.0, watchOS 4.0, tvOS 11.0, *)
-public extension ReachabilityMonitor {
+    @available(macOS 10.13, iOS 11.0, tvOS 11.0, *)
+    public extension ReachabilityMonitor {
 
-    /// A notification posted by a ``ReachabilityMonitor`` when its reachability changes.
-    static let reachabilityChangedNotificationName = Notification.Name("reachabilityChanged")
+        /// A notification posted by a ``ReachabilityMonitor`` when its reachability changes.
+        static let reachabilityChangedNotificationName = Notification.Name("reachabilityChanged")
 
-}
+    }
+#endif
