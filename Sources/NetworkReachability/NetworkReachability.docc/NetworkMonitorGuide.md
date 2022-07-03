@@ -38,6 +38,8 @@ func updateReachability() {
 }
 ```
 
+- Important: `completionHandler` is always called in the main thread.
+
 ##### Swift Concurrency
 
 You can also retrieve the last known network path using Swift Concurrency via the `networkPath` static property.
@@ -86,7 +88,7 @@ final class MyClass {
 }
 ```
 
-- Important: ``NetworkMonitor`` always calls its update handler on the main thread.
+- Important: By default, instances of ``NetworkMonitor`` always update handler on the main thread. You can change this behavior by setting the monitor's `.updateQueue` property.
 
 ##### Swift Concurrency
 
@@ -148,7 +150,7 @@ final class MyClass: NetworkMonitorDelegate {
 }
 ```
 
-- Important: ``NetworkMonitor`` always executes delegate calbacks on the main thread.
+- Important: By default, instances of ``NetworkMonitor`` always call execute their delegate callbacks on the main thread. You can change this behavior by setting the monitor's `.updateQueue` property.
 
 ##### NotificationCenter
 
@@ -191,7 +193,7 @@ final class MyClass {
 }
 ```
 
-- Important: ``NetworkMonitor`` posts notifications on the main thread.
+- Important: By default, instances of ``NetworkMonitor`` always post their notifications on the main thread. You can change this behavior by setting the monitor's `.updateQueue` property.
 
 ##### Combine
 

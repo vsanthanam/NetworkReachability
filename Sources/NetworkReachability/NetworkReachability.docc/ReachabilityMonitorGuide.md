@@ -53,7 +53,7 @@ final class MyClass {
 }
 ```
 
-- Important: ``ReachabilityMonitor`` always calls its update handler on the main thread.
+- Important: By default, instances of ``ReachabilityMonitor`` always call their update handlers on the main thread. You can change this behavior by setting the monitor's `.updateQueue` property.
 
 ##### Swift Concurrency
 
@@ -121,7 +121,7 @@ final class MyClass: ReachabilityMonitorDelegate {
 }
 ```
 
-- Important: ``ReachabilityMonitor`` always executes delegate calbacks on the main thread.
+- Important: By default, instances of ``ReachabilityMonitor`` always execute their delegate callbacks on the main thread. You can change this behavior by setting the monitor's `.updateQueue` property.
 
 ##### NotificationCenter
 
@@ -166,7 +166,7 @@ final class MyClass {
 }
 ```
 
-- Important: ``ReachabilityMonitor`` posts notifications on the main thread.
+- Important: By default, instances of ``ReachabilityMonitor`` always post their notifications on the main thread. You can change this behavior by setting the monitor's `.updateQueue` property.
 
 ##### Combine
 
