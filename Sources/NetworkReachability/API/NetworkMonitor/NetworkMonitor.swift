@@ -334,11 +334,20 @@ public final class NetworkMonitor {
     ///     }
     /// }
     /// ```
-    public static func networkPath(completionHandler: @escaping (NWPath) -> Void) {
+    /// - Parameters:
+    ///   - dispatchQueue: The `DispatchQueue` used to perform the provided completion handler closure.
+    ///                    If `nil`, the provided closure will be executed on the main thread.
+    ///   - completionHandler: The closure used to handle the latest `NWPath` value.
+    public static func networkPath(dispatchQueue: DispatchQueue? = nil,
+                                   completionHandler: @escaping (NWPath) -> Void) {
         let monitor = NWPathMonitor()
         monitor.pathUpdateHandler = { path in
             monitor.cancel()
-            if #available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *) {
+            if let dispatchQueue = dispatchQueue {
+                dispatchQueue.async {
+                    completionHandler(path)
+                }
+            } else if #available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *) {
                 Task {
                     completionHandler(path)
                 }

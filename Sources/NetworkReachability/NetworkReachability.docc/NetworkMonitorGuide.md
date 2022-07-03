@@ -88,7 +88,7 @@ final class MyClass {
 }
 ```
 
-- Important: By default, instances of ``NetworkMonitor`` always update handler on the main thread. You can change this behavior by setting the monitor's `.updateQueue` property.
+- Important: By default, instances of ``NetworkMonitor`` always call their update handlers on the main thread. You can change this behavior by setting the monitor's `.updateQueue` property.
 
 ##### Swift Concurrency
 

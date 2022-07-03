@@ -29,7 +29,7 @@ import Network
 @available(macOS 10.14, iOS 12.0, watchOS 5.0, tvOS 12.0, *)
 public protocol NetworkMonitorDelegate: AnyObject {
 
-    /// Sent to the delegate with the network path changes
+    /// Sent to the delegate when the network path changes
     /// - Parameters:
     ///   - monitor: The monitor who's network path changed
     ///   - networkPath: The new network path
