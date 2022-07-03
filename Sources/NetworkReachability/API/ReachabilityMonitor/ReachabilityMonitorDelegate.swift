@@ -23,9 +23,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-/// A protocol used to observe network reachability changes from a ``ReachabilityMonitor``
-
 #if !os(watchOS)
+
+    /// A protocol used to observe network reachability changes from a ``ReachabilityMonitor``
     @available(macOS 10.13, iOS 11.0, tvOS 11.0, *)
     public protocol ReachabilityMonitorDelegate: AnyObject {
 
