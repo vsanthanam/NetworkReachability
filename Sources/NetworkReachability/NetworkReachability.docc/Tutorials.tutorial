@@ -1,0 +1,26 @@
+@Tutorials(name: "NetworkReachability Tutorials") {
+    @Intro(title: "Learn NetworkReachability") {
+        Step-by-step tutorials to learn NetworkReachability using Xcode 13
+        @Image(source: "Intro.png", alt: "A MacBook Pro Running Xcode")
+    }
+    @Chapter(name: "Build a Sample App") {
+        Create a sample iOS application using NetworkReachability
+        
+        @Image(source: "XcodeIcon.png", alt: "Xcode Icon")
+        @TutorialReference(tutorial: "doc:SampleProjectSetup-UIKit")
+        @TutorialReference(tutorial: "doc:SampleProjectUI-UIKit")
+        @TutorialReference(tutorial: "doc:SampleProjectIntegration-UIKit")
+    }
+    @Resources {
+        Explore more resources for learning about NetworkReachability.
+        @Downloads(destination: "https://github.com/vsanthanam/NetworkReachability/releases") {
+            - [- NetworkReachability Source](https://github.com/vsanthanam/NetworkReachability/releases/latest)
+            - [- Xcode 13](https://developer.apple.com/download/)
+        }
+        @Documentation(destination: "https://reachability.tools/docs/documentation/networkreachability/") {
+            Browse and search NetworkReachability documentation.
+            - [- NetworkMonitor API](https://reachability.tools/docs/documentation/networkreachability/networkmonitor)
+            - [- ReachabilityMonitor API](https://reachability.tools/docs/documentation/networkreachability/reachabilitymonitor)
+        }
+    }
+}

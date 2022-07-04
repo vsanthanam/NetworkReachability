@@ -63,7 +63,7 @@ import Network
 ///
 /// - ``updateHandler-swift.property``
 /// - ``UpdateHandler-swift.typealias``
-/// - ``networkPath(completionHandler:)``
+/// - ``networkPath(dispatchQueue:completionHandler:)``
 /// - ``updateQueue``
 ///
 /// ### Swift Concurrency

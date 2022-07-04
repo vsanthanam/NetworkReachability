@@ -1,0 +1,4 @@
+--enable isEmpty
+--disable blankLinesAtEndOfScope, blankLinesAtStartOfScope, redundantNilInit, unusedArguments, redundantParens, wrapMultilineStatementBraces, trailingCommas, braces
+--swiftversion 5.6
+--header ""
