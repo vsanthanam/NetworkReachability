@@ -3,7 +3,7 @@
             title: "Xcode 13", 
             destination: "https://developer.apple.com/download/"
     )
-    @Intro(title: "UI Setup") {
+    @Intro(title: "Storyboard Setup") {
         This tutorial guides you through the process of creating your app's user interface using Storyboards, Interface Builder, UIKit, and SFSymbols.
     }
     @Section(title: "Create the storyboard") {
@@ -31,7 +31,7 @@
             }
         }
     }
-    @Section(title: "Add Iconography SF Symbols") {
+    @Section(title: "Add Iconography from SF Symbols") {
         @ContentAndMedia {
             Add iconography to your sample reachability application from SF Symbols to communicate different network connectivity information to users.
         }
