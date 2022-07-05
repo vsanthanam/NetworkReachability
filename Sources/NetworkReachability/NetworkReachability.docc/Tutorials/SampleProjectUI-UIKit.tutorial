@@ -1,0 +1,53 @@
+@Tutorial(time: 15, projectFiles: "ProjectUI.zip") {
+    @XcodeRequirement(
+            title: "Xcode 13", 
+            destination: "https://developer.apple.com/download/"
+    )
+    @Intro(title: "UI Setup") {
+        This tutorial guides you through the process of creating your app's user interface using Storyboards, Interface Builder, UIKit, and SFSymbols.
+    }
+    @Section(title: "Create the storyboard") {
+        @ContentAndMedia {
+            Use Interface Builder to create your sample app's view hiearachy.
+            @Image(source: "StoryboardIcon.png", alt: "Storyboard Icon")
+        }
+        @Steps {
+            @Step {
+                Select `Main.storyboard` in the Xcode Sidebar
+                @Image(source: "XcodeMainStoryboardSidebar", alt: "The Xcode Sidebar")
+            }
+            @Step {
+                Select your view controller, click the "+" button in the top right-hand corner, and drag a `UIImageView` on to the canvas.
+                Constrain the image view to be centered within the view controller, with a height and width of 60 points.
+                @Image(source: "XcodeConstraints", alt: "Storyboard Canvas")
+            }
+            @Step {
+                Select `ViewController.swift` in the Xcode Sidebar and add an `IBOutlet` for the image view 
+                @Code(name: "ViewController.swift", file: "ImageOutlet.swift", previousFile: "ImageOutletPrevious.swift")
+            }
+            @Step {
+                Select `Main.storyboard` in the Xcode Sidebar. Select your view controller and click on the "outlets" tab in the inspector panel on the right-hand side. You should see your newly created outlet from the previous step. Connect the outlet to the image view on the canvas
+                @Image(source: "XcodeOutletDrag", alt: "Interface Builder Outlet Inspector")
+            }
+        }
+    }
+    @Section(title: "Add Iconography SF Symbols") {
+        @ContentAndMedia {
+            Add iconography to your sample reachability application from SF Symbols to communicate different network connectivity information to users.
+        }
+        @Steps {
+            @Step {
+                Select `ViewController.swift` in the Xcode Sidebar and add methods to update the image view depending on network state.
+                @Code(name: "ViewController.swift", file: "SFSymbols.swift", previousFile: "ImageOutlet.swift")
+            }
+            @Step {
+                Invoke `showUnknown()` in the `viewDidLoad()` method. Set the view's `tintColor` to `.label`
+                @Code(name: "ViewController.swift", file: "PlaceholderViewDidLoad.swift")
+            }
+            @Step {
+                Run the app in the simulator, and you should see something like this.
+                @Image(source: "Simulator-iPhone8-UI", alt: "iPhone 8 Simulator")
+            }
+        }
+    }
+}

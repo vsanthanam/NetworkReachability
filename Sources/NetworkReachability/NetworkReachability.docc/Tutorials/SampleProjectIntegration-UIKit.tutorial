@@ -1,0 +1,37 @@
+@Tutorial(time: 10, projectFiles: "ProjectIntegrate.zip") {
+    @XcodeRequirement(
+            title: "Xcode 13", 
+            destination: "https://developer.apple.com/download/"
+    )
+    @Intro(title: "Implementing Reachability") {
+        This tutorial guides you through the process of consuming reachability data in your application.
+    }
+    @Section(title: "Integrate Reachability") {
+        @ContentAndMedia {
+            Use delegation to update your application's user interface when its network connectivity changes.
+        }
+        @Steps {
+            @Step {
+                Import `NetworkReachability` in `ViewController.swift` so you can begin using the library.
+                @Code(name: "ViewController.swift", file: "ImportNetworkReachability.swift", previousFile: "PlaceholderViewDidLoad.swift")
+            }
+            @Step {
+                Add `NetworkMonitorDelegate` conformance to `ViewController`.
+                @Code(name: "ViewController.swift", file: "Delegate.swift")
+            }
+            @Step {
+                Update the view controller's UI in the delegate callback.
+                @Code(name: "ViewController.swift", file: "DelegateConformance.swift")
+            }
+            @Step {
+                Initialize an instance of `NetworkMonitor` in `viewDidLoad()` and assign its delegate.
+                @Code(name: "ViewController.swift", file: "CreateMonitor.swift")
+            }
+            @Step {
+                Run the app and try changing the targe device's network connectivity. Your UI should update to match.
+                @Image(source: "Simulator-iPhone8-Integration", alt: "iPhone 8 Simulator")
+                This works best on device, or when targeting Mac Catalyst, as the iPhone Simulator's reachability callbacks are spotty at best.
+            }
+        }
+    }
+}
