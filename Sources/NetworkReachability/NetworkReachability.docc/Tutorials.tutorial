@@ -6,7 +6,7 @@
     @Chapter(name: "Build a Sample App") {
         Create a sample iOS application using NetworkReachability
         
-        @Image(source: "XcodeIcon.png", alt: "Xcode Icon")
+        @Image(source: "SampleIcon.png", alt: "Xcode Icon")
         @TutorialReference(tutorial: "doc:SampleProjectSetup-UIKit")
         @TutorialReference(tutorial: "doc:SampleProjectUI-UIKit")
         @TutorialReference(tutorial: "doc:SampleProjectIntegration-UIKit")
