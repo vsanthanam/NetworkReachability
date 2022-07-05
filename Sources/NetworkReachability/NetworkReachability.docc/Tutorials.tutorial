@@ -1,4 +1,4 @@
-@Tutorials(name: "NetworkReachability Tutorials") {
+@Tutorials(name: "NetworkReachability") {
     @Intro(title: "Learn NetworkReachability") {
         Step-by-step tutorials to learn NetworkReachability using Xcode 13
         @Image(source: "Intro.png", alt: "A MacBook Pro Running Xcode")
