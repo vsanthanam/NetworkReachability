@@ -1,8 +1,5 @@
 @Tutorial(time: 15, projectFiles: "ProjectUI.zip") {
-    @XcodeRequirement(
-            title: "Xcode 13", 
-            destination: "https://developer.apple.com/download/"
-    )
+    @XcodeRequirement(title: "Xcode 13", destination: "https://developer.apple.com/download/")
     @Intro(title: "Storyboard Setup") {
         This tutorial guides you through the process of creating your app's user interface using Storyboards, Interface Builder, UIKit, and SFSymbols.
     }

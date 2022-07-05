@@ -1,8 +1,5 @@
 @Tutorial(time: 10, projectFiles: "ProjectIntegrate.zip") {
-    @XcodeRequirement(
-            title: "Xcode 13", 
-            destination: "https://developer.apple.com/download/"
-    )
+    @XcodeRequirement(title: "Xcode 13", destination: "https://developer.apple.com/download/")
     @Intro(title: "Implementing Reachability") {
         This tutorial guides you through the process of consuming reachability data in your application.
     }
