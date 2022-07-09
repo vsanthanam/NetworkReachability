@@ -3,13 +3,21 @@
         Step-by-step tutorials to learn NetworkReachability using Xcode 13
         @Image(source: "Intro.png", alt: "A MacBook Pro Running Xcode")
     }
-    @Chapter(name: "Build a Sample App") {
-        Create a sample iOS application using NetworkReachability
+    @Chapter(name: "UIKit Sample App") {
+        Create a sample iOS application with NetworkReachability using UIKit
         
-        @Image(source: "SampleIcon.png", alt: "Xcode Icon")
+        @Image(source: "SampleIcon.png", alt: "Sample App Icon")
         @TutorialReference(tutorial: "doc:SampleProjectSetup-UIKit")
         @TutorialReference(tutorial: "doc:SampleProjectUI-UIKit")
         @TutorialReference(tutorial: "doc:SampleProjectIntegration-UIKit")
+    }
+    @Chapter(name: "SwiftUI Sample App") {
+        Create a sample iOS application with NetworkReachability using SwiftUI
+        
+        @Image(source: "SampleIcon2.png", alt: "Sample App Icon")
+        @TutorialReference(tutorial: "doc:SampleProjectSetup-SwiftUI")
+        @TutorialReference(tutorial: "doc:SampleProjectIntegration-SwiftUI")
+        @TutorialReference(tutorial: "doc:SampleProjectUI-SwiftUI")
     }
     @Resources {
         Explore more resources for learning about NetworkReachability.

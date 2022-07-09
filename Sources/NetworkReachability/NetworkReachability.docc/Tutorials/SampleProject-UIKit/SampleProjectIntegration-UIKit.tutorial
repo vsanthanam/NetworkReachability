@@ -1,4 +1,4 @@
-@Tutorial(time: 10, projectFiles: "ProjectIntegrate.zip") {
+@Tutorial(time: 5, projectFiles: "ProjectIntegrate-UIKit.zip") {
     @XcodeRequirement(title: "Xcode 13", destination: "https://developer.apple.com/download/")
     @Intro(title: "Implementing Reachability") {
         This tutorial guides you through the process of consuming reachability data in your application.
@@ -6,6 +6,7 @@
     @Section(title: "Integrate Reachability") {
         @ContentAndMedia {
             Use delegation to update your application's user interface when its network connectivity changes.
+            @Image(source: "SampleIcon.png", alt: "Sample App Icon")
         }
         @Steps {
             @Step {
@@ -27,7 +28,7 @@
             @Step {
                 Run the app and try changing the targe device's network connectivity. Your UI should update to match.
                 @Image(source: "Simulator-iPhone8-Integration", alt: "iPhone 8 Simulator")
-                This works best on device, or when targeting Mac Catalyst, as the iPhone Simulator's reachability callbacks are spotty at best.
+                This works best on device as the iPhone Simulator's reachability callbacks are spotty at best. If you have a Mac with Apple Silicon, you can build for iPad and run on your machine as well.
             }
         }
     }

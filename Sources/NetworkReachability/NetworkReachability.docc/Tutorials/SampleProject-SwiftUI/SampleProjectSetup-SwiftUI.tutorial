@@ -1,0 +1,55 @@
+@Tutorial(time: 5, projectFiles: "ProjectSetup-SwiftUI.zip") {
+    @XcodeRequirement(title: "Xcode 13", destination: "https://developer.apple.com/download/")
+    @Intro(title: "SwiftUI Project Setup") {
+        This tutorial guides you through the process of creating a new SwiftUI application and adding NetworkReachability as a dependency using the Swift Package Manager within Xcode.
+    }
+    @Section(title: "Create a New Project") {
+        @ContentAndMedia {
+            Create a new project for an iOS Application and save it on your Mac.
+            @Image(source: "XcodeIcon.png", alt: "Xcode App Icon")
+        }
+        @Steps {
+            @Step {
+                Open Xcode and either click “Create a new Xcode project” in Xcode’s startup window, or choose File > New > Project.
+                @Image(source: "XcodeOpen.png", alt: "Xcode Dialog")
+            }
+            @Step {
+                In the template selector, select iOS as the platform, select the App template, and then click Next.
+                @Image(source: "XcodeTemplate.png", alt: "Xcode Template Selector")
+            }
+            @Step {
+                Enter “Reachability” as the product name, select “SwiftUI” for the interface and “Swift” for the language, and click Next. Choose a location to save the Reachability project on your Mac.
+                @Image(source: "XcodeTemplateOptionsSwiftUI.png", alt: "Xcode Template Options")
+            }
+        }
+    }
+    @Section(title: "Add NetworkReachability as a Dependency") {
+        @ContentAndMedia {
+            Use the Swift Package Manager to add NetworkReachability as a dependenct to your app target.
+            @Image(source: "SwiftPackageIcon.png", alt: "Swift Package ICon")
+        }
+        @Steps {
+            @Step {
+                Select your `.xcodeproj` file in the Xcode Sidebar, and select your app's target.
+                @Image(source: "XcodeSidebarSwiftUI.png", alt: "The Xcode Sidebar")
+            }
+            @Step {
+                Scroll to the "Frameworks, Libraries, and Embedded Content" section and choose the "+" button.
+                @Image(source: "XcodeAddLibrary.png", alt: "The Frameworks, Libraries, and Embedded Content Section")
+            }
+            @Step {
+                In the popup, choose "Add Other ..." > "Add Package Dependency ..."
+                @Image(source: "XcodeChooseFramework.png", alt: "Framework Selector")
+            }
+            @Step {
+                In the top right-hand corner of the package selector, enter the URL `https://github.com/vsanthanam/NetworkReachability.git`
+                @Image(source: "XcodePackageChooser.png", alt: "Framework Selector")
+                Add the version information if necessary.
+            }
+            @Step {
+                Choose "Add Package" and confirm your selected target.
+                @Image(source: "XcodeAddPackageConfirm.png", alt: "Confirm Package")
+            }
+        }
+    }
+}
