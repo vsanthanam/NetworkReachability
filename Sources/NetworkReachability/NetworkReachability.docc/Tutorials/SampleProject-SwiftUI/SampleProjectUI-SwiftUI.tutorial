@@ -1,0 +1,65 @@
+@Tutorial(time: 10, projectFiles: "ProjectUI-SwiftUI.zip") {
+    @XcodeRequirement(title: "Xcode 13", destination: "https://developer.apple.com/download/")
+    @Intro(title: "Canvas Setup") {
+        This tutorial guides you through the process of creating your app's user interface using SwiftUI and SF Symbols.
+    }
+    @Section(title: "Observe reachability in your view") {
+        @ContentAndMedia {
+            Observe an instance of `ReachabilityManager` and use it to build your symbols.
+            @Image(source: "SFSymbolsIcon", alt: "SF Symbols Icon")
+        }
+        @Steps {
+            @Step {
+                Select `ContentView.swift` in the Xcode Sidebar
+                @Image(source: "XcodeSidebarSwiftUI", alt: "The Xcode Sidebar")
+            }
+            @Step {
+                Add a new observed object and compute the symbol name
+                @Code(name: "ContentView.swift", file: "ComputeSymbol.swift", previousFile: "ContentView.swift")
+            }
+            @Step {
+                Add a property to compute the background color
+                @Code(name: "ContentView.swift", file: "ComputeColor.swift")
+            }
+            @Step {
+                Select `ReachabilityApp.swift` in the Xcode Sidebar
+                @Image(source: "XcodeSidebarSwiftUI", alt: "The Xcode Sidebar")
+            }
+            @Step {
+                Initialize an instance of `ReachabilityManager` and pass it to your content view.
+                @Code(name: "ReachabilityApp.swift", file: "ReachabilityApp.swift", previousFile: "ReachabilityAppTemplate.swift")
+            }
+        }
+    }
+    @Section(title: "Create the ContentView") {
+        @ContentAndMedia {
+            Use SwiftUI to create your sample app's view hiearachy.
+            @Image(source: "SwiftUIIcon", alt: "Swift UI Icon")
+        }
+        @Steps {
+            @Step {
+                Add a symbol to the view body
+                @Code(name: "ContentView.swift", file: "UseSymbol.swift", previousFile: "ComputeColor.swift") {
+                    @Image(source: "PreviewSymbol", alt: "Swift UI Preview")
+                }
+            }
+            @Step {
+                Size the symbol
+                @Code(name: "ContentView.swift", file: "FormatSymbol.swift") {
+                    @Image(source: "PreviewSymbolFormatted", alt: "Swift UI Preview")
+                }
+            }
+            @Step {
+                Wrap the symbol in a ZStack and add a background color
+                @Code(name: "ContentView.swift", file: "UseColor.swift") {
+                    @Image(source: "PreviewColor", alt: "Swift UI Preview")
+                }
+            }
+            @Step {
+                Run the app and try changing the targe device's network connectivity. Your UI should update to match.
+                @Image(source: "Simulator-iPhone8-Integration", alt: "iPhone 8 Simulator")
+                This works best on device as the iPhone Simulator's reachability callbacks are spotty at best. If you have a Mac with Apple Silicon, you can build for iPad and run on your machine as well.
+            }
+        }
+    }
+}

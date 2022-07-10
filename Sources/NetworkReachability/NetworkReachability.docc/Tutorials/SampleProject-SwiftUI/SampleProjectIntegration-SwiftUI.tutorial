@@ -1,0 +1,36 @@
+@Tutorial(time: 5, projectFiles: "ProjectIntegrate-SwiftUI.zip") {
+    @XcodeRequirement(title: "Xcode 13", destination: "https://developer.apple.com/download/")
+    @Intro(title: "Implementing Reachability") {
+        This tutorial guides you through the process of consuming reachability data in your application.
+    }
+    
+    @Section(title: "Integrate Reachability") {
+        @ContentAndMedia {
+            Create an `ObservableObject` for use with SwiftUI using NetworkReachability and callback closures.
+            @Image(source: "SampleIcon2.png", alt: "Sample App Icon")
+        }
+        
+        @Steps {
+            @Step {
+                Choose File > New > File, select iOS as the platform, select the “Swift File” template, and click Next. Name the new file "ReachabilityManager.swift" and click Create.
+                
+                @Image(source: "XcodeNewFile", alt: "New File Chooser")
+            }
+            
+            @Step {
+                Create a new class, and create an enumeration representing the various reachability options within your new class.
+                @Code(name: "ReachabilityManager.swift", file: "CreateStatus.swift")
+            }
+            
+            @Step {
+                Make your class an `ObservableObject` and annotate the instance variable with the `@Published` property wrapper.
+                @Code(name: "ReachabilityManager.swift", file: "MakeObservableObject.swift")
+            }
+            
+            @Step {
+                Create a `NetworkMonitor` class and use the callback API to recieve updates from the monitor.
+                @Code(name: "ReachabilityManager.swift", file: "ImplementManager.swift")
+            }
+        }
+    }
+}

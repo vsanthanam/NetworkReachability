@@ -1,6 +1,6 @@
-@Tutorial(time: 5, projectFiles: "ProjectSetup.zip") {
+@Tutorial(time: 5, projectFiles: "ProjectSetup-UIKit.zip") {
     @XcodeRequirement(title: "Xcode 13", destination: "https://developer.apple.com/download/")
-    @Intro(title: "Project Setup") {
+    @Intro(title: "UIKit Project Setup") {
         This tutorial guides you through the process of creating a new UIKit application and adding NetworkReachability as a dependency using the Swift Package Manager within Xcode.
     }
     @Section(title: "Create a New Project") {
@@ -19,7 +19,7 @@
             }
             @Step {
                 Enter “Reachability” as the product name, select “Storyboard” for the interface and “Swift” for the language, and click Next. Choose a location to save the Reachability project on your Mac.
-                @Image(source: "XcodeTemplateOptions.png", alt: "Xcode Template Options")
+                @Image(source: "XcodeTemplateOptionsStoryboard.png", alt: "Xcode Template Options")
             }
         }
     }
@@ -31,7 +31,7 @@
         @Steps {
             @Step {
                 Select your `.xcodeproj` file in the Xcode Sidebar, and select your app's target.
-                @Image(source: "XcodeSidebar.png", alt: "The Xcode Sidebar")
+                @Image(source: "XcodeSidebarStoryboard.png", alt: "The Xcode Sidebar")
             }
             @Step {
                 Scroll to the "Frameworks, Libraries, and Embedded Content" section and choose the "+" button.
