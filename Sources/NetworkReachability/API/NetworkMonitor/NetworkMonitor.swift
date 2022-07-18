@@ -64,7 +64,6 @@ import Network
 /// - ``updateHandler-swift.property``
 /// - ``UpdateHandler-swift.typealias``
 /// - ``networkPath(dispatchQueue:completionHandler:)``
-/// - ``updateQueue``
 ///
 /// ### Swift Concurrency
 ///
@@ -77,12 +76,10 @@ import Network
 ///
 /// - ``Delegate-swift.typealias``
 /// - ``delegate-swift.property``
-/// - ``updateQueue``
 ///
 /// ### NotificationCenter
 ///
 /// - ``networkPathChangedNotificationName``
-/// - ``updateQueue``
 ///
 /// ### Combine
 ///

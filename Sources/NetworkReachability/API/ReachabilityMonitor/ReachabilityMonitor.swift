@@ -66,7 +66,6 @@
     /// - ``UpdateHandler-swift.typealias``
     /// - ``Result``
     /// - ``Error``
-    /// - ``updateQueue``
     ///
     /// ### Swift Concurrency
     ///
@@ -79,12 +78,10 @@
     ///
     /// - ``Delegate-swift.typealias``
     /// - ``delegate-swift.property``
-    /// - ``updateQueue``
     ///
     /// ### Notifications
     ///
     /// - ``reachabilityChangedNotificationName``
-    /// - ``updateQueue``
     ///
     /// ### Combine
     ///
