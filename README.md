@@ -14,7 +14,7 @@
         <img src="https://img.shields.io/github/workflow/status/vsanthanam/NetworkReachability/Swift" />
     </a>
     <a href="https://swift.org">
-        <img src="https://img.shields.io/badge/swift-5.6-critical" />
+        <img src="https://img.shields.io/badge/swift-5.7-critical" />
     </a>
     <a href="https://developer.apple.com">
         <img src="https://img.shields.io/badge/platform-iOS%2011%20%7C%20macOS%2010.13%20%7C%20tvOS%2011%20%7C%20watchOS%205-lightgrey" />
