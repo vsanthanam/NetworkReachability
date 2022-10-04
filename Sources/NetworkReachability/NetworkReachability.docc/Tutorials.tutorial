@@ -23,7 +23,7 @@
         Explore more resources for learning about NetworkReachability.
         @Downloads(destination: "https://github.com/vsanthanam/NetworkReachability/releases") {
             - [- NetworkReachability Source](https://github.com/vsanthanam/NetworkReachability/releases/latest)
-            - [- Xcode 13](https://developer.apple.com/download/)
+            - [- Xcode 14](https://developer.apple.com/download/)
         }
         @Documentation(destination: "https://reachability.tools/docs/documentation/networkreachability/") {
             Browse and search NetworkReachability documentation.

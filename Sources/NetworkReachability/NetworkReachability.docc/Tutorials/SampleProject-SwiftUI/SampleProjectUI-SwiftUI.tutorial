@@ -1,5 +1,5 @@
 @Tutorial(time: 10, projectFiles: "ProjectUI-SwiftUI.zip") {
-    @XcodeRequirement(title: "Xcode 13", destination: "https://developer.apple.com/download/")
+    @XcodeRequirement(title: "Xcode 14", destination: "https://developer.apple.com/download/")
     @Intro(title: "Canvas Setup") {
         This tutorial guides you through the process of creating your app's user interface using SwiftUI and SF Symbols.
     }
