@@ -1,5 +1,5 @@
 @Tutorial(time: 5, projectFiles: "ProjectSetup-SwiftUI.zip") {
-    @XcodeRequirement(title: "Xcode 13", destination: "https://developer.apple.com/download/")
+    @XcodeRequirement(title: "Xcode 14", destination: "https://developer.apple.com/download/")
     @Intro(title: "SwiftUI Project Setup") {
         This tutorial guides you through the process of creating a new SwiftUI application and adding NetworkReachability as a dependency using the Swift Package Manager within Xcode.
     }
