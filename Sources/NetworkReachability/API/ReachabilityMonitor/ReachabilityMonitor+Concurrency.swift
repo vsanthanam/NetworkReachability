@@ -99,7 +99,7 @@
     private func stream(_ refBuilder: () throws -> SCNetworkReachability) -> AsyncThrowingStream<Reachability, Swift.Error> {
         .init(bufferingPolicy: .bufferingNewest(1)) { continuation in
             do {
-                _ = ReachabilityMonitor.withContinuation(try refBuilder()) { result in
+                _ = try ReachabilityMonitor.withContinuation(refBuilder()) { result in
                     do {
                         let reachability = try result.get()
                         continuation.yield(reachability)

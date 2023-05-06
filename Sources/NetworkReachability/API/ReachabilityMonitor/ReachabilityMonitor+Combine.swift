@@ -137,7 +137,7 @@
             func request(_ demand: Subscribers.Demand) {
                 requested += 1
                 do {
-                    networkMonitor = .withContinuation(try refBuilder()) { [weak self] result in
+                    networkMonitor = try .withContinuation(refBuilder()) { [weak self] result in
                         guard let self = self,
                               let subscriber = self.subscriber,
                               self.requested > .none else { return }

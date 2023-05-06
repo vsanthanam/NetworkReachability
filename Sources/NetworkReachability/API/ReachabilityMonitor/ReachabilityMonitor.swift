@@ -107,10 +107,10 @@
         ///
         /// - Throws: An error of type ``Error``
         public convenience init() throws {
-            self.init(ref: try .general,
-                      updateHandler: nil,
-                      delegate: nil,
-                      updateQueue: nil)
+            try self.init(ref: .general,
+                          updateHandler: nil,
+                          delegate: nil,
+                          updateQueue: nil)
         }
 
         /// Create a reachablity monitor for a specific host
@@ -121,10 +121,10 @@
         ///
         /// - Throws: An error of type ``Error``
         public convenience init(host: String) throws {
-            self.init(ref: try .forHost(host),
-                      updateHandler: nil,
-                      delegate: nil,
-                      updateQueue: nil)
+            try self.init(ref: .forHost(host),
+                          updateHandler: nil,
+                          delegate: nil,
+                          updateQueue: nil)
         }
 
         /// Create a reachablity monitor for a socket address
@@ -135,10 +135,10 @@
         ///
         /// - Throws: An error of type ``Error``
         public convenience init(address: sockaddr) throws {
-            self.init(ref: try .forAddress(address),
-                      updateHandler: nil,
-                      delegate: nil,
-                      updateQueue: nil)
+            try self.init(ref: .forAddress(address),
+                          updateHandler: nil,
+                          delegate: nil,
+                          updateQueue: nil)
         }
 
         /// Create a reachability monitor with a closure used to respond to reachability changes
@@ -149,10 +149,10 @@
         ///
         /// - Throws: An error of type ``Error``
         public convenience init(updateHandler: @escaping UpdateHandler) throws {
-            self.init(ref: try .general,
-                      updateHandler: updateHandler,
-                      delegate: nil,
-                      updateQueue: nil)
+            try self.init(ref: .general,
+                          updateHandler: updateHandler,
+                          delegate: nil,
+                          updateQueue: nil)
         }
 
         /// Create a reachability monitor with a closure used to respond to reachability changes on a specific queue
@@ -166,10 +166,10 @@
         /// - Throws: An error of type ``Error
         public convenience init(updateQueue: DispatchQueue,
                                 updateHandler: @escaping UpdateHandler) throws {
-            self.init(ref: try .general,
-                      updateHandler: updateHandler,
-                      delegate: nil,
-                      updateQueue: updateQueue)
+            try self.init(ref: .general,
+                          updateHandler: updateHandler,
+                          delegate: nil,
+                          updateQueue: updateQueue)
         }
 
         /// Create a reachability monitor for a specific host with a closure used to respond to reachability changes
@@ -183,10 +183,10 @@
         /// - Throws: An error of type ``Error``
         public convenience init(host: String,
                                 updateHandler: @escaping UpdateHandler) throws {
-            self.init(ref: try .forHost(host),
-                      updateHandler: updateHandler,
-                      delegate: nil,
-                      updateQueue: nil)
+            try self.init(ref: .forHost(host),
+                          updateHandler: updateHandler,
+                          delegate: nil,
+                          updateQueue: nil)
         }
 
         /// Create a reachability monitor for a specific host with a closure used to respond to reachability changes on a specific queue
@@ -203,10 +203,10 @@
         public convenience init(host: String,
                                 updateQueue: DispatchQueue,
                                 updateHandler: @escaping UpdateHandler) throws {
-            self.init(ref: try .forHost(host),
-                      updateHandler: updateHandler,
-                      delegate: nil,
-                      updateQueue: updateQueue)
+            try self.init(ref: .forHost(host),
+                          updateHandler: updateHandler,
+                          delegate: nil,
+                          updateQueue: updateQueue)
         }
 
         /// Create a reachability monitor for a specific socket address with a closure used to respond to reachability changes
@@ -220,10 +220,10 @@
         /// - Throws: An error of type ``Error``
         public convenience init(address: sockaddr,
                                 updateHandler: @escaping UpdateHandler) throws {
-            self.init(ref: try .forAddress(address),
-                      updateHandler: updateHandler,
-                      delegate: nil,
-                      updateQueue: nil)
+            try self.init(ref: .forAddress(address),
+                          updateHandler: updateHandler,
+                          delegate: nil,
+                          updateQueue: nil)
         }
 
         /// Create a reachability monitor for a specific socket address with a closure used to respond to reachability changes on a specific queue
@@ -239,10 +239,10 @@
         public convenience init(address: sockaddr,
                                 updateQueue: DispatchQueue,
                                 updateHandler: @escaping UpdateHandler) throws {
-            self.init(ref: try .forAddress(address),
-                      updateHandler: updateHandler,
-                      delegate: nil,
-                      updateQueue: updateQueue)
+            try self.init(ref: .forAddress(address),
+                          updateHandler: updateHandler,
+                          delegate: nil,
+                          updateQueue: updateQueue)
         }
 
         /// Create a reachability monitor with a delegate object used to respond to reachability changes
@@ -253,10 +253,10 @@
         ///
         /// - Throws: An error of type ``Error``
         public convenience init(delegate: any Delegate) throws {
-            self.init(ref: try .general,
-                      updateHandler: nil,
-                      delegate: delegate,
-                      updateQueue: nil)
+            try self.init(ref: .general,
+                          updateHandler: nil,
+                          delegate: delegate,
+                          updateQueue: nil)
         }
 
         /// Create a reachability monitor with a delegate object used to respond to reachability changes
@@ -270,10 +270,10 @@
         /// - Throws: An error of type ``Error``
         public convenience init(updateQueue: DispatchQueue,
                                 delegate: any Delegate) throws {
-            self.init(ref: try .general,
-                      updateHandler: nil,
-                      delegate: delegate,
-                      updateQueue: updateQueue)
+            try self.init(ref: .general,
+                          updateHandler: nil,
+                          delegate: delegate,
+                          updateQueue: updateQueue)
         }
 
         /// Create a reachability monitor for a specific host with a delegate object used to respond to reachability changes
@@ -287,10 +287,10 @@
         /// - Throws: An error of type ``Error``
         public convenience init(host: String,
                                 delegate: any Delegate) throws {
-            self.init(ref: try .forHost(host),
-                      updateHandler: nil,
-                      delegate: delegate,
-                      updateQueue: nil)
+            try self.init(ref: .forHost(host),
+                          updateHandler: nil,
+                          delegate: delegate,
+                          updateQueue: nil)
         }
 
         /// Create a reachability monitor for a specific host with a delegate object used to respond to reachability changes
@@ -306,10 +306,10 @@
         public convenience init(host: String,
                                 updateQueue: DispatchQueue,
                                 delegate: any Delegate) throws {
-            self.init(ref: try .forHost(host),
-                      updateHandler: nil,
-                      delegate: delegate,
-                      updateQueue: updateQueue)
+            try self.init(ref: .forHost(host),
+                          updateHandler: nil,
+                          delegate: delegate,
+                          updateQueue: updateQueue)
         }
 
         /// Create a reachability monitor for a specific socket address with a delegate object used to respond to reachability changes
@@ -323,10 +323,10 @@
         /// - Throws: An error of type ``Error``
         public convenience init(address: sockaddr,
                                 delegate: any Delegate) throws {
-            self.init(ref: try .forAddress(address),
-                      updateHandler: nil,
-                      delegate: delegate,
-                      updateQueue: nil)
+            try self.init(ref: .forAddress(address),
+                          updateHandler: nil,
+                          delegate: delegate,
+                          updateQueue: nil)
         }
 
         /// Create a reachability monitor for a specific socket address with a delegate object used to respond to reachability changes
@@ -342,10 +342,10 @@
         public convenience init(address: sockaddr,
                                 updateQueue: DispatchQueue,
                                 delegate: any Delegate) throws {
-            self.init(ref: try .forAddress(address),
-                      updateHandler: nil,
-                      delegate: delegate,
-                      updateQueue: updateQueue)
+            try self.init(ref: .forAddress(address),
+                          updateHandler: nil,
+                          delegate: delegate,
+                          updateQueue: updateQueue)
         }
 
         // MARK: - API
@@ -413,7 +413,7 @@
         public var currentReachability: Reachability {
             get throws {
                 refreshFlags()
-                return Reachability(flags: try flags.get())
+                return try Reachability(flags: flags.get())
             }
         }
 
