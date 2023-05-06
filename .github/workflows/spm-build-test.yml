@@ -8,11 +8,13 @@ on:
 
 jobs:
   build:
-
-    runs-on: macos-12
-
+    runs-on: macos-13
     steps:
     - uses: actions/checkout@v3
+    - name: Xcode Version
+      run: sudo xcode-select --switch /Applications/Xcode_14.3.app
+    - name: Lint
+      run: swift package plugin --allow-writing-to-package-directory swiftformat --lint
     - name: Build
       run: swift build -v
     - name: Run tests

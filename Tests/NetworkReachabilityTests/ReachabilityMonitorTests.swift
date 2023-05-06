@@ -42,7 +42,7 @@
         func test_observe_closure() {
             let expectation = expectation(description: "pass")
             do {
-                withExtendedLifetime(try ReachabilityMonitor(updateHandler: { _, reachability in
+                try withExtendedLifetime(ReachabilityMonitor(updateHandler: { _, reachability in
                     do {
                         if try reachability.get().status.isReachable {
                             expectation.fulfill()
@@ -125,7 +125,7 @@
             let expectation = expectation(description: "pass")
             withExtendedLifetime(Observer(expectation)) {
                 do {
-                    withExtendedLifetime(try ReachabilityMonitor()) {
+                    try withExtendedLifetime(ReachabilityMonitor()) {
                         waitForExpectations(timeout: 5)
                     }
                 } catch {
