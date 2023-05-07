@@ -10,8 +10,8 @@
     <a href="https://github.com/vsanthanam/NetworkReachability/releases">
         <img src="https://img.shields.io/github/v/release/vsanthanam/NetworkReachability" />
     </a>
-    <a href="https://github.com/vsanthanam/NetworkReachability/actions/workflows/swift.yml">
-        <img src="https://img.shields.io/github/workflow/status/vsanthanam/NetworkReachability/Swift" />
+    <a href="https://github.com/vsanthanam/NetworkReachability/actions/workflows/spm-build-test.yml">
+        <img src="https://img.shields.io/github/actions/workflow/status/vsanthanam/NetworkReachability/spm-build-test.yml" />
     </a>
     <a href="https://swift.org">
         <img src="https://img.shields.io/badge/swift-5.8-critical" />
