@@ -34,7 +34,7 @@ import NetworkReachability
 func updateReachability() {
     NetworkMonitor.networkPath(completionHandler: { (path: NWPath) in 
         // Do something with `path`
-    }
+    })
 }
 ```
 
@@ -78,7 +78,7 @@ final class MyClass {
         stopMonitoring()
         monitor = NetworkMonitor(updateHandler: { (monitor: NetworkMonitor, path: NWPath) in
             // Do something with `monitor` or `path`
-        }
+        })
     }
 
     func stopMonitoring() {
