@@ -28,11 +28,10 @@ import Foundation
 extension DispatchQueue {
 
     private static func frameworkQueue(_ name: String, fallback: String) -> DispatchQueue {
-        let label: String
-        if let bundleIdentifier = Bundle.main.bundleIdentifier {
-            label = [bundleIdentifier, name].joined(separator: ".")
+        let label: String = if let bundleIdentifier = Bundle.main.bundleIdentifier {
+            [bundleIdentifier, name].joined(separator: ".")
         } else {
-            label = [fallback, name].joined(separator: ".")
+            [fallback, name].joined(separator: ".")
         }
 
         let queue = DispatchQueue(label: label)
@@ -45,10 +44,6 @@ extension DispatchQueue {
 
     static var networkMonitorQueue: DispatchQueue {
         networkReachabilityQueue(name: "NetworkMonitor")
-    }
-
-    static var reachabilityMonitorQueue: DispatchQueue {
-        networkReachabilityQueue(name: "ReachabilityMonitor")
     }
 
 }

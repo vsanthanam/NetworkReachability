@@ -23,17 +23,17 @@ final class ReachabilityManager: ObservableObject {
 
     private func setUp() {
         monitor = .init() { [weak self] _, networkPath in
-            guard let self = self else { return }
+            guard let self else { return }
             if networkPath.usesInterfaceType(.wiredEthernet) {
-                self.reachability = .ethernet
+                reachability = .ethernet
             } else if networkPath.usesInterfaceType(.wifi) {
-                self.reachability = .wifi
+                reachability = .wifi
             } else if networkPath.usesInterfaceType(.cellular) {
-                self.reachability = .cellular
+                reachability = .cellular
             } else if networkPath.status == .satisfied {
-                self.reachability = .unknown
+                reachability = .unknown
             } else {
-                self.reachability = .disconnected
+                reachability = .disconnected
             }
         }
     }

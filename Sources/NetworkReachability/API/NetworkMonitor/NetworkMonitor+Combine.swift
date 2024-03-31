@@ -128,12 +128,12 @@
             func request(_ demand: Subscribers.Demand) {
                 requested += 1
                 monitor = .withContinuation(pathMonitor: pathMonitor) { [weak self] path in
-                    guard let self = self,
-                          let subscriber = self.subscriber,
-                          self.requested > .none else { return }
-                    self.requested -= .max(1)
+                    guard let self,
+                          let subscriber,
+                          requested > .none else { return }
+                    requested -= .max(1)
                     let newDemand = subscriber.receive(path)
-                    self.requested += newDemand
+                    requested += newDemand
                 }
             }
 
