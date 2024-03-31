@@ -87,7 +87,7 @@ import Network
 /// - ``networkPathPublisher(requiringInterfaceType:)``
 /// - ``networkPathPublisher(prohibitingInterfaceTypes:)``
 /// - ``Publisher``
-@available(macOS 10.14, iOS 12.0, watchOS 5.0, tvOS 12.0, *)
+@available(macOS 10.14, iOS 12.0, watchOS 6.0, tvOS 12.0, *)
 public final class NetworkMonitor {
 
     // MARK: - Initializers
@@ -340,7 +340,7 @@ public final class NetworkMonitor {
         let monitor = NWPathMonitor()
         monitor.pathUpdateHandler = { path in
             monitor.cancel()
-            if let dispatchQueue = dispatchQueue {
+            if let dispatchQueue {
                 dispatchQueue.async {
                     completionHandler(path)
                 }
@@ -418,14 +418,14 @@ public final class NetworkMonitor {
     }
 
     private func forward(path: NWPath) {
-        if let continuation = continuation {
+        if let continuation {
             continuation(path)
-        } else if let updateQueue = updateQueue {
+        } else if let updateQueue {
             updateQueue.async { [weak self] in
-                guard let self = self else { return }
-                self.postNotification()
-                self.updateDelegate(path: path)
-                self.updateHandler?(self, path)
+                guard let self else { return }
+                postNotification()
+                updateDelegate(path: path)
+                updateHandler?(self, path)
             }
         } else if #available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *) {
             Task {
@@ -437,10 +437,10 @@ public final class NetworkMonitor {
             }
         } else {
             DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                self.postNotification()
-                self.updateDelegate(path: path)
-                self.updateHandler?(self, path)
+                guard let self else { return }
+                postNotification()
+                updateDelegate(path: path)
+                updateHandler?(self, path)
             }
         }
     }

@@ -17,13 +17,6 @@ NetworkReachability is a replacement for Apple's [SystemConfiguration](https://d
 - ``NetworkMonitor``
 - ``NetworkMonitorDelegate``
 
-### Reachability Monitor
-
-- <doc:ReachabilityMonitorGuide>
-- ``ReachabilityMonitor``
-- ``ReachabilityMonitorDelegate``
-- ``Reachability``
-
 ### Other
 
 - <doc:RxSwift>

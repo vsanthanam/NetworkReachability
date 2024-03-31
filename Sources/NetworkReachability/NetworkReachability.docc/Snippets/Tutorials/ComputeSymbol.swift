@@ -13,15 +13,15 @@ struct ContentView: View {
     private var symbolName: String {
         switch reachabilityManager.reachability {
         case .wifi:
-            return "wifi.circle.fill"
+            "wifi.circle.fill"
         case .ethernet:
-            return "cable.connector"
+            "cable.connector"
         case .unknown:
-            return "questionmark.circle.fill"
+            "questionmark.circle.fill"
         case .cellular:
-            return "antenna.radiowaves.left.and.right.circle.fill"
+            "antenna.radiowaves.left.and.right.circle.fill"
         case .disconnected:
-            return "xmark.circle.fill"
+            "xmark.circle.fill"
         }
     }
 }

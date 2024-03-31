@@ -32,9 +32,5 @@
         /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of network path updates
         typealias NetworkPathPublisher = NetworkMonitor.Publisher
 
-        #if !os(watchOS)
-            /// A [`Publisher`](https://developer.apple.com/documentation/combine/publisher) of reachability updates
-            typealias ReachabilityPublisher = ReachabilityMonitor.Publisher
-        #endif
     }
 #endif
