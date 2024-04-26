@@ -37,7 +37,7 @@ Combine
 NetworkReachability supports RxSwift bindings with an optional additional package: NetworkReachabilityRxSwift. This optional package exists so that you can safely depend on NetworkReachability without also depending on RxSwift if you don't need to. NetworkReachability itself has no non-apple dependencies.
                    DESC
 
-  spec.homepage     = "https://github.com/aswathr/NetworkReachability"
+  spec.homepage     = "https://github.com/vsanthanam/NetworkReachability"
   # spec.screenshots  = "www.example.com/screenshots_1.gif", "www.example.com/screenshots_2.gif"
 
 
@@ -62,7 +62,7 @@ NetworkReachability supports RxSwift bindings with an optional additional packag
   #  profile URL.
   #
 
-  spec.author             = { "Aswath" => "aswathrce@gmail.com" }
+  spec.author             = { "Varun Santhanam" => "talkto@vsanthanam.com" }
   # Or just: spec.author    = "Aswath"
   # spec.authors            = { "Aswath" => "aswathrce@gmail.com" }
   # spec.social_media_url   = "https://twitter.com/Aswath"
@@ -90,7 +90,7 @@ NetworkReachability supports RxSwift bindings with an optional additional packag
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  spec.source       = { :git => "https://github.com/aswathr/NetworkReachability", :tag => "#{spec.version}" }
+  spec.source       = { :git => "https://github.com/vsanthanam/NetworkReachability", :tag => "#{spec.version}" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
