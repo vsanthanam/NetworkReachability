@@ -33,8 +33,8 @@ import XCTest
 @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
 final class NetworkMonitorConcurrencyTests: XCTestCase {
 
-    func test_get_concurrency() async {
-        let path = await NetworkMonitor.networkPath
+    func test_get_concurrency() async throws {
+        let path = try await NetworkMonitor.networkPath
         XCTAssertEqual(path.status, .satisfied)
     }
 
@@ -42,7 +42,7 @@ final class NetworkMonitorConcurrencyTests: XCTestCase {
         let expectation = expectation(description: "pass")
 
         Task {
-            for await status in NetworkMonitor.networkPathUpdates.map(\.status) {
+            for try await status in NetworkMonitor.networkPathUpdates.map(\.status) {
                 if status == .satisfied {
                     expectation.fulfill()
                 }

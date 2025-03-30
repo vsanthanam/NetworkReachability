@@ -31,16 +31,20 @@ public extension NetworkMonitor {
     /// Retrieve the latest known network path using [Swift Concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html)
     ///
     /// ```swift
-    /// func updateReachability() async {
-    ///     let path = await NetworkMonitor.networkPath
+    /// func updateReachability() async throws {
+    ///     let path = try await NetworkMonitor.networkPath
     ///     // Do something with `path`
     /// }
     /// ```
     static var networkPath: NWPath {
-        get async {
-            await withUnsafeContinuation { continuation in
+        get async throws {
+            try await withUnsafeThrowingContinuation { continuation in
                 NetworkMonitor.networkPath { path in
-                    continuation.resume(returning: path)
+                    if Task.isCancelled {
+                        continuation.resume(throwing: CancellationError())
+                    } else {
+                        continuation.resume(returning: path)
+                    }
                 }
             }
         }
@@ -55,7 +59,7 @@ public extension NetworkMonitor {
     ///     // Do something with `path`
     /// }
     /// ```
-    static var networkPathUpdates: AsyncStream<NWPath> {
+    static var networkPathUpdates: AsyncThrowingStream<NWPath, any Error> {
         stream(.init())
     }
 
@@ -68,7 +72,7 @@ public extension NetworkMonitor {
     ///     // Do something with `path`
     /// }
     /// ```
-    static func networkPathUpdates(requiringInterfaceType interfaceType: NWInterface.InterfaceType) -> AsyncStream<NWPath> {
+    static func networkPathUpdates(requiringInterfaceType interfaceType: NWInterface.InterfaceType) -> AsyncThrowingStream<NWPath, any Error> {
         stream(.init(requiredInterfaceType: interfaceType))
     }
 
@@ -82,16 +86,21 @@ public extension NetworkMonitor {
     /// }
     /// ```
     @available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
-    static func networkPathUpdates(prohibitingInterfaceTypes interfaceTypes: [NWInterface.InterfaceType]) -> AsyncStream<NWPath> {
+    static func networkPathUpdates(prohibitingInterfaceTypes interfaceTypes: [NWInterface.InterfaceType]) -> AsyncThrowingStream<NWPath, any Error> {
         stream(.init(prohibitedInterfaceTypes: interfaceTypes))
     }
 }
 
 @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
-private func stream(_ monitor: NWPathMonitor) -> AsyncStream<NWPath> {
-    .init(bufferingPolicy: .bufferingNewest(1)) { continuation in
+private func stream(_ monitor: NWPathMonitor) -> AsyncThrowingStream<NWPath, any Error> {
+    .init { continuation in
         monitor.pathUpdateHandler = { path in
-            continuation.yield(path)
+            if Task.isCancelled {
+                monitor.cancel()
+                continuation.finish(throwing: CancellationError())
+            } else {
+                continuation.yield(path)
+            }
         }
         monitor.start(queue: .networkMonitorQueue)
     }
