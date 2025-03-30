@@ -1,0 +1,510 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D6BEB6F82BD801E100A8E023 /* DispatchQueue+NetworkReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BEB6EB2BD801CC00A8E023 /* DispatchQueue+NetworkReachability.swift */; };
+		D6BEB6F92BD801E100A8E023 /* WeakReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BEB6EC2BD801CC00A8E023 /* WeakReference.swift */; };
+		D6BEB6FA2BD801EB00A8E023 /* NetworkMonitor+Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BEB6F42BD801CC00A8E023 /* NetworkMonitor+Notification.swift */; };
+		D6BEB6FB2BD801EB00A8E023 /* NetworkMonitorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BEB6F32BD801CC00A8E023 /* NetworkMonitorDelegate.swift */; };
+		D6BEB6FC2BD801EB00A8E023 /* PublishersExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BEB6F12BD801CC00A8E023 /* PublishersExtensions.swift */; };
+		D6BEB6FD2BD801EB00A8E023 /* NetworkMonitor+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BEB6F62BD801CC00A8E023 /* NetworkMonitor+Combine.swift */; };
+		D6BEB6FE2BD801EB00A8E023 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BEB6F72BD801CC00A8E023 /* NetworkMonitor.swift */; };
+		D6BEB6FF2BD801EB00A8E023 /* NetworkMonitor+Concurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BEB6F52BD801CC00A8E023 /* NetworkMonitor+Concurrency.swift */; };
+		D6BEB7002BD801EB00A8E023 /* NotificationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BEB6F02BD801CC00A8E023 /* NotificationExtensions.swift */; };
+		D6BEB7092BD8022400A8E023 /* libNetworkReachability.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D6BEB6D72BD8013000A8E023 /* libNetworkReachability.a */; };
+		D6BEB70F2BD8024400A8E023 /* NetworkMonitorCombineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BEB6E52BD801CC00A8E023 /* NetworkMonitorCombineTests.swift */; };
+		D6BEB7102BD8024400A8E023 /* NetworkMonitorConcurrencyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BEB6E62BD801CC00A8E023 /* NetworkMonitorConcurrencyTests.swift */; };
+		D6BEB7112BD8024400A8E023 /* NetworkMonitorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BEB6E72BD801CC00A8E023 /* NetworkMonitorTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D6BEB70A2BD8022400A8E023 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D6BEB6CF2BD8013000A8E023 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D6BEB6D62BD8013000A8E023;
+			remoteInfo = NetworkReachability;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D6BEB6D52BD8013000A8E023 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		D6BEB6D72BD8013000A8E023 /* libNetworkReachability.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libNetworkReachability.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D6BEB6E52BD801CC00A8E023 /* NetworkMonitorCombineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitorCombineTests.swift; sourceTree = "<group>"; };
+		D6BEB6E62BD801CC00A8E023 /* NetworkMonitorConcurrencyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitorConcurrencyTests.swift; sourceTree = "<group>"; };
+		D6BEB6E72BD801CC00A8E023 /* NetworkMonitorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitorTests.swift; sourceTree = "<group>"; };
+		D6BEB6EB2BD801CC00A8E023 /* DispatchQueue+NetworkReachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+NetworkReachability.swift"; sourceTree = "<group>"; };
+		D6BEB6EC2BD801CC00A8E023 /* WeakReference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeakReference.swift; sourceTree = "<group>"; };
+		D6BEB6ED2BD801CC00A8E023 /* NetworkReachability.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = NetworkReachability.docc; sourceTree = "<group>"; };
+		D6BEB6F02BD801CC00A8E023 /* NotificationExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationExtensions.swift; sourceTree = "<group>"; };
+		D6BEB6F12BD801CC00A8E023 /* PublishersExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublishersExtensions.swift; sourceTree = "<group>"; };
+		D6BEB6F32BD801CC00A8E023 /* NetworkMonitorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitorDelegate.swift; sourceTree = "<group>"; };
+		D6BEB6F42BD801CC00A8E023 /* NetworkMonitor+Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NetworkMonitor+Notification.swift"; sourceTree = "<group>"; };
+		D6BEB6F52BD801CC00A8E023 /* NetworkMonitor+Concurrency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NetworkMonitor+Concurrency.swift"; sourceTree = "<group>"; };
+		D6BEB6F62BD801CC00A8E023 /* NetworkMonitor+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NetworkMonitor+Combine.swift"; sourceTree = "<group>"; };
+		D6BEB6F72BD801CC00A8E023 /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
+		D6BEB7052BD8022400A8E023 /* NetworkReachabilityTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NetworkReachabilityTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D6BEB6D42BD8013000A8E023 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D6BEB7022BD8022400A8E023 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D6BEB7092BD8022400A8E023 /* libNetworkReachability.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D6BEB6CE2BD8013000A8E023 = {
+			isa = PBXGroup;
+			children = (
+				D6BEB6E82BD801CC00A8E023 /* Sources */,
+				D6BEB6E32BD801CC00A8E023 /* Tests */,
+				D6BEB6D82BD8013000A8E023 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D6BEB6D82BD8013000A8E023 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D6BEB6D72BD8013000A8E023 /* libNetworkReachability.a */,
+				D6BEB7052BD8022400A8E023 /* NetworkReachabilityTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D6BEB6E32BD801CC00A8E023 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				D6BEB6E42BD801CC00A8E023 /* NetworkReachabilityTests */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		D6BEB6E42BD801CC00A8E023 /* NetworkReachabilityTests */ = {
+			isa = PBXGroup;
+			children = (
+				D6BEB6E52BD801CC00A8E023 /* NetworkMonitorCombineTests.swift */,
+				D6BEB6E62BD801CC00A8E023 /* NetworkMonitorConcurrencyTests.swift */,
+				D6BEB6E72BD801CC00A8E023 /* NetworkMonitorTests.swift */,
+			);
+			path = NetworkReachabilityTests;
+			sourceTree = "<group>";
+		};
+		D6BEB6E82BD801CC00A8E023 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				D6BEB6E92BD801CC00A8E023 /* NetworkReachability */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		D6BEB6E92BD801CC00A8E023 /* NetworkReachability */ = {
+			isa = PBXGroup;
+			children = (
+				D6BEB6EA2BD801CC00A8E023 /* Internal */,
+				D6BEB6ED2BD801CC00A8E023 /* NetworkReachability.docc */,
+				D6BEB6EE2BD801CC00A8E023 /* API */,
+			);
+			path = NetworkReachability;
+			sourceTree = "<group>";
+		};
+		D6BEB6EA2BD801CC00A8E023 /* Internal */ = {
+			isa = PBXGroup;
+			children = (
+				D6BEB6EB2BD801CC00A8E023 /* DispatchQueue+NetworkReachability.swift */,
+				D6BEB6EC2BD801CC00A8E023 /* WeakReference.swift */,
+			);
+			path = Internal;
+			sourceTree = "<group>";
+		};
+		D6BEB6EE2BD801CC00A8E023 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				D6BEB6EF2BD801CC00A8E023 /* Extensions */,
+				D6BEB6F22BD801CC00A8E023 /* NetworkMonitor */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		D6BEB6EF2BD801CC00A8E023 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				D6BEB6F02BD801CC00A8E023 /* NotificationExtensions.swift */,
+				D6BEB6F12BD801CC00A8E023 /* PublishersExtensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		D6BEB6F22BD801CC00A8E023 /* NetworkMonitor */ = {
+			isa = PBXGroup;
+			children = (
+				D6BEB6F32BD801CC00A8E023 /* NetworkMonitorDelegate.swift */,
+				D6BEB6F42BD801CC00A8E023 /* NetworkMonitor+Notification.swift */,
+				D6BEB6F52BD801CC00A8E023 /* NetworkMonitor+Concurrency.swift */,
+				D6BEB6F62BD801CC00A8E023 /* NetworkMonitor+Combine.swift */,
+				D6BEB6F72BD801CC00A8E023 /* NetworkMonitor.swift */,
+			);
+			path = NetworkMonitor;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D6BEB6D62BD8013000A8E023 /* NetworkReachability */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D6BEB6DE2BD8013000A8E023 /* Build configuration list for PBXNativeTarget "NetworkReachability" */;
+			buildPhases = (
+				D6BEB6D32BD8013000A8E023 /* Sources */,
+				D6BEB6D42BD8013000A8E023 /* Frameworks */,
+				D6BEB6D52BD8013000A8E023 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NetworkReachability;
+			productName = NetworkReachability;
+			productReference = D6BEB6D72BD8013000A8E023 /* libNetworkReachability.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		D6BEB7042BD8022400A8E023 /* NetworkReachabilityTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D6BEB70C2BD8022400A8E023 /* Build configuration list for PBXNativeTarget "NetworkReachabilityTests" */;
+			buildPhases = (
+				D6BEB7012BD8022400A8E023 /* Sources */,
+				D6BEB7022BD8022400A8E023 /* Frameworks */,
+				D6BEB7032BD8022400A8E023 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D6BEB70B2BD8022400A8E023 /* PBXTargetDependency */,
+			);
+			name = NetworkReachabilityTests;
+			productName = NetworkReachabilityTests;
+			productReference = D6BEB7052BD8022400A8E023 /* NetworkReachabilityTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D6BEB6CF2BD8013000A8E023 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1520;
+				LastUpgradeCheck = 1520;
+				TargetAttributes = {
+					D6BEB6D62BD8013000A8E023 = {
+						CreatedOnToolsVersion = 15.2;
+					};
+					D6BEB7042BD8022400A8E023 = {
+						CreatedOnToolsVersion = 15.2;
+					};
+				};
+			};
+			buildConfigurationList = D6BEB6D22BD8013000A8E023 /* Build configuration list for PBXProject "NetworkReachability" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = D6BEB6CE2BD8013000A8E023;
+			productRefGroup = D6BEB6D82BD8013000A8E023 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D6BEB6D62BD8013000A8E023 /* NetworkReachability */,
+				D6BEB7042BD8022400A8E023 /* NetworkReachabilityTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D6BEB7032BD8022400A8E023 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D6BEB6D32BD8013000A8E023 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D6BEB6FB2BD801EB00A8E023 /* NetworkMonitorDelegate.swift in Sources */,
+				D6BEB7002BD801EB00A8E023 /* NotificationExtensions.swift in Sources */,
+				D6BEB6FD2BD801EB00A8E023 /* NetworkMonitor+Combine.swift in Sources */,
+				D6BEB6FC2BD801EB00A8E023 /* PublishersExtensions.swift in Sources */,
+				D6BEB6F82BD801E100A8E023 /* DispatchQueue+NetworkReachability.swift in Sources */,
+				D6BEB6FA2BD801EB00A8E023 /* NetworkMonitor+Notification.swift in Sources */,
+				D6BEB6F92BD801E100A8E023 /* WeakReference.swift in Sources */,
+				D6BEB6FF2BD801EB00A8E023 /* NetworkMonitor+Concurrency.swift in Sources */,
+				D6BEB6FE2BD801EB00A8E023 /* NetworkMonitor.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D6BEB7012BD8022400A8E023 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D6BEB70F2BD8024400A8E023 /* NetworkMonitorCombineTests.swift in Sources */,
+				D6BEB7102BD8024400A8E023 /* NetworkMonitorConcurrencyTests.swift in Sources */,
+				D6BEB7112BD8024400A8E023 /* NetworkMonitorTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D6BEB70B2BD8022400A8E023 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D6BEB6D62BD8013000A8E023 /* NetworkReachability */;
+			targetProxy = D6BEB70A2BD8022400A8E023 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		D6BEB6DC2BD8013000A8E023 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		D6BEB6DD2BD8013000A8E023 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D6BEB6DF2BD8013000A8E023 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = TQNN8N5NP9;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D6BEB6E02BD8013000A8E023 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = TQNN8N5NP9;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		D6BEB70D2BD8022400A8E023 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = TQNN8N5NP9;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.aswathrce.NetworkReachabilityTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D6BEB70E2BD8022400A8E023 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = TQNN8N5NP9;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.aswathrce.NetworkReachabilityTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D6BEB6D22BD8013000A8E023 /* Build configuration list for PBXProject "NetworkReachability" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D6BEB6DC2BD8013000A8E023 /* Debug */,
+				D6BEB6DD2BD8013000A8E023 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D6BEB6DE2BD8013000A8E023 /* Build configuration list for PBXNativeTarget "NetworkReachability" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D6BEB6DF2BD8013000A8E023 /* Debug */,
+				D6BEB6E02BD8013000A8E023 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D6BEB70C2BD8022400A8E023 /* Build configuration list for PBXNativeTarget "NetworkReachabilityTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D6BEB70D2BD8022400A8E023 /* Debug */,
+				D6BEB70E2BD8022400A8E023 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D6BEB6CF2BD8013000A8E023 /* Project object */;
+}
